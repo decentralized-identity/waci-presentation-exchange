@@ -18,6 +18,13 @@
 
 ## Abstract
 
+When an app/website (issuer, requester, etc.) is interacting with a user there might be a need to do an exchange of JWTs or other signatures. The problem is that QR codes can only contain so much data and a token might be too large. The proposed solution is to start the interaction with a QR code (or link on mobile devices) that contains a link to fetch the token from. The end result returned from the user to the app/website will be signed by the user and will contain the initial token as a challenge. This proves ownership of the DID in addition to the main purpose of the interaction.
+
+Specifically this spec covers:
+
+- the flow where an issuer gives a VC to a user and where
+- the flow where a data requester is requesting VCs from a user (to be shared as a VP)
+
 ## Status of This Document
 
 ## Payload

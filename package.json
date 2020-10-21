@@ -1,0 +1,12 @@
+{
+  "name": "online-jwt-interactions",
+  "description": "Online JWT Interactions",
+  "version": "0.0.1",
+  "license": "Apache 2",
+  "scripts": {
+    "build": "node -e \"require('spec-up')({ nowatch: true })\""
+  },
+  "dependencies": {
+    "spec-up": "^0.9.101"
+  }
+}

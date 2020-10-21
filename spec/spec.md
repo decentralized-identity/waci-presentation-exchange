@@ -27,6 +27,8 @@ Specifically this spec covers:
 
 ## Status of This Document
 
+?
+
 ## Payload
 
 This payload will be what's presented to the user either in a QR code or link.
@@ -80,6 +82,7 @@ In addition to base JWT fields the following applies:
   - MUST have `purpose`
     - See [Purpose](#purpose) below
   - MUST have `iss`
+  - CAN have `aud` if the DID of the user is known
 
 ## Callback Response
 
@@ -181,7 +184,7 @@ In addition to the optional `redirectUrl` the offer purpose must respond with si
 ```json
 {
   "redirectUrl": "...",
-  "vc": [
+  "credentials": [
     {
       /* ... */
       "type": ["VerifiableCredential" /* ... */]

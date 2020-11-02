@@ -1,12 +1,14 @@
-# Online JWT Interactions
+# Wallet Credential Interactions
 
-> QR Codes and Buttons for claiming and sharing credentials (and more!)
+> WACI [__wak__-ee]
+
+QR Codes and Links for credential centric wallet interactions.
 
 ## Getting Started
 
 ```
-git clone git@github.com:hellobloom/online-jwt-interactions.git
-cd online-jwt-interactions
+git clone git@github.com:hellobloom/wallet-credential-interactions.git
+cd wallet-credential-interactions
 npm i
 npm run build
 npx serve ./build

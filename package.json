@@ -1,10 +1,11 @@
 {
-  "name": "online-jwt-interactions",
-  "description": "Online JWT Interactions",
+  "name": "wallet-credential-interactions",
+  "description": "Wallet Credential Interactions",
   "version": "0.0.1",
   "license": "Apache 2",
   "scripts": {
-    "build": "node -e \"require('spec-up')({ nowatch: true })\""
+    "build": "node -e \"require('spec-up')({ nowatch: true })\" && npm run build:move-assets",
+    "build:move-assets": "cp -r ./assets ./build"
   },
   "dependencies": {
     "spec-up": "^0.9.101"

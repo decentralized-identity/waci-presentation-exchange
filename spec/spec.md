@@ -1,6 +1,8 @@
-# Online JWT Interactions
+# Wallet Credential Interactions
 
-**Specification Status:** ??
+> WACI [__wak__-ee]
+
+**Specification Status:** Draft
 
 **Editors:**
 ~ [Afshan Aman](https://www.linkedin.com/in/afshan-aman/) (Bloom)
@@ -18,20 +20,31 @@
 
 ## Abstract
 
-When an app/website (issuer, requester, etc.) is interacting with a user there might be a need to do an exchange of JWTs or other signatures. The problem is that QR codes can only contain so much data and a token might be too large. The proposed solution is to start the interaction with a QR code (or link on mobile devices) that contains a link to fetch the token from. The end result returned from the user to the app/website will be signed by the user and will contain the initial token as a challenge. This proves ownership of the DID in addition to the main purpose of the interaction.
-
-Specifically this spec covers:
-
-- the flow where an issuer gives a VC to a user and where
-- the flow where a data requester is requesting VCs from a user (to be shared as a VP)
+There are interactions between a wallet and relying party that require passing information between the two. WACI provides a standard for these interactions.
 
 ## Status of This Document
 
-?
+WACI is a draft specification under development by Bloom and Affinidi.
 
-## Payload
+## QR Code Or Link
 
-This payload will be what's presented to the user either in a QR code or link.
+If the user is using an app/webiste on something other than the device that their wallet is on then they would be able to scan a QR code with the wallet. _But_ if the user is the device that also has their wallet then they wouldn't be able to scan a QR code, they would need to be able to click a link that will open their mobile wallet.
+
+There are of course other use cases where you might need one over the other or both. For example in an email you may want to display both a link and a QR code because you won't be able to dynamically choose between the two.
+
+## Token Storage
+
+Because the challenge token is always sent back to the relying party the token doesn't need to be stored on creation. And this allows the relying party to not have to worry about someone spamming their API and driving up their storage costs.
+
+But no storage at all can lead to replay attacks. One suggested way to mitigate replay attacks while keeping storage to a minimal is to only store the hash of "used" tokens and have a cron job that cleans this storage based on expiration date of the tokens.
+
+## Interactions
+
+All interactions use the same common blocks:
+
+### Paylod
+
+This is the payload that is displayed in a QR code or added as a query param to a link.
 
 ```json
 {
@@ -40,22 +53,20 @@ This payload will be what's presented to the user either in a QR code or link.
 ```
 
 - `tokenUrl`:
-  - MUST be unique to the user
-  - MUST be a `GET` endpoint that returns the [Token Payload](#token-payload)
+  - MUST be unique to the interaction
+  - MUST be a `GET` endpoint that returns the [Token Payload](#token-url-response)
 
-## Token Payload
+### Token URL Response
+
+The result from `GET`ing the provided `tokenUrl`. This contains the initial JWT that really starts the interaction.
 
 ```json
 {
-  "token": "{{JWT String}}"
+  "challengeToken": "{{JWT String}}"
 }
 ```
 
-- `token`:
-  - MUST be a JWT
-  - MUST conform to the structure [below](#token)
-
-### Token
+#### Challenge Token
 
 ```json
 {
@@ -64,29 +75,45 @@ This payload will be what's presented to the user either in a QR code or link.
     "kid": "did:example:ebfeb1f712ebc6f1c276e12ec21#primary"
   },
   "payload": {
-    "callbackUrl": "https://example.com/api/callback-url",
-    "purpose": "...",
+    "jti": "...",
     "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-    "aud": "..."
+    "aud": "...",
+    "callbackUrl": "https://example.com/api/callback-url",
+    "purpose": "..."
   }
 }
 ```
 
-In addition to base JWT fields the following applies:
-
 - `header`
-  - MUST have `kid`, so the JWT can be verified
+  - MUST have `alg` and `kid`, so the JWT can be verified
 - `payload`
+  - MUST have `iss`
+  - MUST have `jti` to protect against replay attacks
+  - CAN have `aud` if the DID of the wallet is known
   - MUST have `callbackUrl`
-    - MUST be a `POST` endpoint to take the user's reponse (determined by the `purpose`)
+    - MUST be a `POST` endpoint to take the wallet's reponse (determined by the `purpose`)
   - MUST have `purpose`
     - See [Purpose](#purpose) below
-  - MUST have `iss`
-  - CAN have `aud` if the DID of the user is known
 
-## Callback Response
+### Callback URL
 
-The POST to the provided `callbackUrl` can return with a simple `200` for success or it can provide a `redirectUrl` that the app will open. This could be used to show a success message or bring them back to the website/app to continue where they left off. Most of the time `redirectUrl` will only be used when the user is already using their phone (see [below](#qr-code-or-link)).
+#### Request
+
+Each interaction will `POST` specific data to the `callbackUrl`. But all `POST`s to the `callbackUrl` will include the following:
+
+```json
+{
+  "from": "qr" | "link"
+}
+```
+
+- `from`
+  - MUST be either "qr" or "link"
+  - The issuer may need to handle things differently based on how the user is claiming the credentials
+
+#### Reponse
+
+The `POST` to the provided `callbackUrl` can return with a simple successful HTTP response or it can return a `redirectUrl` that the app will open. This could be used to show a success message or bring them back to the website/app to continue where they left off. Most of the time `redirectUrl` will only be used when the user is already using their phone (see [above](#qr-code-or-link)).
 
 ```json
 {
@@ -94,17 +121,13 @@ The POST to the provided `callbackUrl` can return with a simple `200` for succes
 }
 ```
 
-## QR Code Or Link
+## Offer/Claim
 
-If the user is using an app/webiste on their computer then they would be able to scan a QR code with their mobile wallet. But if the user is using a mobile app/website then they wouldn't be able to scan a QR code, they would need to be able to click a link that will open their mobile wallet.
+The offer/claim interaction is for the use case where an issuer wants to give credential(s) to the user.
 
-## Purpose
+### Challenge Token
 
-The idea of this specification is to support any number of interaction that require transferring JWTs between two parties. The `purpose` field in the initial JWT's payload is what's responsible for informing the second party what the initiator wants. Depending on the purpose there will be additional fields in the payload.
-
-### Offer/Claim Purpose
-
-This purpose is for the use case where an Issuer wants to give credential(s) to the user.
+An example of an `offer` challenge token has the following properties (in addition to the base [properties](#challenge-token)):
 
 ```json
 {
@@ -113,8 +136,10 @@ This purpose is for the use case where an Issuer wants to give credential(s) to 
     "kid": "did:example:ebfeb1f712ebc6f1c276e12ec21#primary"
   },
   "payload": {
-    "callbackUrl": "https://example.com/api/callback-url",
+    "jti": "...",
     "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "aud": "...",
+    "callbackUrl": "https://example.com/api/callback-url",
     "purpose": "offer",
     /* Not finalized, and I would love if this could rely on a separate spec */
     "offeredCredentials": [
@@ -129,29 +154,26 @@ This purpose is for the use case where an Issuer wants to give credential(s) to 
 }
 ```
 
-This JWT tells the user that the issuer has a `PhoneCredential` and `EmailCredential` waiting for them to claim.
-
 - `payload`
+  - `purpose` MUST be `"offer"`
   - MUST have `offeredCredentials`
 
-#### Callback URL Payload
+### Callback URL
 
-The payload that will be `POST`ed to the `callbackUrl` will contain a JWT signed by the user and whether the user is using a QR code or link.
+#### Request
+
+In addition to the standard [Callback URL Request](#request) payload, the offer/claim flow adds `responseToken`
 
 ```json
 {
-  token: "{{Signed JWT}}"
+  responseToken: "{{Signed JWT}}"
   from: "qr" | "link"
 }
 ```
 
-- `from`
-  - MUST be either "qr" or "link"
-  - The issuer may need to handle things differently based on how the user is claiming the credentials
+##### Response Token
 
-##### Token
-
-This is the format that the JWT sent to the `callbackUrl` must adhere to.
+The response token is signed by the user and acts as a way to prove ownership of their DID as well as accept the credentials they are offered.
 
 ```json
 {
@@ -160,41 +182,41 @@ This is the format that the JWT sent to the `callbackUrl` must adhere to.
     "kid": "did:example:c276e12ec21ebfeb1f712ebc6f1#primary"
   },
   "payload": {
-    "challenge": "{{Initial JWT}}",
     "iss": "did:example:c276e12ec21ebfeb1f712ebc6f1",
-    "aud": "did:example:ebfeb1f712ebc6f1c276e12ec21"
+    "aud": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "challenge": "{{CHALLENGE TOKEN}}"
   }
 }
 ```
 
 - `header`
-  - MUST have `kid`, so the JWT can be verified
+  - MUST have `alg` and `kid`, so the JWT can be verified
 - `payload`
-  - MUST have `challenge`
-    - MUST be the initial token fetched from `tokenUrl`
-      - Sending back the original token allows the Issuer to not have to store the tokens, see [Token Storage](#token-storage) for more details and caveats
   - MUST have `iss`
   - MUST have `aud`
-    - MUST be the initial token's `iss`
+    - `aud` MUST be the `iss` of the challenge token
+  - MUST have `challenge`
+    - `challenge` MUST be the challenge token given by the issuer
 
-#### Callback Response
+#### Response
 
-In addition to the optional `redirectUrl` the offer purpose must respond with signed credentials
+In addition to the standard [Callback URL Response](#response) payload, the offer/claim flow adds `credentials`:
 
 ```json
 {
-  "redirectUrl": "...",
   "credentials": [
     {
-      /* ... */
       "type": ["VerifiableCredential" /* ... */]
+      // ...
     }
-    /* ... */
-  ]
+  ],
+  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}"
 }
 ```
 
-#### Flow
+- `credentials` MUST be an array of Verifiable Credentials issued to the user.
+
+### Swimlane
 
 <tab-panels selected-index="0">
 
@@ -205,49 +227,25 @@ In addition to the optional `redirectUrl` the offer purpose must respond with si
 
 <section>
 
-1. Issuer displays a QR code
-1. User scans QR code with mobile wallet
-1. Wallet `GET`s `tokenUrl` and recieves the `token`
-1. (Optional) Wallet parses the token and displays to the user the credentials that are being offered
-1. Wallet creates a reponse token and `POST`s it to the `callbackUrl`
-1. Issuer recieves token and verifies it, verification includes:
-   - Verify the recieved token
-   - Verify the recieved token's challenge
-     - Verify the challenge token
-     - Verify that the challenge token was signed by the Issuer
-     - Verify that the token hasn't been used (protect against replay attacks, see [Token Storage](#token-storage) for more details)
-   - Verify that the recieved token's `iss` matches the challenge token's `aud` (if present)
-1. Issuer responds with the signed credentials and a redirect URL (optional)
-1. Wallet recieves credentials, verifies them (optional), and stores them (optional)
-1. If provided, the Wallet will open a browser to `redirectUrl`
+![QR based flow](./assets/offer-claim/qr.png)
 
 </section>
 
 <section>
 
-1. Issuer displays a link
-1. User clicks link, opening their mobile wallet
-1. Wallet `GET`s `tokenUrl` and recieves the `token`
-1. (Optional) Wallet parses the token and displays to the user the credentials that are being offered
-1. Wallet creates a reponse token and `POST`s it to the `callbackUrl`
-1. Issuer recieves token and verifies it, verification includes:
-   - Verify the recieved token
-   - Verify the recieved token's challenge
-     - Verify the challenge token
-     - Verify that the challenge token was signed by the Issuer
-     - Verify that the token hasn't been used (protect against replay attacks, see [Token Storage](#token-storage) for more details)
-   - Verify that the recieved token's `iss` matches the challenge token's `aud` (if present)
-1. Issuer responds with the signed credentials and a redirect URL (optional)
-1. Wallet recieves credentials, verifies them (optional), and stores them (optional)
-1. If provided, the Wallet will open a browser to `redirectUrl`
+![Link based flow](./assets/offer-claim/link.png)
 
 </section>
 
 </tab-panels>
 
-### Request/Share Purpose
+## Request/Share
 
-This purpose is for the use case where an Requester wants a user to share credentials with them.
+The request/share interaction is for the use case where an verifier wants a user to share credential(s) with them.
+
+### Challenge Token
+
+An example of a `request` challenge token has the following properties (in addition to the base [properties](#challenge-token-1)):
 
 ```json
 {
@@ -256,57 +254,52 @@ This purpose is for the use case where an Requester wants a user to share creden
     "kid": "did:example:ebfeb1f712ebc6f1c276e12ec21#primary"
   },
   "payload": {
-    "callbackUrl": "https://example.com/api/callback-url",
+    "jti": "...",
     "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "aud": "...",
+    "callbackUrl": "https://example.com/api/callback-url",
     "purpose": "request",
     /* Using [Presentation Exchange](https://identity.foundation/presentation-exchange/) to define the requirements */
     "presentationDefinition": {
-      /* ... */
+      // ...
     }
   }
 }
 ```
 
-This JWT tells the user what credentials the requester is asking for.
+- `payload`
+  - `purpose` MUST be `"request"`
+  - MUST have `presentationDefinition`
 
-#### Callback URL Payload
+### Callback URL
 
-The payload that will be `POST`ed to the `callbackUrl` will contain a signed [Verifiable Presentation](https://www.w3.org/TR/vc-data-model/#presentations-0) and whether the user is using a QR code or link.
+#### Request
 
-The VP will contain the credentials that were requested. The `challenge` will be set to the initial JWT and the `domain` will be set to the host of the `callbackUrl`.
+In addition to the standard [Callback URL Request]() payload, the offer/claim flow adds `presentation`
 
 ```json
 {
-  vp: {
-    // ...
-    "type": ["VerifiablePresentation"],
+  "presentation": {
+    "type": ["VerifiablePresentation" /* ... */],
     "proof": {
+      "challenge": "{{CHALLENGE TOKEN}}"
       // ...
-      "challenge": "{{Initial JWT}}",
-      "domain": "{{URI(callbackUrl).host}}"
     }
-  }
-  from: "qr" | "link"
+    // ...
+  },
+  "from": "qr" | "link"
 }
 ```
 
-- `from`
-  - MUST be either "qr" or "link"
-  - The issuer may need to handle things differently based on how the user is claiming the credentials
-- `vp`
-  - MUST be a VP
-  - `challenge`
-    - MUST be the initial JWT from the Requester
-  - `domain`
-    - MUST be the host of the `callbackUrl`
+- `presentation`:
+  - MUST be a valid Verifiable Presentation
+  - Have it's `proof.challenge` set to the challenge token given by the verifier
 
-#### Callback Response
+#### Response
 
-Only the optional `redirectUrl` needs to be returned from the `callbackUrl`.
+The request/share flow does not add anything to the [Callback URL Response]().
 
-#### Flow
-
-##### QR Based
+### Swimlane
 
 <tab-panels selected-index="0">
 
@@ -317,43 +310,14 @@ Only the optional `redirectUrl` needs to be returned from the `callbackUrl`.
 
 <section>
 
-1. Requester displays a QR code
-1. User scans QR code with mobile wallet
-1. Wallet `GET`s `tokenUrl` and recieves the `token`
-1. Wallet parses the token and displays to the user the credentials that are being requested
-1. Wallet gathers the requested VCs and creates a VP containing them all and `POST`s it to the `callbackUrl`
-1. Requester recieves VP and verifies it, verification includes:
-   - Verify the recieved VP
-   - Verify the recieved VP's challenge
-     - Verify the challenge token
-     - Verify that the challenge token was signed by the Issuer
-     - Verify that the token hasn't been used (protect against replay attacks, see [Token Storage](#token-storage) for more details)
-   - Verify that the VP's `holder` matches the challenge token's `aud` (if present)
-1. Requester responds successfully to the wallet, optionally providing a redirect URL
-1. Wallet indicates to the user that the share was successful
-1. If provided the Wallet will open a browser to `redirectUrl`
+![QR based flow](./assets/request-share/qr.png)
 
 </section>
 
 <section>
 
-1. Requester displays a link
-1. User clicks link, opening their mobile wallet
-1. Wallet `GET`s `tokenUrl` and recieves the `token`
-1. Wallet parses the token and displays to the user the credentials that are being requested
-1. Wallet creates gathers the requested VCs and creates a VP containing them all and `POST`s it to the `callbackUrl`
-1. Requester recieves VP and verifies it, verification includes:
-   - Verify the recieved VP
-   - Verify the recieved VP's challenge
-     - Verify the challenge token
-     - Verify that the challenge token was signed by the Issuer
-     - Verify that the token hasn't been used (protect against replay attacks, see [Token Storage](#token-storage) for more details)
-   - Verify that the VP's `holder` matches the challenge token's `aud` (if present)
-1. Requester responds successfully to the wallet, optionally providing a redirect URL
-1. Wallet indicates to the user that the share was successful
+![Link based flow](./assets/request-share/link.png)
 
 </section>
 
-## Token Storage
-
-Because the initial token is always sent back to the initiator the token doesn't need to be stored on creation. But no storage at all can lead to replay attacks. One suggested way to mitigate replay attacks while keeping storage to a minimal is to only store the hash of "used" tokens and have a cron job that cleans this storage based on expiration date of the tokens.
+</tab-panels>

@@ -12,9 +12,9 @@
 ~ [Jace Hensley](https://www.linkedin.com/in/jacehensley/) (Bloom)
 
 **Participate:**
-~ [GitHub repo](https://github.com/hellobloom/online-jwt-interactions)
-~ [File a bug](https://github.com/hellobloom/online-jwt-interactions/issues)
-~ [Commit history](https://github.com/hellobloom/online-jwt-interactions/commits/master)
+~ [GitHub repo](https://github.com/hellobloom/wallet-credential-interactions)
+~ [File a bug](https://github.com/hellobloom/wallet-credential-interactions/issues)
+~ [Commit history](https://github.com/hellobloom/wallet-credential-interactions/commits/master)
 
 ---
 
@@ -42,7 +42,7 @@ But no storage at all can lead to replay attacks. One suggested way to mitigate 
 
 All interactions use the same common blocks:
 
-### Paylod
+### Payload
 
 This is the payload that is displayed in a QR code or added as a query param to a link.
 

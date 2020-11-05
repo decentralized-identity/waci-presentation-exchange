@@ -4,8 +4,7 @@
   "version": "0.0.1",
   "license": "Apache 2",
   "scripts": {
-    "build": "node -e \"require('spec-up')({ nowatch: true })\" && npm run build:move-assets",
-    "build:move-assets": "cp -r ./assets ./build"
+    "build": "node -e \"require('spec-up')({ nowatch: true })\""
   },
   "dependencies": {
     "spec-up": "https://github.com/JaceHensley/spec-up.git#c89029efb6eae06ec38488c33c79e95dc21c4584"

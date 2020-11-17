@@ -113,13 +113,25 @@ Each interaction will `POST` specific data to the `callbackUrl`. But all `POST`s
 
 #### Reponse
 
-The `POST` to the provided `callbackUrl` can return with a simple successful HTTP response or it can return a `redirectUrl` that the app will open. This could be used to show a success message or bring them back to the website/app to continue where they left off. Most of the time `redirectUrl` will only be used when the user is already using their phone (see [above](#qr-code-or-link)).
+The `POST` to the provided `callbackUrl` can return with a simple successful HTTP response or it can return a success with follow up details. A `redirectLink` that the app will open in a browser or `challengeToken` that will start a new interaction.
 
 ```json
 {
-  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}"
+  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}",
 }
 ```
+
+This could be used to show a success message or bring them back to the website/app to continue where they left off. Most of the time `redirectUrl` will only be used when the user is already using their phone (see [above](#qr-code-or-link)).
+
+__OR__
+
+```json
+{
+  "challengeToken": "{{JWT String}}"
+}
+```
+
+This could be used to follow up a request interaction with an offer interaction, or even a chain of request interactions that are based on the previously shared VCs.
 
 ## Offer/Claim
 
@@ -210,7 +222,21 @@ In addition to the standard [Callback URL Response](#response) payload, the offe
       // ...
     }
   ],
-  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}"
+  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}",
+}
+```
+
+__OR__
+
+```json
+{
+  "credentials": [
+    {
+      "type": ["VerifiableCredential" /* ... */]
+      // ...
+    }
+  ],
+  "challengeToken": "{{JWT String}}",
 }
 ```
 
@@ -249,7 +275,13 @@ sequenceDiagram
 
   Wallet ->> Wallet: Store credentials
 
-  Wallet ->> Browser: If provided open `redirectUrl`
+  opt `redirectUrl` or `challengeToken` is provided
+    alt `redirectUrl` is provided
+      Wallet ->> Browser: Open `redirectUrl`
+    else `challengeToken` is provided
+      Wallet ->> Wallet: Start new interaction
+    end
+  end
 
   deactivate Wallet
 ```
@@ -283,7 +315,13 @@ sequenceDiagram
 
   Wallet ->> Wallet: Store credentials
 
-  Wallet ->> Browser: If provided open `redirectUrl`
+  opt `redirectUrl` or `challengeToken` is provided
+    alt `redirectUrl` is provided
+      Wallet ->> Browser: Open `redirectUrl`
+    else `challengeToken` is provided
+      Wallet ->> Wallet: Start new interaction
+    end
+  end
 
   deactivate Wallet
 ```
@@ -328,7 +366,7 @@ An example of a `request` challenge token has the following properties (in addit
 
 #### Request
 
-In addition to the standard [Callback URL Request]() payload, the offer/claim flow adds `presentation`
+In addition to the standard [Callback URL Request](#request) payload, the offer/claim flow adds `presentation`
 
 ```json
 {
@@ -350,7 +388,7 @@ In addition to the standard [Callback URL Request]() payload, the offer/claim fl
 
 #### Response
 
-The request/share flow does not add anything to the [Callback URL Response]().
+The request/share flow does not add anything to the [Callback URL Response](#response).
 
 ### Swimlane
 
@@ -383,7 +421,13 @@ sequenceDiagram
   Verifier ->> Verifier: Verify the VP's challenge token (valid JWT, signed by verifier, and not used before)
   Verifier -->>- Wallet: Return success
 
-  Wallet ->> Browser: If provided open `redirectUrl`
+  opt `redirectUrl` or `challengeToken` is provided
+    alt `redirectUrl` is provided
+      Wallet ->> Browser: Open `redirectUrl`
+    else `challengeToken` is provided
+      Wallet ->> Wallet: Start new interaction
+    end
+  end
 
   deactivate Wallet
 ```
@@ -415,7 +459,13 @@ sequenceDiagram
   Verifier ->> Verifier: Verify the VP's challenge token (valid JWT, signed by verifier, and not used before)
   Verifier -->>- Wallet: Return success
 
-  Wallet ->> Browser: If provided open `redirectUrl`
+  opt `redirectUrl` or `challengeToken` is provided
+    alt `redirectUrl` is provided
+      Wallet ->> Browser: Open `redirectUrl`
+    else `challengeToken` is provided
+      Wallet ->> Wallet: Start new interaction
+    end
+  end
 
   deactivate Wallet
 ```

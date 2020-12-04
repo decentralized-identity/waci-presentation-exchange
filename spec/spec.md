@@ -48,13 +48,16 @@ This is the payload that is displayed in a QR code or added as a query param to 
 
 ```json
 {
-  "challengeTokenUrl": "https://example.com/api/get-token/fb28b4ec-4209-4b78-8507-7cc49164cb37"
+  "challengeTokenUrl": "https://example.com/api/get-token/fb28b4ec-4209-4b78-8507-7cc49164cb37",
+  "version": "..."
 }
 ```
 
 - `challengeTokenUrl`:
   - MUST be unique to the interaction
   - MUST be a `GET` endpoint that returns the [Token Payload](#token-url-response)
+- `version`:
+  - This is the version of just the QR/link payload, not the rest of the interaction
 
 ### Token URL Response
 
@@ -79,7 +82,8 @@ The result from `GET`ing the provided `challengeTokenUrl`. This contains the ini
     "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
     "aud": "...",
     "callbackUrl": "https://example.com/api/callback-url",
-    "purpose": "..."
+    "purpose": "...",
+    "version": "..."
   }
 }
 ```
@@ -94,6 +98,8 @@ The result from `GET`ing the provided `challengeTokenUrl`. This contains the ini
     - MUST be a `POST` endpoint to take the wallet's reponse (determined by the `purpose`)
   - MUST have `purpose`
     - See [Purpose](#purpose) below
+  - MUST have `version`
+    - This is specific to the `purpose`
 
 ### Callback URL
 
@@ -117,13 +123,13 @@ The `POST` to the provided `callbackUrl` can return with a simple successful HTT
 
 ```json
 {
-  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}",
+  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}"
 }
 ```
 
 This could be used to show a success message or bring them back to the website/app to continue where they left off. Most of the time `redirectUrl` will only be used when the user is already using their phone (see [above](#qr-code-or-link)).
 
-__OR__
+**OR**
 
 ```json
 {
@@ -153,13 +159,15 @@ An example of an `offer` challenge token has the following properties (in additi
     "aud": "...",
     "callbackUrl": "https://example.com/api/callback-url",
     "purpose": "offer",
-    /* Not finalized, and I would love if this could rely on a separate spec */
-    "offeredCredentials": [
+    /* Using [Credential Manifest](https://identity.foundation/credential-manifest/) to define the available credentials */
+    "credential_manifest": [
       {
-        "type": ["PhoneCredential"]
-      },
-      {
-        "type": ["EmailCredential"]
+        "issuer": {
+          /* ... */
+        },
+        "credential": {
+          /* ... */
+        }
       }
     ]
   }
@@ -168,7 +176,7 @@ An example of an `offer` challenge token has the following properties (in additi
 
 - `payload`
   - `purpose` MUST be `"offer"`
-  - MUST have `offeredCredentials`
+  - MUST have `credential_manifest`
 
 ### Callback URL
 
@@ -222,11 +230,11 @@ In addition to the standard [Callback URL Response](#response) payload, the offe
       // ...
     }
   ],
-  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}",
+  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}"
 }
 ```
 
-__OR__
+**OR**
 
 ```json
 {
@@ -236,7 +244,7 @@ __OR__
       // ...
     }
   ],
-  "challengeToken": "{{JWT String}}",
+  "challengeToken": "{{JWT String}}"
 }
 ```
 

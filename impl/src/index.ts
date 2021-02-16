@@ -15,7 +15,7 @@ export type WACIResponseJWTPayload = JWTPayload & {
 // Offer / Claim
 
 export type OfferChallengeJWTPayloadV1 = WACIChallengeJWTPayload<'1'> & {
-  credential_manifest: Record<string, any>[]
+  credential_manifest: Record<string, any>
 }
 
 export type OfferChallengeJWTPayload = OfferChallengeJWTPayloadV1
@@ -31,7 +31,7 @@ const offerChallengeJwtVerifyV1 = (result: JWTVerifyResult) => {
     throw new JWTClaimValidationFailed('"purpose" claim check failed', 'purpose', 'check_failed')
   }
 
-  if (!Array.isArray(result.payload['credential_manifest'])) {
+  if (typeof result.payload['credential_manifest'] !== 'object') {
     throw new JWTClaimValidationFailed('"credential_manifest" claim check failed', 'credential_manifest', 'check_failed')
   }
 }
@@ -54,7 +54,9 @@ export const offerChallengeJwtVerify = async (
   return result
 }
 
-export type OfferResponseJWTPayload = WACIResponseJWTPayload
+export type OfferResponseJWTPayload = WACIResponseJWTPayload & {
+  verifiable_presentation?: Record<string, any>
+}
 
 export class SignOfferResponseJWT extends SignJWT {
   constructor(payload: OfferResponseJWTPayload) {
@@ -75,6 +77,14 @@ const offerResponseJwtVerifyV1 = async (responseResult: JWTVerifyResult, challen
     throw new JWTClaimValidationFailed(
       '"aud" claim check failed, the "aud" of the response does not match the "iss" of the challenge',
       'aud',
+      'check_failed',
+    )
+  }
+
+  if (challengeResult.payload['credential_manifest']['presentation_definition'] && !responseResult.payload['verifiable_presentation']) {
+    throw new JWTClaimValidationFailed(
+      '"verifiable_presentation" claim check failed, no "verifiable_presentation" in the response but a "presentation_definition" is defined in the challenge',
+      'verifiable_presentation',
       'check_failed',
     )
   }

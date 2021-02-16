@@ -8,67 +8,14 @@ import {
   requestChallengeJwtVerify,
 } from '../dist/index.js'
 
-const credentialManifest = [
-  {
-    locale: 'en-US',
-    issuer: {
-      id: 'did:example:123',
-      name: 'Washington State Government',
-      styles: {
-        thumbnail: {
-          uri: 'https://dol.wa.com/logo.png',
-          alt: 'Washington State Seal',
-        },
-        hero: {
-          uri: 'https://dol.wa.com/people-working.png',
-          alt: 'People working on serious things',
-        },
-        background: {
-          color: '#ff0000',
-        },
-        text: {
-          color: '#d4d400',
-        },
-      },
-    },
-    credential: {
-      schema: 'https://schema.org/EducationalOccupationalCredential',
-      display: {
-        title: {
-          text: 'Washington State Driver License',
-        },
-        subtitle: {
-          text: 'Class A, Commercial',
-        },
-        description: {
-          text:
-            'License to operate a vehicle with a gross combined weight rating (GCWR) of 26,001 or more pounds, as long as the GVWR of the vehicle(s) being towed is over 10,000 pounds.',
-        },
-        properties: [
-          {
-            label: 'Organ Donor',
-          },
-        ],
-      },
-      styles: {
-        thumbnail: {
-          uri: 'https://dol.wa.com/logo.png',
-          alt: 'Washington State Seal',
-        },
-        hero: {
-          uri: 'https://dol.wa.com/happy-people-driving.png',
-          alt: 'Happy people driving',
-        },
-        background: {
-          color: '#ff0000',
-        },
-        text: {
-          color: '#d4d400',
-        },
-      },
-    },
-  },
-]
+const verifiablePresentation = {
+  "@context": ["https://www.w3.org/2018/credentials/v1", "https://identity.foundation/presentation-exchange/submission/v1"],
+  "type": ["VerifiablePresentation", "PresentationSubmission"],
+  "presentation_submission": {},
+  "verifiableCredential": [],
+  "proof": {}
+}
+
 const presentationDefinition = {
   input_descriptors: [
     {
@@ -117,6 +64,68 @@ const presentationDefinition = {
     },
   ],
 }
+
+const credentialManifest = {
+  locale: 'en-US',
+  issuer: {
+    id: 'did:example:123',
+    name: 'Washington State Government',
+    styles: {
+      thumbnail: {
+        uri: 'https://dol.wa.com/logo.png',
+        alt: 'Washington State Seal',
+      },
+      hero: {
+        uri: 'https://dol.wa.com/people-working.png',
+        alt: 'People working on serious things',
+      },
+      background: {
+        color: '#ff0000',
+      },
+      text: {
+        color: '#d4d400',
+      },
+    },
+  },
+  credential: {
+    schema: 'https://schema.org/EducationalOccupationalCredential',
+    display: {
+      title: {
+        text: 'Washington State Driver License',
+      },
+      subtitle: {
+        text: 'Class A, Commercial',
+      },
+      description: {
+        text:
+          'License to operate a vehicle with a gross combined weight rating (GCWR) of 26,001 or more pounds, as long as the GVWR of the vehicle(s) being towed is over 10,000 pounds.',
+      },
+      properties: [
+        {
+          label: 'Organ Donor',
+        },
+      ],
+    },
+    styles: {
+      thumbnail: {
+        uri: 'https://dol.wa.com/logo.png',
+        alt: 'Washington State Seal',
+      },
+      hero: {
+        uri: 'https://dol.wa.com/happy-people-driving.png',
+        alt: 'Happy people driving',
+      },
+      background: {
+        color: '#ff0000',
+      },
+      text: {
+        color: '#d4d400',
+      },
+    },
+  },
+  presentation_definition: presentationDefinition,
+}
+
 const callbackUrl = 'https://example.com'
 
 const relyingPartySecret = new Uint8Array(32)
@@ -133,6 +142,7 @@ test('Offer Flow', async t => {
 
   const responseString = await new SignOfferResponseJWT({
     challenge: challengeString,
+    verifiable_presentation: verifiablePresentation
   })
     .setProtectedHeader({alg: 'HS256'})
     .sign(userSecret)

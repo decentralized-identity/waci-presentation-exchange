@@ -160,16 +160,17 @@ An example of an `offer` challenge token has the following properties (in additi
     "callbackUrl": "https://example.com/api/callback-url",
     "purpose": "offer",
     /* Using [Credential Manifest](https://identity.foundation/credential-manifest/) to define the available credentials */
-    "credential_manifest": [
-      {
-        "issuer": {
-          /* ... */
-        },
-        "credential": {
-          /* ... */
-        }
+    "credential_manifest": {
+      "issuer": {
+        /* ... */
+      },
+      "credential": {
+        /* ... */
+      },
+      "presentation_definition": {
+        /* ... */
       }
-    ]
+    }
   }
 }
 ```
@@ -177,6 +178,7 @@ An example of an `offer` challenge token has the following properties (in additi
 - `payload`
   - `purpose` MUST be `"offer"`
   - MUST have `credential_manifest`
+    - If the `credential_manifest` provides a `presentation_definition` the response MUST include a `verifiable_presentation`
 
 ### Callback URL
 
@@ -204,7 +206,19 @@ The response token is signed by the user and acts as a way to prove ownership of
   "payload": {
     "iss": "did:example:c276e12ec21ebfeb1f712ebc6f1",
     "aud": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-    "challenge": "{{CHALLENGE TOKEN}}"
+    "challenge": "{{CHALLENGE TOKEN}}",
+    "verifiable_presentation": {
+      /* ... */
+      "type": [
+        "VerifiablePresentation",
+        "PresentationSubmission"
+      ],
+      "presentation_submission": {
+        /* Using Presentation Exchange's [Presentation Submission](https://identity.foundation/presentation-exchange/#presentation-submission) */
+        /* ... */
+      }
+      /* ... */
+    }
   }
 }
 ```
@@ -217,10 +231,25 @@ The response token is signed by the user and acts as a way to prove ownership of
     - `aud` MUST be the `iss` of the challenge token
   - MUST have `challenge`
     - `challenge` MUST be the challenge token given by the issuer
+  - MUST have `verifiable_presentation` IF the challenge token provides a `presentation_definition`
+    - This `VerifiablePresentation`  MUST be a `PresentationSubmission`
 
 #### Response
 
 In addition to the standard [Callback URL Response](#response) payload, the offer/claim flow adds `credentials`:
+
+```json
+{
+  "credentials": [
+    {
+      "type": ["VerifiableCredential" /* ... */]
+      // ...
+    }
+  ]
+}
+```
+
+**OR**
 
 ```json
 {

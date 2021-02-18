@@ -188,8 +188,8 @@ In addition to the standard [Callback URL Request](#request) payload, the offer/
 
 ```json
 {
-  responseToken: "{{Signed JWT}}"
-  from: "qr" | "link"
+  "responseToken": "{{Signed JWT}}",
+  "from": "qr" | "link"
 }
 ```
 
@@ -415,13 +415,51 @@ In addition to the standard [Callback URL Request](#request) payload, the offer/
     }
     // ...
   },
+  "responseToken": "{{Signed JWT}}",
   "from": "qr" | "link"
 }
 ```
 
-- `presentation`:
-  - MUST be a valid Verifiable Presentation
-  - Have it's `proof.challenge` set to the challenge token given by the verifier
+##### Response Token
+
+```json
+{
+  "header": {
+    "alg": "...",
+    "kid": "did:example:c276e12ec21ebfeb1f712ebc6f1#primary"
+  },
+  "payload": {
+    "iss": "did:example:c276e12ec21ebfeb1f712ebc6f1",
+    "aud": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "challenge": "{{CHALLENGE TOKEN}}",
+    "verifiable_presentation": {
+      /* ... */
+      "type": [
+        "VerifiablePresentation",
+        "PresentationSubmission"
+      ],
+      "presentation_submission": {
+        /* Using Presentation Exchange's [Presentation Submission](https://identity.foundation/presentation-exchange/#presentation-submission) */
+        /* ... */
+      }
+      /* ... */
+    }
+  }
+}
+
+```
+
+- `header`
+  - MUST have `alg` and `kid`, so the JWT can be verified
+- `payload`
+  - MUST have `iss`
+  - MUST have `aud`
+    - `aud` MUST be the `iss` of the challenge token
+  - MUST have `challenge`
+    - `challenge` MUST be the challenge token given by the issuer
+  - MUST have `verifiable_presentation`
+    - This `VerifiablePresentation`  MUST be a `PresentationSubmission`
+    - This `VerifiablePresentation`'s `proof.challenge` MUST be the challenge token given by the issuer
 
 #### Response
 
@@ -451,11 +489,11 @@ sequenceDiagram
   Verifier -->> Wallet: Return `challengeToken`
 
   Wallet ->> Wallet: Verify/decode `challengeToken`
-  Wallet ->> Wallet: Create/sign a VP, with `challengeToken` as the `challenge`
+  Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
 
-  Wallet ->> Verifier: POST the VP to `challengeToken`'s `callBackUrl`
-  Verifier ->> Verifier: Verify the VP
-  Verifier ->> Verifier: Verify the VP's challenge token (valid JWT, signed by verifier, and not used before)
+  Wallet ->> Verifier: POST the `responseToken` to `challengeToken`'s `callBackUrl`
+  Verifier ->> Verifier: Verify the `responseToken`
+  Verifier ->> Verifier: Verify the `responseToken`'s challenge token (valid JWT, signed by verifier, and not used before)
   Verifier -->>- Wallet: Return success
 
   opt `redirectUrl` or `challengeToken` is provided
@@ -489,11 +527,11 @@ sequenceDiagram
   Verifier -->> Wallet: Return `challengeToken`
 
   Wallet ->> Wallet: Verify/decode `challengeToken`
-  Wallet ->> Wallet: Create/sign a VP, with `challengeToken` as the `challenge`
+  Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
 
-  Wallet ->> Verifier: POST the VP to `challengeToken`'s `callBackUrl`
-  Verifier ->> Verifier: Verify the VP
-  Verifier ->> Verifier: Verify the VP's challenge token (valid JWT, signed by verifier, and not used before)
+  Wallet ->> Verifier: POST the `responseToken` to `challengeToken`'s `callBackUrl`
+  Verifier ->> Verifier: Verify the `responseToken`
+  Verifier ->> Verifier: Verify the `responseToken`'s challenge token (valid JWT, signed by verifier, and not used before)
   Verifier -->>- Wallet: Return success
 
   opt `redirectUrl` or `challengeToken` is provided

@@ -5,7 +5,8 @@ import {
   SignOfferResponseJWT,
   offerResponseJwtVerify,
   SignRequestChallengeJWT,
-  requestChallengeJwtVerify,
+  SignRequestResponseJWT,
+  requestResponseJwtVerify,
 } from '../dist/index.js'
 
 const verifiablePresentation = {
@@ -179,7 +180,22 @@ test('Request Flow', async t => {
     .setProtectedHeader({alg: 'HS256'})
     .sign(relyingPartySecret)
 
-  const challenge = await requestChallengeJwtVerify(challengeString, relyingPartySecret)
+  const responseString = await new SignRequestResponseJWT({
+    challenge: challengeString,
+    verifiable_presentation: verifiablePresentation
+  })
+    .setProtectedHeader({alg: 'HS256'})
+    .sign(userSecret)
+
+    const {response, challenge} = await requestResponseJwtVerify(
+      responseString,
+      {
+        key: userSecret,
+      },
+      {
+        key: relyingPartySecret,
+      },
+    )
 
   t.true('purpose' in challenge.payload)
   t.deepEqual(challenge.payload['purpose'], 'request')
@@ -189,4 +205,7 @@ test('Request Flow', async t => {
 
   t.true('presentation_definition' in challenge.payload)
   t.deepEqual(challenge.payload['presentation_definition'], presentationDefinition)
+
+  t.true('challenge' in response.payload)
+  t.deepEqual(response.payload['challenge'], challengeString)
 })

@@ -3,9 +3,6 @@
   "description": "Wallet Credential Interactions",
   "version": "0.0.1",
   "license": "Apache 2",
-  "scripts": {
-    "spec:build": "cd spec && npm run build"
-  },
   "devDependencies": {
     "lerna": "^3.22.1"
   }

@@ -16,8 +16,9 @@ jobs:
 
       - name: Build Spec
         run: |
+          cd spec
           npm i
-          npm run spec:build
+          npm run build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

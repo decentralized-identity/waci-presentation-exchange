@@ -1,0 +1,12 @@
+{
+  "name": "wallet-credential-interactions",
+  "description": "Wallet Credential Interactions",
+  "version": "0.1.0",
+  "private": "true",
+  "scripts": {
+    "build": "node -e \"require('spec-up')({ nowatch: true })\""
+  },
+  "dependencies": {
+    "spec-up": "https://github.com/JaceHensley/spec-up.git#c89029efb6eae06ec38488c33c79e95dc21c4584"
+  }
+}

@@ -1,9 +1,12 @@
+import {OfferChallengeJWTPayload, OfferResponseJWTPayload, RequestChallengeJWTPayload, RequestResponseJWTPayload} from '@waci/core'
 import SignJWT, {JWTPayload, KeyLike} from 'jose/jwt/sign'
 import jwtVerify, {JWTVerifyGetKey, JWTVerifyOptions} from 'jose/jwt/verify'
-import {JWTVerifyResult} from 'jose/webcrypto/types'
-import {JWTClaimValidationFailed} from 'jose/webcrypto/util/errors'
+import {JWTVerifyResult, SignOptions} from 'jose/webcrypto/types'
+import {JWTClaimValidationFailed, JWTInvalid} from 'jose/webcrypto/util/errors'
 
-import { OfferChallengeJWTPayload, OfferResponseJWTPayload, RequestChallengeJWTPayload, RequestResponseJWTPayload } from './core'
+type OmitChallengePayloadFields<Payload> = Omit<Payload, 'jti' | 'iss' | 'aud' | 'purpose'>
+
+type OmitResponsePayloadFields<Payload> = Omit<Payload, 'iss' | 'aud'>
 
 // ****************
 // Offer / Claim
@@ -11,15 +14,26 @@ import { OfferChallengeJWTPayload, OfferResponseJWTPayload, RequestChallengeJWTP
 
 // Challenge
 
-type JoseOfferChallengeJWTPayload = Omit<OfferChallengeJWTPayload, 'purpose'> & JWTPayload
+type JoseOfferChallengeJWTPayload = OmitChallengePayloadFields<OfferChallengeJWTPayload> & JWTPayload
 
 export class SignOfferChallengeJWT extends SignJWT {
   constructor(payload: JoseOfferChallengeJWTPayload) {
     super({...payload, purpose: 'offer'})
   }
+
+  async sign(key: KeyLike, options?: SignOptions): Promise<string> {
+    if (typeof this._payload['jti'] !== 'string') throw new JWTInvalid('OfferChallengeJWT MUST have a jti claim')
+    if (typeof this._payload['iss'] !== 'string') throw new JWTInvalid('OfferChallengeJWT MUST have an iss claim')
+
+    return super.sign(key, options)
+  }
 }
 
 const offerChallengeJwtVerifyV1 = (result: JWTVerifyResult) => {
+  if (typeof result.payload.iss !== 'string') {
+    throw new JWTClaimValidationFailed('"iss" claim check failed', 'iss', 'check_failed')
+  }
+
   if (result.payload['purpose'] !== 'offer') {
     throw new JWTClaimValidationFailed('"purpose" claim check failed', 'purpose', 'check_failed')
   }
@@ -49,21 +63,36 @@ export const offerChallengeJwtVerify = async (
 
 // Response
 
-export type JoseOfferResponseJWTPayload = OfferResponseJWTPayload & JWTPayload
+export type JoseOfferResponseJWTPayload = OmitResponsePayloadFields<OfferResponseJWTPayload> & JWTPayload
 
 export class SignOfferResponseJWT extends SignJWT {
   constructor(payload: JoseOfferResponseJWTPayload) {
     super(payload)
   }
+
+  async sign(key: KeyLike, options?: SignOptions): Promise<string> {
+    if (typeof this._payload['iss'] !== 'string') throw new JWTInvalid('OfferResponseJWT MUST have an iss claim')
+    if (typeof this._payload['aud'] !== 'string') throw new JWTInvalid('OfferResponseJWT MUST have an aud claim')
+
+    return super.sign(key, options)
+  }
 }
 
 const offerResponseJwtVerifyV1 = async (responseResult: JWTVerifyResult, challengeResult: JWTVerifyResult) => {
+  if (typeof responseResult.payload.iss !== 'string') {
+    throw new JWTClaimValidationFailed('"iss" claim check failed', 'iss', 'check_failed')
+  }
+
   if (typeof challengeResult.payload.aud === 'string' && challengeResult.payload.aud !== responseResult.payload.iss) {
     throw new JWTClaimValidationFailed(
       '"iss" claim check failed, the "iss" of the response does not match the "aud" of the challenge',
       'iss',
       'check_failed',
     )
+  }
+
+  if (typeof responseResult.payload.aud !== 'string') {
+    throw new JWTClaimValidationFailed('"aud" claim check failed', 'aud', 'check_failed')
   }
 
   if (challengeResult.payload.iss !== responseResult.payload.aud) {
@@ -120,29 +149,32 @@ export const offerResponseJwtVerify = async (
 
 // Challenge
 
-export type JoseRequestChallengeJWTPayload = Omit<RequestChallengeJWTPayload, 'purpose'> & JWTPayload
+export type JoseRequestChallengeJWTPayload = OmitChallengePayloadFields<RequestChallengeJWTPayload> & JWTPayload
 
 export class SignRequestChallengeJWT extends SignJWT {
   constructor(payload: JoseRequestChallengeJWTPayload) {
     super({...payload, purpose: 'request'})
   }
+
+  async sign(key: KeyLike, options?: SignOptions): Promise<string> {
+    if (typeof this._payload['jti'] !== 'string') throw new JWTInvalid('RequestChallengeJWT MUST have a jti claim')
+    if (typeof this._payload['iss'] !== 'string') throw new JWTInvalid('RequestChallengeJWT MUST have an iss claim')
+
+    return super.sign(key, options)
+  }
 }
 
 const requestChallengeJwtVerifyV1 = (result: JWTVerifyResult) => {
+  if (typeof result.payload.iss !== 'string') {
+    throw new JWTClaimValidationFailed('"iss" claim check failed', 'iss', 'check_failed')
+  }
+
   if (result.payload['purpose'] !== 'request') {
-    throw new JWTClaimValidationFailed(
-      '"purpose" claim check failed',
-      'purpose',
-      'check_failed',
-    )
+    throw new JWTClaimValidationFailed('"purpose" claim check failed', 'purpose', 'check_failed')
   }
 
   if (typeof result.payload['presentation_definition'] !== 'object') {
-    throw new JWTClaimValidationFailed(
-      '"presentation_definition" claim check failed',
-      'presentation_definition',
-      'check_failed',
-    )
+    throw new JWTClaimValidationFailed('"presentation_definition" claim check failed', 'presentation_definition', 'check_failed')
   }
 }
 
@@ -166,21 +198,36 @@ export const requestChallengeJwtVerify = async (
 
 // Response
 
-export type JoseRequestResponseJWTPayload = RequestResponseJWTPayload & JWTPayload
+export type JoseRequestResponseJWTPayload = OmitResponsePayloadFields<RequestResponseJWTPayload> & JWTPayload
 
 export class SignRequestResponseJWT extends SignJWT {
   constructor(payload: JoseRequestResponseJWTPayload) {
     super(payload)
   }
+
+  async sign(key: KeyLike, options?: SignOptions): Promise<string> {
+    if (typeof this._payload['iss'] !== 'string') throw new JWTInvalid('RequestResponseJWT MUST have an iss claim')
+    if (typeof this._payload['aud'] !== 'string') throw new JWTInvalid('RequestResponseJWT MUST have an aud claim')
+
+    return super.sign(key, options)
+  }
 }
 
 const requestResponseJwtVerifyV1 = async (responseResult: JWTVerifyResult, challengeResult: JWTVerifyResult) => {
+  if (typeof responseResult.payload.iss !== 'string') {
+    throw new JWTClaimValidationFailed('"iss" claim check failed', 'iss', 'check_failed')
+  }
+
   if (typeof challengeResult.payload.aud === 'string' && challengeResult.payload.aud !== responseResult.payload.iss) {
     throw new JWTClaimValidationFailed(
       '"iss" claim check failed, the "iss" of the response does not match the "aud" of the challenge',
       'iss',
       'check_failed',
     )
+  }
+
+  if (typeof responseResult.payload.aud !== 'string') {
+    throw new JWTClaimValidationFailed('"aud" claim check failed', 'aud', 'check_failed')
   }
 
   if (challengeResult.payload.iss !== responseResult.payload.aud) {
@@ -192,11 +239,7 @@ const requestResponseJwtVerifyV1 = async (responseResult: JWTVerifyResult, chall
   }
 
   if (typeof responseResult.payload['verifiable_presentation'] !== 'object') {
-    throw new JWTClaimValidationFailed(
-      '"verifiable_presentation" claim check failed',
-      'verifiable_presentation',
-      'check_failed',
-    )
+    throw new JWTClaimValidationFailed('"verifiable_presentation" claim check failed', 'verifiable_presentation', 'check_failed')
   }
 }
 

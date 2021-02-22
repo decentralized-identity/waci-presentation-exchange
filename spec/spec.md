@@ -105,17 +105,47 @@ The result from `GET`ing the provided `challengeTokenUrl`. This contains the ini
 
 #### Request
 
-Each interaction will `POST` specific data to the `callbackUrl`. But all `POST`s to the `callbackUrl` will include the following:
+Each interaction will `POST` data to the `callbackUrl`:
 
 ```json
 {
+  "responseToken": "{{Signed JWT}}",
   "from": "qr" | "link"
 }
 ```
 
+- `responseToken`
+  - A JWT signed by the user, will contain the `challengeToken`
 - `from`
   - MUST be either "qr" or "link"
   - The issuer may need to handle things differently based on how the user is claiming the credentials
+
+##### Response Token
+
+The response token is signed by the user and acts as a way to prove ownership of their DID and to pass aditional data back to the relying party.
+
+```json
+{
+  "header": {
+    "alg": "...",
+    "kid": "did:example:c276e12ec21ebfeb1f712ebc6f1#primary"
+  },
+  "payload": {
+    "iss": "did:example:c276e12ec21ebfeb1f712ebc6f1",
+    "aud": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "challenge": "{{CHALLENGE TOKEN}}"
+  }
+}
+```
+
+- `header`
+  - MUST have `alg` and `kid`, so the JWT can be verified
+- `payload`
+  - MUST have `iss`
+  - MUST have `aud`
+    - `aud` MUST be the `iss` of the challenge token
+  - MUST have `challenge`
+    - `challenge` MUST be the challenge token given by the issuer
 
 #### Reponse
 
@@ -138,6 +168,92 @@ This could be used to show a success message or bring them back to the website/a
 ```
 
 This could be used to follow up a request interaction with an offer interaction, or even a chain of request interactions that are based on the previously shared VCs.
+
+### Swimlane
+
+Each interaction will be slightly different but will follow this general pattern:
+
+<tab-panels selected-index="0">
+
+<nav>
+  <button type="button">QR Based</button>
+  <button type="button">Link Based</button>
+</nav>
+
+<section>
+
+```mermaid
+sequenceDiagram
+  title: Interaction (QR)
+
+  activate Wallet
+
+  Wallet ->>+ Relying Party's Interface: Scan QR Code
+  Relying Party's Interface -->>- Wallet: Retrieve `challengeTokenUrl`
+
+  Wallet ->>+ Relying Party: GET `challengeTokenUrl`
+  Relying Party -->> Wallet: Return `challengeToken`
+
+  Wallet ->> Wallet: Verify/decode `challengeToken`
+  Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
+
+  Wallet ->> Relying Party: POST the `responseToken` to `challengeToken`'s `callBackUrl`
+  Relying Party ->> Relying Party: Verify the `responseToken`
+  Relying Party ->> Relying Party: Verify the `responseToken`'s challenge token (valid JWT, signed by Relying Party, and not used before)
+  Relying Party -->>- Wallet: Return success
+
+  opt `redirectUrl` or `challengeToken` is provided
+    alt `redirectUrl` is provided
+      Wallet ->> Browser: Open `redirectUrl`
+    else `challengeToken` is provided
+      Wallet ->> Wallet: Start new interaction
+    end
+  end
+
+  deactivate Wallet
+```
+
+</section>
+
+<section>
+
+```mermaid
+sequenceDiagram
+  title: Interaction (Link)
+
+  User ->>+ Relying Party's Interface: Click link
+
+  Relying Party's Interface ->>- Wallet: Open Wallet with deep link
+
+  activate Wallet
+
+  Wallet ->> Wallet: Parse deep link
+
+  Wallet ->>+ Relying Party: GET `challengeTokenUrl`
+  Relying Party -->> Wallet: Return `challengeToken`
+
+  Wallet ->> Wallet: Verify/decode `challengeToken`
+  Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
+
+  Wallet ->> Relying Party: POST the `responseToken` to `challengeToken`'s `callBackUrl`
+  Relying Party ->> Relying Party: Verify the `responseToken`
+  Relying Party ->> Relying Party: Verify the `responseToken`'s challenge token (valid JWT, signed by Relying Party, and not used before)
+  Relying Party -->>- Wallet: Return success
+
+  opt `redirectUrl` or `challengeToken` is provided
+    alt `redirectUrl` is provided
+      Wallet ->> Browser: Open `redirectUrl`
+    else `challengeToken` is provided
+      Wallet ->> Wallet: Start new interaction
+    end
+  end
+
+  deactivate Wallet
+```
+
+</section>
+
+</tab-panels>
 
 ## Offer/Claim
 
@@ -184,7 +300,7 @@ An example of an `offer` challenge token has the following properties (in additi
 
 #### Request
 
-In addition to the standard [Callback URL Request](#request) payload, the offer/claim flow adds `responseToken`
+The offer/claim interaction follows the standard [Callback URL Request](#request) payload, but the `responseToken`'s is specific to the this interaction.
 
 ```json
 {
@@ -195,7 +311,7 @@ In addition to the standard [Callback URL Request](#request) payload, the offer/
 
 ##### Response Token
 
-The response token is signed by the user and acts as a way to prove ownership of their DID as well as accept the credentials they are offered.
+In addition to the standard `responseToken` the offer/claim interaction adds `verifiable_presentation` to the payload.
 
 ```json
 {
@@ -223,14 +339,7 @@ The response token is signed by the user and acts as a way to prove ownership of
 }
 ```
 
-- `header`
-  - MUST have `alg` and `kid`, so the JWT can be verified
 - `payload`
-  - MUST have `iss`
-  - MUST have `aud`
-    - `aud` MUST be the `iss` of the challenge token
-  - MUST have `challenge`
-    - `challenge` MUST be the challenge token given by the issuer
   - MUST have `verifiable_presentation` IF the challenge token provides a `presentation_definition`
     - This `VerifiablePresentation`  MUST be a `PresentationSubmission`
 
@@ -303,7 +412,14 @@ sequenceDiagram
   Issuer -->> Wallet: Return `challengeToken`
 
   Wallet ->> Wallet: Verify/decode `challengeToken`
-  Wallet ->> Wallet: Create/sign `responseToken` based on `challengeToken`
+
+  alt `challengeToken`'s `credential_manifest` contains a `presentation_definition`
+    Wallet ->> Wallet: Collect VCs that are described in the `challengeToken`s `presentation_definition`
+    Wallet ->> Wallet: Create VP containing the VCs, with `challengeToken` as the `challenge`
+    Wallet ->> Wallet: Create/sign a `responseToken` containing the VP, with `challengeToken` as the `challenge`
+  else `challengeToken` is provided
+    Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
+  end
 
   Wallet ->> Issuer: POST `responseToken` to `challengeToken`'s `callBackUrl`
   Issuer ->> Issuer: Verify `responseToken`
@@ -343,7 +459,14 @@ sequenceDiagram
   Issuer -->> Wallet: Return `challengeToken`
 
   Wallet ->> Wallet: Verify/decode `challengeToken`
-  Wallet ->> Wallet: Create/sign `responseToken` based on `challengeToken`
+
+  alt `challengeToken`'s `credential_manifest` contains a `presentation_definition`
+    Wallet ->> Wallet: Collect VCs that are described in the `challengeToken`s `presentation_definition`
+    Wallet ->> Wallet: Create VP containing the VCs, with `challengeToken` as the `challenge`
+    Wallet ->> Wallet: Create/sign a `responseToken` containing the VP, with `challengeToken` as the `challenge`
+  else `challengeToken` is provided
+    Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
+  end
 
   Wallet ->> Issuer: POST `responseToken` to `challengeToken`'s `callBackUrl`
   Issuer ->> Issuer: Verify `responseToken`
@@ -407,20 +530,14 @@ In addition to the standard [Callback URL Request](#request) payload, the offer/
 
 ```json
 {
-  "presentation": {
-    "type": ["VerifiablePresentation" /* ... */],
-    "proof": {
-      "challenge": "{{CHALLENGE TOKEN}}"
-      // ...
-    }
-    // ...
-  },
   "responseToken": "{{Signed JWT}}",
   "from": "qr" | "link"
 }
 ```
 
 ##### Response Token
+
+In addition to the standard `responseToken` the offer/claim interaction adds `verifiable_presentation` to the payload.
 
 ```json
 {
@@ -449,14 +566,7 @@ In addition to the standard [Callback URL Request](#request) payload, the offer/
 
 ```
 
-- `header`
-  - MUST have `alg` and `kid`, so the JWT can be verified
 - `payload`
-  - MUST have `iss`
-  - MUST have `aud`
-    - `aud` MUST be the `iss` of the challenge token
-  - MUST have `challenge`
-    - `challenge` MUST be the challenge token given by the issuer
   - MUST have `verifiable_presentation`
     - This `VerifiablePresentation`  MUST be a `PresentationSubmission`
     - This `VerifiablePresentation`'s `proof.challenge` MUST be the challenge token given by the issuer
@@ -489,7 +599,9 @@ sequenceDiagram
   Verifier -->> Wallet: Return `challengeToken`
 
   Wallet ->> Wallet: Verify/decode `challengeToken`
-  Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
+  Wallet ->> Wallet: Collect VCs that are described in the `challengeToken`s `presentation_definition`
+  Wallet ->> Wallet: Create VP containing the VCs, with `challengeToken` as the `challenge`
+  Wallet ->> Wallet: Create/sign a `responseToken` containing the VP, with `challengeToken` as the `challenge`
 
   Wallet ->> Verifier: POST the `responseToken` to `challengeToken`'s `callBackUrl`
   Verifier ->> Verifier: Verify the `responseToken`
@@ -513,11 +625,11 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-  title: Request/Share (QR)
+  title: Request/Share (Link)
 
-  User ->>+ Verifiers's Interface: Click link
+  User ->>+ Verifier's Interface: Click link
 
-  Verifiers's Interface ->>- Wallet: Open Wallet with deep link
+  Verifier's Interface ->>- Wallet: Open Wallet with deep link
 
   activate Wallet
 
@@ -527,7 +639,9 @@ sequenceDiagram
   Verifier -->> Wallet: Return `challengeToken`
 
   Wallet ->> Wallet: Verify/decode `challengeToken`
-  Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
+  Wallet ->> Wallet: Collect VCs that are described in the `challengeToken`s `presentation_definition`
+  Wallet ->> Wallet: Create VP containing the VCs, with `challengeToken` as the `challenge`
+  Wallet ->> Wallet: Create/sign a `responseToken` containing the VP, with `challengeToken` as the `challenge`
 
   Wallet ->> Verifier: POST the `responseToken` to `challengeToken`'s `callBackUrl`
   Verifier ->> Verifier: Verify the `responseToken`

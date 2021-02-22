@@ -3,12 +3,19 @@
 // ****************
 
 export type WACIChallengeJWTPayload<Version extends string, Purpose extends string> = {
-  callbackUrl: string
+  iss: string
+  aud?: string
+  jti: string
+
   purpose: Purpose
+  callbackUrl: string
   version: Version
 }
 
 export type WACIResponseJWTPayload = {
+  iss: string
+  aud: string
+
   challenge: string
 }
 

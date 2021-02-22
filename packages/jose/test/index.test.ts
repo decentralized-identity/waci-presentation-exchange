@@ -10,11 +10,11 @@ import {
 } from '../dist/index.js'
 
 const verifiablePresentation = {
-  "@context": ["https://www.w3.org/2018/credentials/v1", "https://identity.foundation/presentation-exchange/submission/v1"],
-  "type": ["VerifiablePresentation", "PresentationSubmission"],
-  "presentation_submission": {},
-  "verifiableCredential": [],
-  "proof": {}
+  '@context': ['https://www.w3.org/2018/credentials/v1', 'https://identity.foundation/presentation-exchange/submission/v1'],
+  type: ['VerifiablePresentation', 'PresentationSubmission'],
+  presentation_submission: {},
+  verifiableCredential: [],
+  proof: {},
 }
 
 const presentationDefinition = {
@@ -132,19 +132,27 @@ const callbackUrl = 'https://example.com'
 const relyingPartySecret = new Uint8Array(32)
 const userSecret = new Uint8Array(32)
 
+const relyingPartyId = 'urn:example:relying-party'
+const userId = 'urn:example:user'
+
 test('Offer Flow', async t => {
   const challengeString = await new SignOfferChallengeJWT({
     callbackUrl,
     credential_manifest: credentialManifest,
     version: '1',
   })
+    .setJti('1234')
+    .setIssuer(relyingPartyId)
+    .setAudience(userId)
     .setProtectedHeader({alg: 'HS256'})
     .sign(relyingPartySecret)
 
   const responseString = await new SignOfferResponseJWT({
     challenge: challengeString,
-    verifiable_presentation: verifiablePresentation
+    verifiable_presentation: verifiablePresentation,
   })
+    .setIssuer(userId)
+    .setAudience(relyingPartyId)
     .setProtectedHeader({alg: 'HS256'})
     .sign(userSecret)
 
@@ -177,25 +185,30 @@ test('Request Flow', async t => {
     presentation_definition: presentationDefinition,
     version: '1',
   })
+    .setJti('1234')
+    .setIssuer(relyingPartyId)
+    .setAudience(userId)
     .setProtectedHeader({alg: 'HS256'})
     .sign(relyingPartySecret)
 
   const responseString = await new SignRequestResponseJWT({
     challenge: challengeString,
-    verifiable_presentation: verifiablePresentation
+    verifiable_presentation: verifiablePresentation,
   })
+    .setIssuer(userId)
+    .setAudience(relyingPartyId)
     .setProtectedHeader({alg: 'HS256'})
     .sign(userSecret)
 
-    const {response, challenge} = await requestResponseJwtVerify(
-      responseString,
-      {
-        key: userSecret,
-      },
-      {
-        key: relyingPartySecret,
-      },
-    )
+  const {response, challenge} = await requestResponseJwtVerify(
+    responseString,
+    {
+      key: userSecret,
+    },
+    {
+      key: relyingPartySecret,
+    },
+  )
 
   t.true('purpose' in challenge.payload)
   t.deepEqual(challenge.payload['purpose'], 'request')

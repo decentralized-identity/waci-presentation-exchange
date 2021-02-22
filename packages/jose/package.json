@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "module": "dist/jose.esm.js",
   "typings": "dist/index.d.ts",
-  "description": "WACI Implementation Based Using JOSE",
+  "description": "WACI Implementation With JOSE",
   "author": "Bloom Team <team@bloom.co>",
   "license": "Apache 2",
   "files": [
@@ -23,6 +23,7 @@
   },
   "sideEffects": false,
   "dependencies": {
+    "@waci/core": "^0.1.0",
     "jose": "^3.6.2"
   },
   "devDependencies": {

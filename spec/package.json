@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "private": "true",
   "scripts": {
-    "build": "node -e \"require('spec-up')({ nowatch: true })\""
+    "build": "npm run build:spec && npm run build:resources",
+    "build:spec": "node -e \"require('spec-up')({ nowatch: true })\"",
+    "build:resources": "mkdir -p build/resources && cp -r resources/* build/resources/."
   },
   "dependencies": {
     "spec-up": "^0.10.0"

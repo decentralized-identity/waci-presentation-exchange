@@ -229,7 +229,7 @@ This could be used to follow up a request interaction with an offer interaction,
 
 Because the challenge token is always sent back to the relying party, the token doesn't need to be stored on creation. And this allows the relying party to not have to worry about someone spamming their API and driving up their storage costs.
 
-But no storage at all can lead to replay attacks. One suggested way to mitigate replay attacks while keeping storage to a minimal is to only store the hash of "used" tokens and have a cron job that cleans this storage based on expiration date of the tokens.
+But no storage at all can lead to replay attacks. One suggested way to mitigate replay attacks while keeping storage to a minimum is to only store the hash of "used" tokens and have a cron job that cleans this storage based on expiration date of the tokens.
 
 ### Swimlane
 
@@ -348,7 +348,6 @@ An example of an `offer` challenge token has the following properties (in additi
   "callbackUrl": "https://example.com/api/callback-url",
   "purpose": "offer",
   "version": "1",
-  /* Using [Credential Manifest](#credential-manifest-working-copy) to define the available credentials */
   "credential_manifest": {
     "issuer": {
       /* ... */
@@ -367,6 +366,7 @@ An example of an `offer` challenge token has the following properties (in additi
 
 - `purpose` MUST be `"offer"`
 - MUST have `credential_manifest`
+  - Uses the [Credential Manifest](#credential-manifest-working-copy) to define the available credentials
   - If the `credential_manifest` provides a `presentation_definition` the response MUST include a `verifiable_presentation`
 
 ### Callback URL
@@ -414,7 +414,6 @@ In addition to the standard `responseToken` the offer/claim interaction adds `ve
     /* ... */
     "type": ["VerifiablePresentation", "PresentationSubmission"],
     "presentation_submission": {
-      /* Using Presentation Exchange's [Presentation Submission](https://identity.foundation/presentation-exchange/#presentation-submission) */
       /* ... */
     }
     /* ... */
@@ -425,6 +424,7 @@ In addition to the standard `responseToken` the offer/claim interaction adds `ve
 :::
 
 - MUST have `verifiable_presentation` IF the challenge token provides a `presentation_definition`
+  - Uses Presentation Exchange's [Presentation Submission](https://identity.foundation/presentation-exchange/#presentation-submission)
   - This `VerifiablePresentation` MUST be a `PresentationSubmission`
 
 #### Response
@@ -617,7 +617,6 @@ An example of a `request` challenge token has the following properties (in addit
   "callbackUrl": "https://example.com/api/callback-url",
   "purpose": "request",
   "version": "1",
-  /* Using [Presentation Exchange](https://identity.foundation/presentation-exchange/) to define the requirements */
   "presentation_definition": {
     // ...
   }
@@ -628,6 +627,7 @@ An example of a `request` challenge token has the following properties (in addit
 
 - `purpose` MUST be `"request"`
 - MUST have `presentation_definition`
+  - Uses [Presentation Exchange](https://identity.foundation/presentation-exchange/) to define the requirements
 
 ### Callback URL
 
@@ -674,7 +674,6 @@ In addition to the standard `responseToken` the offer/claim interaction adds `ve
     /* ... */
     "type": ["VerifiablePresentation", "PresentationSubmission"],
     "presentation_submission": {
-      /* Using Presentation Exchange's [Presentation Submission](https://identity.foundation/presentation-exchange/#presentation-submission) */
       /* ... */
     }
     /* ... */
@@ -685,6 +684,7 @@ In addition to the standard `responseToken` the offer/claim interaction adds `ve
 :::
 
 - MUST have `verifiable_presentation`
+  - Using Presentation Exchange's [Presentation Submission](https://identity.foundation/presentation-exchange/#presentation-submission)
   - This `VerifiablePresentation` MUST be a `PresentationSubmission`
   - This `VerifiablePresentation`'s `proof.challenge` MUST be the challenge token given by the issuer
 

@@ -9,6 +9,6 @@
     "build:resources": "mkdir -p build/resources && cp -r resources/* build/resources/."
   },
   "dependencies": {
-    "spec-up": "^0.10.0"
+    "spec-up": "^0.10.1"
   }
 }

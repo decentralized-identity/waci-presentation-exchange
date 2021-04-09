@@ -1,4 +1,4 @@
-# Wallet Credential Interactions
+# Wallet And Credential Interactions
 
 > WACI [__wak__-ee]
 

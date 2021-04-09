@@ -1,12 +1,13 @@
 {
-  "name": "wallet-credential-interactions",
-  "description": "Wallet Credential Interactions",
+  "name": "wallet-and-credential-interactions",
+  "description": "Wallet And Credential Interactions",
   "version": "0.1.0",
   "private": "true",
   "scripts": {
-    "build": "npm run build:spec && npm run build:resources",
-    "build:spec": "node -e \"require('spec-up')({ nowatch: true })\"",
-    "build:resources": "mkdir -p build/resources && cp -r resources/* build/resources/."
+    "build": "npm run build:latest && npm run build:resources && npm run build:versions",
+    "build:latest": "node -e \"require('spec-up')({ nowatch: true })\"",
+    "build:resources": "mkdir -p build/resources && cp -r resources/* build/resources/.",
+    "build:versions": "mkdir -p build/versions && cp -r versions/* build/versions/."
   },
   "dependencies": {
     "spec-up": "^0.10.1"

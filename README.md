@@ -1,7 +1,7 @@
-# Wallet Presentation Exchange
+# Wallet And Credential Interactions
 
-A new Work Item under DIF
+> WACI [__wak__-ee]
 
-With input documents:
+QR Codes and Links for wallet and credential interactions.
 
-- https://docs.google.com/document/d/1_b5MxzUPWzYxXxWt7Tw6-MySqh77ZvYHBnUgEBCFH7Q/edit#heading=h.dmkfjagb2ier
+Latest spec: [specs.bloom.co/wallet-and-credential-interactions](https://specs.bloom.co/wallet-and-credential-interactions/)

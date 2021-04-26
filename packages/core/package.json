@@ -1,0 +1,52 @@
+{
+  "name": "@waci/core",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "module": "dist/core.esm.js",
+  "typings": "dist/index.d.ts",
+  "description": "WACI Typescript Types",
+  "author": "Bloom Team <team@bloom.co>",
+  "license": "Apache 2",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": "^12"
+  },
+  "scripts": {
+    "build": "tsdx build --target node",
+    "test": "npm run build && npm run test:only",
+    "test:only": "echo \"No tests, continuing\"",
+    "lint": "tsdx lint src",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run test && npm run lint"
+  },
+  "sideEffects": false,
+  "devDependencies": {
+    "@bloomprotocol/eslint-config": "^1.0.0",
+    "@bloomprotocol/prettier-config": "^1.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.14.0",
+    "@typescript-eslint/parser": "^2.23.0",
+    "ava": "^3.15.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "esm": "^3.2.25",
+    "prettier": "^1.19.1",
+    "ts-node": "^9.1.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.0.3",
+    "typescript": "^3.9.7"
+  },
+  "ava": {
+    "files": [
+      "**/*.test.*"
+    ],
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  }
+}

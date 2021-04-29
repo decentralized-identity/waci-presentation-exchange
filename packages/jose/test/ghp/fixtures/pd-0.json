@@ -1,0 +1,25 @@
+{
+  "input_descriptors": [
+    {
+      "id": "vaccination_input",
+      "name": "Vaccinatin Certificate",
+      "schema": "https://w3id.org/vaccination/#VaccinationCertificate",
+      "constraints": {
+        "fields": [
+          {
+            "path": ["$.credentialSubject.batchNumber"],
+            "filter": {
+              "type": "string"
+            }
+          },
+          {
+            "path": ["$.credentialSubject.countryOfVaccination"],
+            "filter": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

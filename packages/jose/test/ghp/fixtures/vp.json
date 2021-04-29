@@ -1,0 +1,24 @@
+{
+  "@context": ["https://www.w3.org/2018/credentials/v1"],
+  "type": ["VerifiablePresentation"],
+  "verifiableCredential": [],
+  "proof": {
+    "type": "Ed25519Signature2018",
+    "proofPurpose": "authentication",
+    "verificationMethod": "did:key:z6Mkgg342Ycpuk263R9d8Aq6MUaxPn1DDeHyGo38EefXmgDL#z6Mkgg342Ycpuk263R9d8Aq6MUaxPn1DDeHyGo38EefXmgDL",
+    "created": "2021-04-23T16:04:37.759497",
+    "challenge": "1f44d55f-f161-4938-a659-f8026467f126",
+    "jws": "eyJhbGciOiAiRWREU0EiLCAiYjY0IjogZmFsc2UsICJjcml0IjogWyJiNjQiXX0..qljm3LhN5vL-qv-4j3Hz6dF7Wgnx8boBAWJONrRAQNmvhBwUkI2_AEvDSbtNNTskz4i8vzzvLX4Ixl75RdoZCQ"
+  },
+  "presentation_submission": {
+    "id": "f9513f33-4ad4-4359-af91-783e052b5ed8",
+    "definition_id": "32f54163-7166-48f1-93d8-ff217bdb0653",
+    "descriptor_map": [
+      {
+        "id": "citizenship_input_1",
+        "format": "ldp_vp",
+        "path": "$.verifiableCredential[0]"
+      }
+    ]
+  }
+}

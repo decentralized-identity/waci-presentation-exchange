@@ -1,0 +1,10 @@
+export const presentationDefinition = require('./pd-0.json')
+export const credentialManifest = require('./cm-0.json')
+credentialManifest.presentation_definition = presentationDefinition
+export const request_vp = require('./m0.json')
+request_vp['request_presentations~attach'][0].data.json.presentation_definitions = presentationDefinition
+export const submit_vp = require('./m1.json')
+export const vp = require('./vp.json')
+submit_vp['presentations~attach'][0].data.json = vp
+export const vc = require('./vc-1.json')
+vp.verifiableCredential = [vc]

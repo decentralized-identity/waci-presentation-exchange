@@ -1,0 +1,33 @@
+{
+  "@type": "https://didcomm.org/present-proof/2.0/request-presentation",
+  "@id": "0ac534c8-98ed-4fe3-8a41-3600775e1e92",
+  "comment": "A verifier is requesting proof of vaccination.",
+  "formats": [{"attach_id": "ed7d9b1f-9eed-4bde-b81c-3aa7485cf947", "format": "dif/presentation-exchange/definitions@v1.0"}],
+  "request_presentations~attach": [
+    {
+      "@id": "ed7d9b1f-9eed-4bde-b81c-3aa7485cf947",
+      "mime-type": "application/json",
+      "data": {
+        "json": {
+          "challenge": "23516943-1d79-4ebd-8981-623f036365ef",
+          "domain": "airline.example/VaccinationCertificate",
+          "presentation_definitions": {
+            "input_descriptors": [
+              {
+                "id": "vaccination_input",
+                "name": "Vaccinatin Certificate",
+                "schema": "https://w3id.org/vaccination/#VaccinationCertificate",
+                "constraints": {
+                  "fields": [
+                    {"path": ["$.credentialSubject.batchNumber"], "filter": {"type": "string"}},
+                    {"path": ["$.credentialSubject.countryOfVaccination"], "filter": {"type": "string"}}
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

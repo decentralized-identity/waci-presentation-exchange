@@ -1,0 +1,59 @@
+{
+  "locale": "en-US",
+  "issuer": {
+    "id": "did:example:123",
+    "name": "Vaccination Certificate Provider",
+    "styles": {
+      "thumbnail": {
+        "uri": "https://cdn.pixabay.com/photo/2016/09/16/19/16/hearth-1674896_1280.png",
+        "alt": "issuer logo"
+      },
+      "hero": {
+        "uri": "https://cdn.pixabay.com/photo/2016/11/30/12/17/cells-1872666_1280.jpg",
+        "alt": "issuer background"
+      },
+      "background": {
+        "color": "#ff0000"
+      },
+      "text": {
+        "color": "#d4d400"
+      }
+    }
+  },
+  "credential": {
+    "schema": "https://w3id.org/vaccination/#VaccinationCertificate",
+    "display": {
+      "title": {
+        "text": "COVID-19 Vaccination Certificate"
+      },
+      "subtitle": {
+        "text": "COVID-19 Vaccination Certificate"
+      },
+      "description": {
+        "text": "COVID-19 Vaccination Certificate"
+      },
+      "properties": [
+        {
+          "label": "COVID-19 Vaccine Moderna"
+        }
+      ]
+    },
+    "styles": {
+      "thumbnail": {
+        "uri": "https://cdn.pixabay.com/photo/2016/09/16/19/16/hearth-1674896_1280.png",
+        "alt": "credential logo"
+      },
+      "hero": {
+        "uri": "https://cdn.pixabay.com/photo/2016/11/30/12/17/cells-1872666_1280.jpg",
+        "alt": "credential background"
+      },
+      "background": {
+        "color": "#ff0000"
+      },
+      "text": {
+        "color": "#d4d400"
+      }
+    }
+  },
+  "presentation_definition": {}
+}

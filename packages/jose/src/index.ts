@@ -4,6 +4,8 @@ import jwtVerify, {JWTVerifyGetKey, JWTVerifyOptions} from 'jose/jwt/verify'
 import {JWTVerifyResult, SignOptions} from 'jose/webcrypto/types'
 import {JWTClaimValidationFailed, JWTInvalid} from 'jose/webcrypto/util/errors'
 
+export * as didcomm from './didcomm'
+
 type OmitChallengePayloadFields<Payload> = Omit<Payload, 'jti' | 'iss' | 'aud' | 'purpose'>
 
 type OmitResponsePayloadFields<Payload> = Omit<Payload, 'iss' | 'aud'>

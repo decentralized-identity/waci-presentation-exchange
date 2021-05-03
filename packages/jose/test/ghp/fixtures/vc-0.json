@@ -1,0 +1,38 @@
+{
+  "@context": ["https://www.w3.org/2018/credentials/v1", "https://w3id.org/vaccination/v1", "https://w3id.org/security/bbs/v1"],
+  "type": ["VerifiableCredential", "VaccinationCertificate"],
+  "id": "urn:uvci:af5vshde843jf831j128fj",
+  "name": "COVID-19 Vaccination Certificate",
+  "description": "COVID-19 Vaccination Certificate",
+  "issuanceDate": "2019-12-03T12:19:52Z",
+  "expirationDate": "2029-12-03T12:19:52Z",
+  "issuer": "did:key:zUC724vuGvHpnCGFG1qqpXb81SiBLu3KLSqVzenwEZNPoY35i2Bscb8DLaVwHvRFs6F2NkNNXRcPWvqnPDUd9ukdjLkjZd3u9zzL4wDZDUpkPAatLDGLEYVo8kkAzuAKJQMr7N2",
+  "credentialSubject": {
+    "type": "VaccinationEvent",
+    "batchNumber": "1183738569",
+    "administeringCentre": "MoH",
+    "healthProfessional": "MoH",
+    "countryOfVaccination": "NZ",
+    "recipient": {
+      "type": "VaccineRecipient",
+      "givenName": "JOHN",
+      "familyName": "SMITH",
+      "gender": "Male",
+      "birthDate": "1958-07-17"
+    },
+    "vaccine": {
+      "type": "Vaccine",
+      "disease": "COVID-19",
+      "atcCode": "J07BX03",
+      "medicinalProductName": "COVID-19 Vaccine Moderna",
+      "marketingAuthorizationHolder": "Moderna Biotech"
+    }
+  },
+  "proof": {
+    "type": "BbsBlsSignature2020",
+    "created": "2021-02-18T23:01:59Z",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "kyesJtjITx/qsXTOuBpAu44e1UC9kjwqbEVyPqTiHL0pVPyaD/xeD0pEw/qBtr25SfrmMj3wXhCMfH77cc6+JgpgIaAnmR5wtTKGsxNm03wwlXf8LFZujjbw+Uf9Wm3aNO7rmAdrG3ec8e9VEQZeIw==",
+    "verificationMethod": "did:key:zUC724vuGvHpnCGFG1qqpXb81SiBLu3KLSqVzenwEZNPoY35i2Bscb8DLaVwHvRFs6F2NkNNXRcPWvqnPDUd9ukdjLkjZd3u9zzL4wDZDUpkPAatLDGLEYVo8kkAzuAKJQMr7N2#zUC724vuGvHpnCGFG1qqpXb81SiBLu3KLSqVzenwEZNPoY35i2Bscb8DLaVwHvRFs6F2NkNNXRcPWvqnPDUd9ukdjLkjZd3u9zzL4wDZDUpkPAatLDGLEYVo8kkAzuAKJQMr7N2"
+  }
+}

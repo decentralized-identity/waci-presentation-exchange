@@ -621,7 +621,8 @@ See [#22](https://github.com/decentralized-identity/waci-presentation-exchange/i
       "format": "dif/presentation-exchange/submission@v1.0",
       "data": {
         "@context": [
-          "https://www.w3.org/2018/credentials/v1"
+          "https://www.w3.org/2018/credentials/v1",
+          "https://identity.foundation/presentation-exchange/submission/v1"
         ],
         "type": [
           "VerifiablePresentation"

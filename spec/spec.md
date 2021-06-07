@@ -625,7 +625,8 @@ See [#22](https://github.com/decentralized-identity/waci-presentation-exchange/i
           "https://identity.foundation/presentation-exchange/submission/v1"
         ],
         "type": [
-          "VerifiablePresentation"
+          "VerifiablePresentation",
+          "PresentationSubmission"
         ],
         "holder": "did:example:123",
         "verifiableCredential": [

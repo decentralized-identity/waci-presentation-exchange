@@ -23,6 +23,21 @@
 There are interactions between a wallet and relying party that require passing
 information between the two. WACI provides a standard for these interactions.
 
+WACI v0.1 incorporates elements from a number of existing specifications and
+protocols. It inherits its overall structure from a
+[previous version of WACI](https://github.com/decentralized-identity/wallet-and-credential-interactions),
+but makes use of
+[DIDComm v2.0](https://github.com/decentralized-identity/didcomm-messaging)
+communication protocols, along with
+[Aries Present Proof](https://github.com/hyperledger/aries-rfcs/blob/master/features/0454-present-proof-v2/README.md)
+message formats and
+[DIF Presentation Exchange](https://identity.foundation/presentation-exchange/)
+data objects.
+
+It is anticipated that future versions of this specification will add
+support for additional messaging, transport, or other mechanisms beyond those
+used in v0.1.
+
 ## Status of This Document
 
 WACI is a draft specification under development by [DIF Claims and Credentials WG](https://identity.foundation/working-groups/claims-credentials.html)

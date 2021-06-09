@@ -726,18 +726,3 @@ See [#22](https://github.com/decentralized-identity/waci-presentation-exchange/i
   ]
 }
 ```
-
-## Credential Manifest (Working Copy)
-
-Because the
-[Credential Manifest spec](https://identity.foundation/credential-manifest) is
-just a strawman at the moment we will rely on a "frozen" copy of the spec
-outlined below. The WACI spec will not be considered stable until the Credential
-Manifest spec is, but we want to be able to implement early prototypes against
-something so we need a version of the spec to base it off of.
-
-This is the CM spec as of 02/22/2021.
-
-Alterations in the spec are colored in <span style="color:darkgreen;">green</span>
-
-</section>

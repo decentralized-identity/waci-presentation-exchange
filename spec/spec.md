@@ -741,3 +741,11 @@ This is the CM spec as of 02/22/2021.
 Alterations in the spec are colored in <span style="color:darkgreen;">green</span>
 
 </section>
+
+## Appendix
+
+### Out of Scope
+The following are items that were considered "out of scope" for v0.1, but which
+may be considered for future versions:
+
+1. 

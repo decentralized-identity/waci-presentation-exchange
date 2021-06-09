@@ -20,7 +20,8 @@
 
 ## Abstract
 
-There are interactions between a wallet and relying party that require passing information between the two. WACI provides a standard for these interactions.
+There are interactions between a wallet and relying party that require passing
+information between the two. WACI provides a standard for these interactions.
 
 ## Status of This Document
 
@@ -32,17 +33,28 @@ All interactions use the same common blocks:
 
 ### QR Code or Link
 
-Two ways of initiating an interaction is for the relying party to display either a QR code or a link to the user. There could be other ways to initiate an interaction but this document will be discussing QR codes and links.
+Two ways of initiating an interaction is for the relying party to display either
+a QR code or a link to the user. There could be other ways to initiate an
+interaction but this document will be discussing QR codes and links.
 
-If the user is using an app/webiste on something other than the device that their wallet is on, then they would be able to scan a QR code with the wallet. _But_ if the user is using the device that also has their wallet then they wouldn't be able to scan a QR code, they would need to be able to click a link that will open their mobile wallet.
+If the user is using an app/webiste on something other than the device that
+their wallet is on, then they would be able to scan a QR code with the wallet.
+_But_ if the user is using the device that also has their wallet then they
+wouldn't be able to scan a QR code, they would need to be able to click a link
+that will open their mobile wallet.
 
-There are of course other use cases where you might need one over the other or both. For example, in an email you may want to display both a link and a QR code because you won't be able to dynamically choose between the two.
+There are of course other use cases where you might need one over the other or
+both. For example, in an email you may want to display both a link and a QR code
+because you won't be able to dynamically choose between the two.
 
 ### Payload
 
-Some mediums do not allow for a large amount of data to be sent (e.g a QR code) to support those cases the initial payload contains instructions for fetching the challenge token.
+Some mediums do not allow for a large amount of data to be sent (e.g a QR code)
+to support those cases the initial payload contains instructions for fetching
+the challenge token.
 
-This is payload can be displayed in a QR code or added to a link as a query parameter.
+This is payload can be displayed in a QR code or added to a link as a query
+parameter.
 
 <tab-panels selected-index="0">
 
@@ -78,13 +90,16 @@ This is payload can be displayed in a QR code or added to a link as a query para
 
 - `challengeTokenUrl`:
   - MUST be unique to the interaction
-  - MUST be a `GET` endpoint that returns the [Token Payload](#token-url-response)
+  - MUST be a `GET` endpoint that returns the
+  [Token Payload](#token-url-response)
 - `version`:
-  - This is the version of just the QR/link payload, not the rest of the interaction
+  - This is the version of just the QR/link payload, not the rest of the
+  interaction
 
 ### Token URL Response
 
-The result from `GET`ing the provided `challengeTokenUrl`. This contains the initial JWT that really starts the interaction.
+The result from `GET`ing the provided `challengeTokenUrl`. This contains the
+initial JWT that really starts the interaction.
 
 ::: example Token URL Response
 
@@ -132,7 +147,8 @@ The result from `GET`ing the provided `challengeTokenUrl`. This contains the ini
 - MUST have `jti` to protect against replay attacks
 - CAN have `aud` if the DID of the wallet is known
 - MUST have `callbackUrl`
-  - MUST be a `POST` endpoint to take the wallet's reponse (payload determined by the `purpose`)
+  - MUST be a `POST` endpoint to take the wallet's reponse (payload determined
+  by the `purpose`)
 - MUST have `purpose`
 - MUST have `version`
   - This is specific to the `purpose`
@@ -158,11 +174,13 @@ Each interaction will `POST` data to the `callbackUrl`:
   - A JWT signed by the user, will contain the `challengeToken`
 - `from`
   - MUST be either "qr" or "link"
-  - The issuer may need to handle things differently based on how the user is claiming the credentials
+  - The issuer may need to handle things differently based on how the user is
+  claiming the credentials
 
 ##### Response Token
 
-The response token is signed by the user and acts as a way to prove ownership of their DID and to pass aditional data back to the relying party.
+The response token is signed by the user and acts as a way to prove ownership of
+their DID and to pass additional data back to the relying party.
 
 :::example Response Token Header
 
@@ -197,7 +215,10 @@ The response token is signed by the user and acts as a way to prove ownership of
 
 #### Reponse
 
-The `POST` to the provided `callbackUrl` can return with a simple successful HTTP response or it can return a success with follow up details. A `redirectLink` that the app will open in a browser or `challengeToken` that will start a new interaction.
+The `POST` to the provided `callbackUrl` can return with a simple successful
+HTTP response or it can return a success with follow up details. A
+`redirectLink` that the app will open in a browser or `challengeToken` that will
+start a new interaction.
 
 ::: example Response Redirect Payload
 
@@ -209,7 +230,10 @@ The `POST` to the provided `callbackUrl` can return with a simple successful HTT
 
 :::
 
-This could be used to show a success message or bring them back to the website/app to continue where they left off. Most of the time `redirectUrl` will only be used when the user is already using their phone (see [above](#qr-code-or-link)).
+This could be used to show a success message or bring them back to the
+website/app to continue where they left off. Most of the time `redirectUrl` will
+only be used when the user is already using their phone (see
+[above](#qr-code-or-link)).
 
 **OR**
 
@@ -223,13 +247,21 @@ This could be used to show a success message or bring them back to the website/a
 
 :::
 
-This could be used to follow up a request interaction with an offer interaction, or even a chain of request interactions that are based on the previously shared VCs.
+This could be used to follow up a request interaction with an offer interaction,
+or even a chain of request interactions that are based on the previously shared
+VCs.
 
 ### Token Storage
 
-Because the challenge token is always sent back to the relying party, the token doesn't need to be stored on creation. And this allows the relying party to not have to worry about someone spamming their API and driving up their storage costs.
+Because the challenge token is always sent back to the relying party, the token
+doesn't need to be stored on creation. And this allows the relying party to not
+have to worry about someone spamming their API and driving up their storage
+costs.
 
-But no storage at all can lead to replay attacks. One suggested way to mitigate replay attacks while keeping storage to a minimum is to only store the hash of "used" tokens and have a cron job that cleans this storage based on expiration date of the tokens.
+But no storage at all can lead to replay attacks. One suggested way to mitigate
+replay attacks while keeping storage to a minimum is to only store the hash of
+"used" tokens and have a cron job that cleans this storage based on expiration
+date of the tokens.
 
 ### Swimlane
 
@@ -319,11 +351,13 @@ sequenceDiagram
 
 ## Request/Share
 
-The request/share interaction is for the use case where an verifier wants a user to share credential(s) with them.
+The request/share interaction is for the use case where an verifier wants a user
+to share credential(s) with them.
 
 ### Challenge Token
 
-An example of a `request` challenge token has the following properties (in addition to the base [properties](#challenge-token)):
+An example of a `request` challenge token has the following properties (in
+addition to the base [properties](#challenge-token)):
 
 :::example Request Challenge Token Header
 
@@ -358,13 +392,15 @@ An example of a `request` challenge token has the following properties (in addit
 
 - `purpose` MUST be `"request"`
 - MUST have `presentation_definition`
-  - Uses [Presentation Exchange](https://identity.foundation/presentation-exchange/) to define the requirements
+  - Uses [Presentation Exchange](https://identity.foundation/presentation-exchange/)
+  to define the requirements.
 
 ### Callback URL
 
 #### Request
 
-In addition to the standard [Callback URL Request](#request) payload, the offer/claim flow adds `presentation`
+In addition to the standard [Callback URL Request](#request) payload, the
+offer/claim flow adds `presentation`
 
 :::example Request Callback URL Request Payload
 
@@ -379,7 +415,8 @@ In addition to the standard [Callback URL Request](#request) payload, the offer/
 
 ##### Response Token
 
-In addition to the standard `responseToken` the offer/claim interaction adds `verifiable_presentation` to the payload.
+In addition to the standard `responseToken` the offer/claim interaction adds
+`verifiable_presentation` to the payload.
 
 :::example Request Response Token Header
 
@@ -415,13 +452,16 @@ In addition to the standard `responseToken` the offer/claim interaction adds `ve
 :::
 
 - MUST have `verifiable_presentation`
-  - Using Presentation Exchange's [Presentation Submission](https://identity.foundation/presentation-exchange/#presentation-submission)
+  - Using Presentation Exchange's
+  [Presentation Submission](https://identity.foundation/presentation-exchange/#presentation-submission)
   - This `VerifiablePresentation` MUST be a `PresentationSubmission`
-  - This `VerifiablePresentation`'s `proof.challenge` MUST be the challenge token given by the issuer
+  - This `VerifiablePresentation`'s `proof.challenge` MUST be the challenge
+  token given by the issuer
 
 #### Response
 
-The request/share flow does not add anything to the [Callback URL Response](#response).
+The request/share flow does not add anything to the
+[Callback URL Response](#response).
 
 ### Swimlane
 
@@ -689,7 +729,12 @@ See [#22](https://github.com/decentralized-identity/waci-presentation-exchange/i
 
 ## Credential Manifest (Working Copy)
 
-Because the [Credential Manifest spec](https://identity.foundation/credential-manifest) is just a strawman at the moment we will rely on a "frozen" copy of the spec outline below. The WACI spec will not be considered stable until the Credential Manifest spec is, but we want to be able to implement early prototypes against something so we need a version of the spec to base it off of.
+Because the
+[Credential Manifest spec](https://identity.foundation/credential-manifest) is
+just a strawman at the moment we will rely on a "frozen" copy of the spec
+outlined below. The WACI spec will not be considered stable until the Credential
+Manifest spec is, but we want to be able to implement early prototypes against
+something so we need a version of the spec to base it off of.
 
 This is the CM spec as of 02/22/2021.
 

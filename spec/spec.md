@@ -5,16 +5,18 @@
 **Specification Status:** Draft
 
 **Editors:**
+~ [Orie Steele](https://www.linkedin.com/in/or13b/) (Transmute)
+~ [Brent Zundel](https://www.linkedin.com/in/bzundel/) (Evernym)
+
+**Authors:**
 ~ [Afshan Aman](https://www.linkedin.com/in/afshan-aman/) (Bloom)
 ~ [Eddie Hedges](https://www.linkedin.com/in/eddiehedges/) (Bloom)
-
-**Contributors:**
 ~ [Jace Hensley](https://www.linkedin.com/in/jacehensley/) (Bloom)
 
 **Participate:**
-~ [GitHub repo](https://github.com/hellobloom/wallet-and-credential-interactions)
-~ [File a bug](https://github.com/hellobloom/wallet-and-credential-interactions/issues)
-~ [Commit history](https://github.com/hellobloom/wallet-and-credential-interactions/commits/master)
+~ [GitHub repo](https://github.com/decentralized-identity/waci-presentation-exchange)
+~ [File a bug](https://github.com/decentralized-identity/waci-presentation-exchange/issues)
+~ [Commit history](https://github.com/decentralized-identity/waci-presentation-exchange/commits/master)
 
 ---
 

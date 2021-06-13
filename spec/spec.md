@@ -716,11 +716,14 @@ example is drawn.
 
 ### Message 2 - Present Proof
 
-::: todo Present Proof
-See [#22](https://github.com/decentralized-identity/waci-presentation-exchange/issues/22)
-:::
+The Verifiable Presentation is again returned as an attachment (defined by [RFC
+0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#presentation-attachment-format))
+to a DIDComm
+[present-proof](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#presentation)
+message.  Note the `challenge` from the previous message is given in the `proof`
+object for the VP and used to generate the signature there.
 
-```
+```json
 {
   "type": "https://didcomm.org/present-proof/3.0/presentation",
   "id": "f1ca8245-ab2d-4d9c-8d7d-94bf310314ef",
@@ -799,6 +802,10 @@ See [#22](https://github.com/decentralized-identity/waci-presentation-exchange/i
   ]
 }
 ```
+
+For context on the Vaccination object passed, see the W3C-CCG [Vaccination
+Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
+example is drawn.
 
 ## Credential Manifest (Working Copy)
 

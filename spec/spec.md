@@ -553,7 +553,22 @@ sequenceDiagram
 
 ## DIDComm v2 Messages
 
-The exchange specified in the [DIDComm v2 specification](https://identity.foundation/didcomm-messaging/spec/) is presumed to take place between two subjects that control DIDs with certain properties, and can take place over many different transports.  The establishment of a DIDComm channel with a DIDComm v2-conformant holder or verifier requires starting from a conformant DID and establishing a channel using [peer DIDs](https://identity.foundation/peer-did-method-spec/#overview)" (i.e. local, off-chain DIDs to encapsulate a peer relationship) and Aries-style "mediators" for routing.  For an introduction to mediators, see [Aries RFC 0046](https://github.com/hyperledger/aries-rfcs/blob/master/concepts/0046-mediators-and-relays/README.md) and for a treatment of cross-vendor interoperability for mediators and wallets, see [Aries RFC 0211](https://github.com/hyperledger/aries-rfcs/blob/master/features/0211-route-coordination/README.md). 
+The exchange specified in the [DIDComm v2
+specification](https://identity.foundation/didcomm-messaging/spec/) is presumed
+to take place between two subjects that control DIDs with certain properties,
+and can take place over many different transports.  The establishment of a
+DIDComm channel with a DIDComm v2-conformant holder or verifier requires
+starting from a conformant DID and establishing a channel using [peer
+DIDs](https://identity.foundation/peer-did-method-spec/#overview)" (i.e. local,
+off-chain DIDs to encapsulate a peer relationship) and Aries-style "mediators"
+for routing.  For an introduction to mediators, see [Aries RFC
+0046](https://github.com/hyperledger/aries-rfcs/blob/master/concepts/0046-mediators-and-relays/README.md)
+and for a treatment of cross-vendor interoperability for mediators and wallets,
+see [Aries RFC
+0211](https://github.com/hyperledger/aries-rfcs/blob/master/features/0211-route-coordination/README.md).
+For differences between mediator routing in DIDComm v1 and v2, see explanatory
+[Aries RFC
+0496](https://github.com/hyperledger/aries-rfcs/tree/master/features/0496-transition-to-oob-and-did-exchange).
 
 The examples in this section show and explain such a flow, step by step.
 

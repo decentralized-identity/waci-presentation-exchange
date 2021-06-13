@@ -608,7 +608,7 @@ DIDComm v2 specification.
 
 A "Propose Presentation" message, optional in many cases, is defined in [Aries
 RFC
-0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages).
+0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages) and its Presentation Exchange "attachment" defined in [RFC 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
 It either initiates a Request/Share interaction or answers an earlier invitation
 to do so; it can be functionally equivalent to the request for a challenge token
 in the [challenge token section](#challenge-token-2) above:
@@ -632,11 +632,17 @@ been established otherwise.
 
 ### Message 1 - Request Presentation
 
-::: todo Request Presentation
-See [#21](https://github.com/decentralized-identity/waci-presentation-exchange/issues/21)
-:::
+The [v2] request for a Verifiable Presentation is defined in the "request
+presentation" section of [Aries RFC
+0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#request-presentation)
+and the attachment format for Presentation Exchange objects is defined in [Aries
+RFC
+0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#request-presentation-attachment-format).
+The challenge token that the holder will use to generate a replay-resistant VP
+is included in the the `options` object within the `dif` object, encoded as a
+DIDComm attachment:
 
-```
+```json
 {
   "type": "https://didcomm.org/present-proof/3.0/request-presentation",
   "id": "0ac534c8-98ed-4fe3-8a41-3600775e1e92",
@@ -673,7 +679,7 @@ See [#21](https://github.com/decentralized-identity/waci-presentation-exchange/i
                 "input_descriptors": [
                   {
                     "id": "vaccination_input",
-                    "name": "Vaccinatin Certificate",
+                    "name": "Vaccination Certificate",
                     "schema": "https://w3id.org/vaccination/#VaccinationCertificate",
                     "constraints": {
                       "fields": [
@@ -701,6 +707,8 @@ See [#21](https://github.com/decentralized-identity/waci-presentation-exchange/i
   ]
 }
 ```
+
+For context on the Vaccination object passed, see the W3C-CCG [Vaccination Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the example is drawn.
 
 ### Message 2 - Present Proof
 

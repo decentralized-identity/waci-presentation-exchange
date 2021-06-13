@@ -561,9 +561,11 @@ The examples in this section show and explain such a flow, step by step.
 
 #### Service block expected in DID Documents for DIDComm
 
-Both parties to the simplest, pairwise DIDComm relationship start with a pairwise peer DID representing the other party, which contains a `service` block with at least the following properties:
+Both parties to the simplest, pairwise DIDComm relationship start with a
+pairwise peer DID representing the other party, which contains a `service` block
+with at least the following properties:
 
-``` example
+```json
 "service": [{
     "id": "#someid",
     "type": "didcommmessaging",
@@ -572,19 +574,31 @@ Both parties to the simplest, pairwise DIDComm relationship start with a pairwis
   }]
 ``` 
 
-Note: a DID document with an endpoint and one or more routing keys requires a "complex" peer DID; the process for doing this is outlined under "Method 2" in the [generation](https://identity.foundation/peer-did-method-spec/#generation-method) section of the peer DID spec, and an example of this kind of peerDID in both JSON plain-text and multibase encoding can be found [here](https://identity.foundation/peer-did-method-spec/#multi-key-creation).
+A DID document with an endpoint and one or more routing keys requires a
+"complex" peer DID; the process for doing this is outlined under "Method 2" in
+the
+[generation](https://identity.foundation/peer-did-method-spec/#generation-method)
+section of the peer DID spec, and an example of this kind of peerDID in both
+JSON plain-text and multibase encoding can be found
+[here](https://identity.foundation/peer-did-method-spec/#multi-key-creation).
 
 #### Establishing an HTTP(S) Connection
 
-The assumptions and requirements for using an HTTP(S) connection for sending, routing, and receiving DIDComm packets are described in the [HTTP(S) section](https://identity.foundation/didcomm-messaging/spec/#https) of the DIDComm v2 specification.
+The assumptions and requirements for using an HTTP(S) connection for sending,
+routing, and receiving DIDComm packets are described in the [HTTP(S)
+section](https://identity.foundation/didcomm-messaging/spec/#https) of the
+DIDComm v2 specification.
 
 ### Message 0 - Propose Presentation
 
-::: todo Propose Presentation
-See [#20](https://github.com/decentralized-identity/waci-presentation-exchange/issues/20)
-:::
+A "Propose Presentation" message, optional in many cases, is defined in [Aries
+RFC
+0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages).
+It either initiates a Request/Share interaction or answers an earlier invitation
+to do so; it can be functionally equivalent to the request for a challenge token
+in the [challenge token section](#challenge-token-2) above:
 
-```
+```json
 {
     "type": "https://didcomm.org/present-proof/3.0/propose-presentation",
     "id": "<message unique id>",
@@ -593,6 +607,13 @@ See [#20](https://github.com/decentralized-identity/waci-presentation-exchange/i
     "to": "did:example:verifier"
 }
 ```
+
+Note: `id`s can be any arbitrary string used to identify each message, such as a
+UUID or a hash, but the `id` of each message should be included as `pthid`
+("parent id") in each response to chain messages. In the above example, `id` of
+the message that established a connection could be used; `id` could also be
+blank if this message were the first one over the channel and a connection had
+been established otherwise.
 
 ### Message 1 - Request Presentation
 

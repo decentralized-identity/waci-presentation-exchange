@@ -608,7 +608,9 @@ DIDComm v2 specification.
 
 A "Propose Presentation" message, optional in many cases, is defined in [Aries
 RFC
-0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages) and its Presentation Exchange "attachment" defined in [RFC 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
+0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
+and its Presentation Exchange "attachment" defined in [RFC
+0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
 It either initiates a Request/Share interaction or answers an earlier invitation
 to do so; it can be functionally equivalent to the request for a challenge token
 in the [challenge token section](#challenge-token-2) above:
@@ -708,7 +710,9 @@ DIDComm attachment:
 }
 ```
 
-For context on the Vaccination object passed, see the W3C-CCG [Vaccination Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the example is drawn.
+For context on the Vaccination object passed, see the W3C-CCG [Vaccination
+Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
+example is drawn.
 
 ### Message 2 - Present Proof
 

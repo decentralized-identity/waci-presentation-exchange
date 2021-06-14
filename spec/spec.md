@@ -577,7 +577,7 @@ specification](https://identity.foundation/didcomm-messaging/spec/) is presumed
 to take place between two subjects that control DIDs with certain properties,
 and can take place over many different transports.  The establishment of a
 DIDComm channel with a DIDComm v2-conformant holder or verifier requires
-starting from a conformant DID and establishing a channel using [peer
+starting from a conformant DID and establishing a channel using "[peer
 DIDs](https://identity.foundation/peer-did-method-spec/#overview)" (i.e. local,
 off-chain DIDs to encapsulate a peer relationship) and Aries-style "mediators"
 for routing.  For an introduction to mediators, see [Aries RFC

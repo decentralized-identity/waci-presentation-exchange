@@ -825,3 +825,11 @@ object for the VP and used to generate the signature there.
 For context on the Vaccination object passed, see the W3C-CCG [Vaccination
 Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
 example is drawn.
+
+## Appendix
+
+### Out of Scope
+The following are items that were considered "out of scope" for v0.1, but which
+may be considered for future versions:
+
+1. 

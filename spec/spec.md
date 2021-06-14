@@ -597,26 +597,23 @@ The examples in this section show and explain such a flow, step by step.
 
 #### Service block expected in DID Documents for DIDComm
 
-Both parties to the simplest, pairwise DIDComm relationship start with a
-pairwise peer DID representing the other party, which contains a `service` block
-with at least the following properties:
+Both parties MUST have a `service` block containing the following properties:
 
 ```json
 "service": [{
-    "id": "#someid",
-    "type": "didcommmessaging",
+    "id": "did:example:123123123#someid",
+    "type": "DIDCommMessaging",
     "serviceEndpoint": "https://example.com/endpoint",
     "routingKeys": ["did:example:somemediator#somekey"]
   }]
 ``` 
 
-A DID document with an endpoint and one or more routing keys requires a
-"complex" peer DID; the process for doing this is outlined under "Method 2" in
-the
-[generation](https://identity.foundation/peer-did-method-spec/#generation-method)
-section of the peer DID spec, and an example of this kind of peerDID in both
-JSON plain-text and multibase encoding can be found
-[here](https://identity.foundation/peer-did-method-spec/#multi-key-creation).
+TODO: Explain routing keys. Each property and normative status:
+- service block must be present
+- `id` MUST contain a unique id
+- `type` MUST be `DIDCommMessaging`
+- `serviceEndpoint` MUST be a resolvable URI
+- `routingKeys` MUST contain valid routing keys (ref directly to DIDComm spec section about routing keys)
 
 #### Establishing an HTTP(S) Connection
 

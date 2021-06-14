@@ -600,7 +600,7 @@ Both parties MUST have a `service` block containing the following properties:
 ```json
 "service": [{
     "id": "did:example:123123123#someid",
-    "type": "didcommMessaging",
+    "type": "DIDCommMessaging",
     "serviceEndpoint": "https://example.com/endpoint",
     "routingKeys": ["did:example:somemediator#somekey"]
   }]
@@ -609,7 +609,7 @@ Both parties MUST have a `service` block containing the following properties:
 TODO: Explain routing keys. Each property and normative status:
 - service block must be present
 - `id` MUST contain a unique id
-- `type` MUST be didcommMessaging
+- `type` MUST be `DIDCommMessaging`
 - `serviceEndpoint` MUST be a resolvable URI
 - `routingKeys` MUST contain valid routing keys (ref directly to DIDComm spec section about routing keys)
 

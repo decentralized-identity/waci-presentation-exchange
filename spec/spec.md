@@ -27,7 +27,9 @@ information between the two. WACI provides a standard for these interactions.
 
 ## Status of This Document
 
-WACI is a draft specification under development by [DIF Claims and Credentials WG](https://identity.foundation/working-groups/claims-credentials.html)
+WACI v0.1 is a _PRE-DRAFT_ specification under development by the
+[DIF Claims and Credentials WG](https://identity.foundation/working-groups/claims-credentials.html).
+
 
 ## Interactions
 

@@ -5,16 +5,18 @@
 **Specification Status:** Draft
 
 **Editors:**
+~ [Orie Steele](https://www.linkedin.com/in/or13b/) (Transmute)
+~ [Brent Zundel](https://www.linkedin.com/in/bzundel/) (Evernym)
+
+**Authors:**
 ~ [Afshan Aman](https://www.linkedin.com/in/afshan-aman/) (Bloom)
 ~ [Eddie Hedges](https://www.linkedin.com/in/eddiehedges/) (Bloom)
-
-**Contributors:**
 ~ [Jace Hensley](https://www.linkedin.com/in/jacehensley/) (Bloom)
 
 **Participate:**
-~ [GitHub repo](https://github.com/hellobloom/wallet-and-credential-interactions)
-~ [File a bug](https://github.com/hellobloom/wallet-and-credential-interactions/issues)
-~ [Commit history](https://github.com/hellobloom/wallet-and-credential-interactions/commits/master)
+~ [GitHub repo](https://github.com/decentralized-identity/waci-presentation-exchange)
+~ [File a bug](https://github.com/decentralized-identity/waci-presentation-exchange/issues)
+~ [Commit history](https://github.com/decentralized-identity/waci-presentation-exchange/commits/master)
 
 ---
 
@@ -23,9 +25,26 @@
 There are interactions between a wallet and relying party that require passing
 information between the two. WACI provides a standard for these interactions.
 
+WACI v0.1 incorporates elements from a number of existing specifications and
+protocols. It inherits its overall structure from a
+[previous version of WACI](https://github.com/decentralized-identity/wallet-and-credential-interactions),
+but makes use of
+[DIDComm v2.0](https://github.com/decentralized-identity/didcomm-messaging)
+communication protocols, along with
+[Aries Present Proof](https://github.com/hyperledger/aries-rfcs/blob/master/features/0454-present-proof-v2/README.md)
+message formats and
+[DIF Presentation Exchange](https://identity.foundation/presentation-exchange/)
+data objects.
+
+It is anticipated that future versions of this specification will add
+support for additional messaging, transport, or other mechanisms beyond those
+used in v0.1.
+
 ## Status of This Document
 
-WACI is a draft specification under development by [DIF Claims and Credentials WG](https://identity.foundation/working-groups/claims-credentials.html)
+WACI v0.1 is a _PRE-DRAFT_ specification under development by the
+[DIF Claims and Credentials WG](https://identity.foundation/working-groups/claims-credentials.html).
+
 
 ## Interactions
 
@@ -806,18 +825,3 @@ object for the VP and used to generate the signature there.
 For context on the Vaccination object passed, see the W3C-CCG [Vaccination
 Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
 example is drawn.
-
-## Credential Manifest (Working Copy)
-
-Because the
-[Credential Manifest spec](https://identity.foundation/credential-manifest) is
-just a strawman at the moment we will rely on a "frozen" copy of the spec
-outlined below. The WACI spec will not be considered stable until the Credential
-Manifest spec is, but we want to be able to implement early prototypes against
-something so we need a version of the spec to base it off of.
-
-This is the CM spec as of 02/22/2021.
-
-Alterations in the spec are colored in <span style="color:darkgreen;">green</span>
-
-</section>

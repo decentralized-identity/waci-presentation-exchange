@@ -570,15 +570,71 @@ sequenceDiagram
 
 </tab-panels>
 
-## DIDComm Messages
+## DIDComm v2 Messages
+
+The exchange specified in the [DIDComm v2
+specification](https://identity.foundation/didcomm-messaging/spec/) is presumed
+to take place between two subjects that control DIDs with certain properties,
+and can take place over many different transports.  The establishment of a
+DIDComm channel with a DIDComm v2-conformant holder or verifier requires
+starting from a conformant DID and establishing a channel using [peer
+DIDs](https://identity.foundation/peer-did-method-spec/#overview)" (i.e. local,
+off-chain DIDs to encapsulate a peer relationship) and Aries-style "mediators"
+for routing.  For an introduction to mediators, see [Aries RFC
+0046](https://github.com/hyperledger/aries-rfcs/blob/master/concepts/0046-mediators-and-relays/README.md)
+and for a treatment of cross-vendor interoperability for mediators and wallets,
+see [Aries RFC
+0211](https://github.com/hyperledger/aries-rfcs/blob/master/features/0211-route-coordination/README.md).
+For differences between mediator routing in DIDComm v1 and v2, see explanatory
+[Aries RFC
+0496](https://github.com/hyperledger/aries-rfcs/tree/master/features/0496-transition-to-oob-and-did-exchange).
+
+The examples in this section show and explain such a flow, step by step.
+
+### Opening a DIDComm v2 connection over HTTP(S)
+
+#### Service block expected in DID Documents for DIDComm
+
+Both parties to the simplest, pairwise DIDComm relationship start with a
+pairwise peer DID representing the other party, which contains a `service` block
+with at least the following properties:
+
+```json
+"service": [{
+    "id": "#someid",
+    "type": "didcommmessaging",
+    "serviceEndpoint": "https://example.com/endpoint",
+    "routingKeys": ["did:example:somemediator#somekey"]
+  }]
+``` 
+
+A DID document with an endpoint and one or more routing keys requires a
+"complex" peer DID; the process for doing this is outlined under "Method 2" in
+the
+[generation](https://identity.foundation/peer-did-method-spec/#generation-method)
+section of the peer DID spec, and an example of this kind of peerDID in both
+JSON plain-text and multibase encoding can be found
+[here](https://identity.foundation/peer-did-method-spec/#multi-key-creation).
+
+#### Establishing an HTTP(S) Connection
+
+The assumptions and requirements for using an HTTP(S) connection for sending,
+routing, and receiving DIDComm packets are described in the [HTTP(S)
+section](https://identity.foundation/didcomm-messaging/spec/#https) of the
+DIDComm v2 specification.
 
 ### Message 0 - Propose Presentation
 
-::: todo Propose Presentation
-See [#20](https://github.com/decentralized-identity/waci-presentation-exchange/issues/20)
-:::
+A "Propose Presentation" message, optional in many cases, is defined in [Aries
+RFC
+0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
+and its Presentation Exchange "attachment" defined in [RFC
+0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
+It either initiates a Request/Share interaction or answers an earlier invitation
+to do so; it can be functionally equivalent to the request for a challenge token
+in the [challenge token section](#challenge-token-2) above:
 
-```
+```json
 {
     "type": "https://didcomm.org/present-proof/3.0/propose-presentation",
     "id": "<message unique id>",
@@ -588,13 +644,26 @@ See [#20](https://github.com/decentralized-identity/waci-presentation-exchange/i
 }
 ```
 
+Note: `id`s can be any arbitrary string used to identify each message, such as a
+UUID or a hash, but the `id` of each message should be included as `pthid`
+("parent id") in each response to chain messages. In the above example, `id` of
+the message that established a connection could be used; `id` could also be
+blank if this message were the first one over the channel and a connection had
+been established otherwise.
+
 ### Message 1 - Request Presentation
 
-::: todo Request Presentation
-See [#21](https://github.com/decentralized-identity/waci-presentation-exchange/issues/21)
-:::
+The [v2] request for a Verifiable Presentation is defined in the "request
+presentation" section of [Aries RFC
+0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#request-presentation)
+and the attachment format for Presentation Exchange objects is defined in [Aries
+RFC
+0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#request-presentation-attachment-format).
+The challenge token that the holder will use to generate a replay-resistant VP
+is included in the the `options` object within the `dif` object, encoded as a
+DIDComm attachment:
 
-```
+```json
 {
   "type": "https://didcomm.org/present-proof/3.0/request-presentation",
   "id": "0ac534c8-98ed-4fe3-8a41-3600775e1e92",
@@ -631,7 +700,7 @@ See [#21](https://github.com/decentralized-identity/waci-presentation-exchange/i
                 "input_descriptors": [
                   {
                     "id": "vaccination_input",
-                    "name": "Vaccinatin Certificate",
+                    "name": "Vaccination Certificate",
                     "schema": "https://w3id.org/vaccination/#VaccinationCertificate",
                     "constraints": {
                       "fields": [
@@ -660,13 +729,20 @@ See [#21](https://github.com/decentralized-identity/waci-presentation-exchange/i
 }
 ```
 
+For context on the Vaccination object passed, see the W3C-CCG [Vaccination
+Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
+example is drawn.
+
 ### Message 2 - Present Proof
 
-::: todo Present Proof
-See [#22](https://github.com/decentralized-identity/waci-presentation-exchange/issues/22)
-:::
+The Verifiable Presentation is again returned as an attachment (defined by [RFC
+0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#presentation-attachment-format))
+to a DIDComm
+[present-proof](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#presentation)
+message.  Note the `challenge` from the previous message is given in the `proof`
+object for the VP and used to generate the signature there.
 
-```
+```json
 {
   "type": "https://didcomm.org/present-proof/3.0/presentation",
   "id": "f1ca8245-ab2d-4d9c-8d7d-94bf310314ef",
@@ -745,3 +821,7 @@ See [#22](https://github.com/decentralized-identity/waci-presentation-exchange/i
   ]
 }
 ```
+
+For context on the Vaccination object passed, see the W3C-CCG [Vaccination
+Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
+example is drawn.

@@ -577,23 +577,7 @@ sequenceDiagram
 The exchange specified in the [DIDComm v2
 specification](https://identity.foundation/didcomm-messaging/spec/) is presumed
 to take place between two subjects that control DIDs with certain properties,
-and can take place over many different transports.  The establishment of a
-DIDComm channel with a DIDComm v2-conformant holder or verifier requires
-starting from a conformant DID and establishing a channel using "[peer
-DIDs](https://identity.foundation/peer-did-method-spec/#overview)" (i.e. local,
-off-chain DIDs to encapsulate a peer relationship) and Aries-style "mediators"
-for routing.  For an introduction to mediators, see [Aries RFC
-0046](https://github.com/hyperledger/aries-rfcs/blob/master/concepts/0046-mediators-and-relays/README.md)
-and for a treatment of cross-vendor interoperability for mediators and wallets,
-see [Aries RFC
-0211](https://github.com/hyperledger/aries-rfcs/blob/master/features/0211-route-coordination/README.md).
-For differences between mediator routing in DIDComm v1 and v2, see explanatory
-[Aries RFC
-0496](https://github.com/hyperledger/aries-rfcs/tree/master/features/0496-transition-to-oob-and-did-exchange).
-
-The examples in this section show and explain such a flow, step by step.
-
-### Opening a DIDComm v2 connection over HTTP(S)
+and can take place over many different transports. Having a connection means that each party in the relationship has a DID for the other parties, and parties can communicate securely using the keys and endpoints within each DID Document. 
 
 #### Service block expected in DID Documents for DIDComm
 
@@ -616,6 +600,8 @@ TODO: Explain routing keys. Each property and normative status:
 - `routingKeys` MUST contain valid routing keys (ref directly to DIDComm spec section about routing keys)
 
 #### Establishing an HTTP(S) Connection
+
+In order to establish a new connection, Simply exchange a new message between parties. Knowing the DID of the other parties does not indicate any level of trust.
 
 The assumptions and requirements for using an HTTP(S) connection for sending,
 routing, and receiving DIDComm packets are described in the [HTTP(S)

@@ -637,9 +637,19 @@ in the [challenge token section](#challenge-token-2) above:
 {
     "type": "https://didcomm.org/present-proof/3.0/propose-presentation",
     "id": "<message unique id>",
-    "pthid": "<id present in invitation>",
     "from": "did:example:prover",
-    "to": "did:example:verifier"
+    "to": "did:example:verifier",
+    "body": {},
+    "attachments": [
+      {
+        "format": "dif/presentation-exchange/definitions@v1.0",
+        "@id": "<attachment unique id>",
+        "mime-type": "application/json",
+        "data": {
+            "json": "<json>"
+        }
+      }
+    ]
 }
 ```
 

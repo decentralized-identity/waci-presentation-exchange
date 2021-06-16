@@ -636,14 +636,14 @@ in the [challenge token section](#challenge-token-2) above:
 ```json
 {
     "type": "https://didcomm.org/present-proof/3.0/propose-presentation",
-    "id": "<message unique id>",
+    "id": "43f3a34d-9137-42b1-9404-efa9bfbf5cfd",
     "from": "did:example:prover",
     "to": "did:example:verifier",
     "body": {},
     "attachments": [
       {
         "format": "dif/presentation-exchange/definitions@v1.0",
-        "@id": "<attachment unique id>",
+        "@id": "47e3d077-d1a6-447d-8031-8f813a715be9",
         "mime-type": "application/json",
         "data": {
             "json": "<json>"

@@ -666,7 +666,7 @@ DIDComm attachment:
 {
   "type": "https://didcomm.org/present-proof/3.0/request-presentation",
   "id": "0ac534c8-98ed-4fe3-8a41-3600775e1e92",
-  "pthid": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
+  "thid": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
   "from": "did:example:prover",
   "to": "did:example:verifier",
   "body": {},
@@ -747,7 +747,7 @@ object for the VP and used to generate the signature there.
 {
   "type": "https://didcomm.org/present-proof/3.0/presentation",
   "id": "f1ca8245-ab2d-4d9c-8d7d-94bf310314ef",
-  "pthid": "0ac534c8-98ed-4fe3-8a41-3600775e1e92",
+  "thid": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
   "from": "did:example:verifier",
   "to": "did:example:prover",
   "body": {},

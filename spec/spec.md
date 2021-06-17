@@ -684,7 +684,8 @@ DIDComm attachment:
             },
             "presentation_definition": {
               "frame": {
-                  "@context": [
+                "id": "32f54163-7166-48f1-93d8-ff217bdb0654",
+                "@context": [
                     "https://www.w3.org/2018/credentials/v1",
                     "https://w3id.org/vaccination/v1",
                     "https://w3id.org/security/suites/bls12381-2020/v1"

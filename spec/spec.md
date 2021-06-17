@@ -637,18 +637,18 @@ in the [challenge token section](#challenge-token-2) above:
 {
     "type": "https://didcomm.org/present-proof/3.0/propose-presentation",
     "id": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
-    "pthid": "599f3638-b563-4937-9487-dfe55099d900",
+    "thid": "599f3638-b563-4937-9487-dfe55099d900",
     "from": "did:example:prover",
     "to": "did:example:verifier"
 }
 ```
 
 Note: `id`s can be any arbitrary string used to identify each message, such as a
-UUID or a hash, but the `id` of each message should be included as `pthid`
-("parent id") in each response to chain messages. In the above example, `id` of
-the message that established a connection could be used; `id` could also be
-blank if this message were the first one over the channel and a connection had
-been established otherwise.
+UUID or a hash, but the `id` of the initial message should be included as `thid`
+("thread id"). In the above example, `id` of the message that established a
+connection could be used for `thid`; `thid` could also be blank if this message
+were the first one over the channel and a connection had been established
+otherwise.
 
 ### Message 1 - Request Presentation
 

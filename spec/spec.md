@@ -646,7 +646,7 @@ in the [challenge token section](#challenge-token-2) above:
 Note: `id`s can be any arbitrary string used to identify each message, such as a
 UUID or a hash, but the `id` of the initial message should be included as `thid`
 ("thread id"). In the above example, `id` of the message that established a
-connection could be used for `thid`; `thid` could also be unspecified if this
+connection was used for `thid`; `thid` could also be unspecified if this
 message were the first one over the channel or if a connection had been
 established out of band.
 

@@ -40,7 +40,7 @@ It is anticipated that future versions of this specification will add
 support for additional messaging, transport, or other mechanisms beyond those
 used in v0.1.
 
-![Layering Diagram](./resources/layer_cake_v0-1.png)
+![Layering Diagram](./resources/layer_cake_v0-2.png)
 
 ## Status of This Document
 

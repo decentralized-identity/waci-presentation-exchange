@@ -654,19 +654,19 @@ in the [challenge token section](#challenge-token-2) above:
 ```json
 {
     "type": "https://didcomm.org/present-proof/3.0/propose-presentation",
-    "id": "<message unique id>",
-    "pthid": "<id present in invitation>",
+    "id": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
+    "thid": "599f3638-b563-4937-9487-dfe55099d900",
     "from": "did:example:prover",
     "to": "did:example:verifier"
 }
 ```
 
 Note: `id`s can be any arbitrary string used to identify each message, such as a
-UUID or a hash, but the `id` of each message should be included as `pthid`
-("parent id") in each response to chain messages. In the above example, `id` of
-the message that established a connection could be used; `id` could also be
-blank if this message were the first one over the channel and a connection had
-been established otherwise.
+UUID or a hash, but the `id` of the initial message should be included as `thid`
+("thread id"). In the above example, `id` of the message that established a
+connection was used for `thid`; `thid` could also be unspecified if this
+message were the first one over the channel or if a connection had been
+established out of band.
 
 ### Message 1 - Request Presentation
 
@@ -684,8 +684,9 @@ DIDComm attachment:
 {
   "type": "https://didcomm.org/present-proof/3.0/request-presentation",
   "id": "0ac534c8-98ed-4fe3-8a41-3600775e1e92",
-  "from": "did:example:verifier",
-  "to": "did:example:prover",
+  "thid": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
+  "from": "did:example:prover",
+  "to": "did:example:verifier",
   "body": {},
   "attachments": [
     {
@@ -700,8 +701,9 @@ DIDComm attachment:
               "domain": "4jt78h47fh47"
             },
             "presentation_definition": {
+              "id": "32f54163-7166-48f1-93d8-ff217bdb0654",
               "frame": {
-                  "@context": [
+                "@context": [
                     "https://www.w3.org/2018/credentials/v1",
                     "https://w3id.org/vaccination/v1",
                     "https://w3id.org/security/suites/bls12381-2020/v1"
@@ -763,6 +765,7 @@ object for the VP and used to generate the signature there.
 {
   "type": "https://didcomm.org/present-proof/3.0/presentation",
   "id": "f1ca8245-ab2d-4d9c-8d7d-94bf310314ef",
+  "thid": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
   "from": "did:example:verifier",
   "to": "did:example:prover",
   "body": {},

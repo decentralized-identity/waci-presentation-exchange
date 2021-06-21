@@ -612,12 +612,14 @@ DIDComm v2 specification.
 
 The QR code used to start a presentation is constructed by encoding a json based message into a URI, then encoding that URI into a QR code.
 
-JSON message
+#### JSON message
+
+The contents of the QR code to be generated can described in the following JSON bloc, which is also what DIDComm v2 calls an "out of band invitation."
 
 ```json=
 {
   "type": "https://didcomm.org/out-of-band/2.0/invitation",
-  "id": "<id used for context as pthid>",
+  "id": "<new id used for context as pthid for all future messages in this exchange>",
   "from": "did:example:verifier",
   "body": {
       "goal_code": "streamlined-vp",
@@ -626,7 +628,9 @@ JSON message
 }
 ```
 
-To encode this message, remove all json whitespace and Base 64 URL encode.
+#### Encoding
+
+To encode this message, remove all json whitespace and Base 64 URL encode. The result should look like this, for the example above:
 
 ```
 eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb2YtYmFuZC8yLjAvaW52aXRhdGlvbiIsImlkIjoiPGlkIHVzZWQgZm9yIGNvbnRleHQgYXMgcHRoaWQ-IiwiZnJvbSI6ImRpZDpleGFtcGxlOnZlcmlmaWVyIiwiYm9keSI6eyJnb2FsX2NvZGUiOiJzdHJlYW1saW5lZC12cCIsImFjY2VwdCI6WyJkaWRjb21tL3YyIl19fQ==
@@ -637,6 +641,12 @@ Prepend this encoded string with a domain and path, and a query parameter of `_o
 ```
 https://example.com/some/path?_oob=eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb2YtYmFuZC8yLjAvaW52aXRhdGlvbiIsImlkIjoiPGlkIHVzZWQgZm9yIGNvbnRleHQgYXMgcHRoaWQ-IiwiZnJvbSI6ImRpZDpleGFtcGxlOnZlcmlmaWVyIiwiYm9keSI6eyJnb2FsX2NvZGUiOiJzdHJlYW1saW5lZC12cCIsImFjY2VwdCI6WyJkaWRjb21tL3YyIl19fQ==
 ```
+
+#### QR Code generated 
+
+TODO: Sam will make a QR from the above and paste it here; perhaps also describe the libraries/parameters/etc used?  See issue #13
+
+#### QR Code scanning and processing
 
 The URI, if loaded into a browser should display instructions on how to download and use a mobile application. If scanned inside an app that understands this protocol, the message should be extracted from the URI's `_oob` query parameter and processed without resolving the URI. This behavior allows for a better fallback user experience should a user encounter a QR code without having a suitable app.
 

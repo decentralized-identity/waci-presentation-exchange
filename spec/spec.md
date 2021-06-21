@@ -46,443 +46,50 @@ used in v0.1.
 WACI v0.1 is a _PRE-DRAFT_ specification under development by the
 
 
-## Interactions
+## Presentation Exchange Context
 
-All interactions use the same common blocks:
+TBD
 
-### QR Code or Link
+## DIDComm Context
 
-Two ways of initiating an interaction is for the relying party to display either
-a QR code or a link to the user. There could be other ways to initiate an
-interaction but this document will be discussing QR codes and links.
+The exchange specified in the [DIDComm v2
+specification](https://identity.foundation/didcomm-messaging/spec/) is presumed
+to take place between two subjects that control DIDs with certain properties,
+and can take place over many different transports. Having a connection means that each party in the relationship has a DID for the other parties, and parties can communicate securely using the keys and endpoints within each DID Document. 
 
-If the user is using an app/webiste on something other than the device that
-their wallet is on, then they would be able to scan a QR code with the wallet.
-_But_ if the user is using the device that also has their wallet then they
-wouldn't be able to scan a QR code, they would need to be able to click a link
-that will open their mobile wallet.
+#### Service block expected in DID Documents for DIDComm
 
-There are of course other use cases where you might need one over the other or
-both. For example, in an email you may want to display both a link and a QR code
-because you won't be able to dynamically choose between the two.
-
-### Payload
-
-Some mediums do not allow for a large amount of data to be sent (e.g a QR code)
-to support those cases the initial payload contains instructions for fetching
-the challenge token.
-
-This is payload can be displayed in a QR code or added to a link as a query
-parameter.
-
-<tab-panels selected-index="0">
-
-<nav>
-  <button type="button">QR</button>
-  <button type="button">Link</button>
-</nav>
-
-<section>
-
-![QR Code](./resources/qr.png)
-
-</section>
-
-<section>
-
-<a target="_blank" rel="noopener noreferrer" href="https://deep-link-into-app.com/waci?payload=eyJjaGFsbGVuZ2VUb2tlblVybCI6Imh0dHBzOi8vZXhhbXBsZS5jb20vYXBpL2dldC10b2tlbi9mYjI4YjRlYy00MjA5LTRiNzgtODUwNy03Y2M0OTE2NGNiMzciLCJ2ZXJzaW9uIjoiMSJ9">Click Me!</a>
-
-</section>
-
-</tab-panels>
-
-::: example QR/Link Payload
+Both parties MUST have a `service` block containing the following properties:
 
 ```json
-{
-  "challengeTokenUrl": "https://example.com/api/get-token/fb28b4ec-4209-4b78-8507-7cc49164cb37",
-  "version": "1"
-}
-```
+"service": [{
+    "id": "did:example:123123123#someid",
+    "type": "DIDCommMessaging",
+    "serviceEndpoint": "https://example.com/endpoint",
+    "routingKeys": ["did:example:somemediator#somekey"]
+  }]
+``` 
 
-:::
+TODO: Explain routing keys. Each property and normative status:
+- service block must be present
+- `id` MUST contain a unique id
+- `type` MUST be `DIDCommMessaging`
+- `serviceEndpoint` MUST be a resolvable URI
+- `routingKeys` MUST contain valid routing keys (ref directly to DIDComm spec section about routing keys)
 
-- `challengeTokenUrl`:
-  - MUST be unique to the interaction
-  - MUST be a `GET` endpoint that returns the
-  [Token Payload](#token-url-response)
-- `version`:
-  - This is the version of just the QR/link payload, not the rest of the
-  interaction
+#### Establishing an HTTP(S) Connection
 
-### Token URL Response
+In order to establish a new connection, Simply exchange a new message between parties. Knowing the DID of the other parties does not indicate any level of trust.
 
-The result from `GET`ing the provided `challengeTokenUrl`. This contains the
-initial JWT that really starts the interaction.
+The assumptions and requirements for using an HTTP(S) connection for sending,
+routing, and receiving DIDComm packets are described in the [HTTP(S)
+section](https://identity.foundation/didcomm-messaging/spec/#https) of the
+DIDComm v2 specification.
 
-::: example Token URL Response
 
-```json
-{
-  "challengeToken": "{{JWT String}}"
-}
-```
+## WACI Protocol Context
 
-:::
-
-#### Challenge Token
-
-::: example Challenge Token Header
-
-```json
-// Header
-{
-  "alg": "...",
-  "kid": "did:example:ebfeb1f712ebc6f1c276e12ec21#primary"
-}
-```
-
-:::
-
-- MUST have `alg` and `kid`, so the JWT can be verified
-
-::: example Challenge Token Payload
-
-```json
-// Payload
-{
-  "jti": "...",
-  "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-  "aud": "...",
-  "callbackUrl": "https://example.com/api/callback-url",
-  "purpose": "...",
-  "version": "..."
-}
-```
-
-:::
-
-- MUST have `iss`
-- MUST have `jti` to protect against replay attacks
-- CAN have `aud` if the DID of the wallet is known
-- MUST have `callbackUrl`
-  - MUST be a `POST` endpoint to take the wallet's reponse (payload determined
-  by the `purpose`)
-- MUST have `purpose`
-- MUST have `version`
-  - This is specific to the `purpose`
-
-### Callback URL
-
-#### Request
-
-Each interaction will `POST` data to the `callbackUrl`:
-
-::: example Callback URL Request Payload
-
-```json
-{
-  "responseToken": "{{Signed JWT}}",
-  "from": "qr" | "link"
-}
-```
-
-:::
-
-- `responseToken`
-  - A JWT signed by the user, will contain the `challengeToken`
-- `from`
-  - MUST be either "qr" or "link"
-  - The issuer may need to handle things differently based on how the user is
-  claiming the credentials
-
-##### Response Token
-
-The response token is signed by the user and acts as a way to prove ownership of
-their DID and to pass additional data back to the relying party.
-
-:::example Response Token Header
-
-```json
-{
-  "alg": "...",
-  "kid": "did:example:c276e12ec21ebfeb1f712ebc6f1#primary"
-}
-```
-
-:::
-
-- MUST have `alg` and `kid`, so the JWT can be verified
-
-:::example Response Token Payload
-
-```json
-{
-  "iss": "did:example:c276e12ec21ebfeb1f712ebc6f1",
-  "aud": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-  "challenge": "{{CHALLENGE TOKEN}}"
-}
-```
-
-:::
-
-- MUST have `iss`
-- MUST have `aud`
-  - `aud` MUST be the `iss` of the challenge token
-- MUST have `challenge`
-  - `challenge` MUST be the challenge token given by the issuer
-
-#### Reponse
-
-The `POST` to the provided `callbackUrl` can return with a simple successful
-HTTP response or it can return a success with follow up details. A
-`redirectLink` that the app will open in a browser or `challengeToken` that will
-start a new interaction.
-
-::: example Response Redirect Payload
-
-```json
-{
-  "redirectUrl": "https://example.com/redirect-url?id={{Some id that identifies the user}}"
-}
-```
-
-:::
-
-This could be used to show a success message or bring them back to the
-website/app to continue where they left off. Most of the time `redirectUrl` will
-only be used when the user is already using their phone (see
-[above](#qr-code-or-link)).
-
-**OR**
-
-::: example Response Chain Payload
-
-```json
-{
-  "challengeToken": "{{JWT String}}"
-}
-```
-
-:::
-
-This could be used to follow up a request interaction with an offer interaction,
-or even a chain of request interactions that are based on the previously shared
-VCs.
-
-### Token Storage
-
-Because the challenge token is always sent back to the relying party, the token
-doesn't need to be stored on creation. And this allows the relying party to not
-have to worry about someone spamming their API and driving up their storage
-costs.
-
-But no storage at all can lead to replay attacks. One suggested way to mitigate
-replay attacks while keeping storage to a minimum is to only store the hash of
-"used" tokens and have a cron job that cleans this storage based on expiration
-date of the tokens.
-
-### Swimlane
-
-Each interaction will be slightly different but will follow this general pattern:
-
-<tab-panels selected-index="0">
-
-<nav>
-  <button type="button">QR Based</button>
-  <button type="button">Link Based</button>
-</nav>
-
-<section>
-
-```mermaid
-sequenceDiagram
-  title: Interaction (QR)
-
-  activate Wallet
-
-  Wallet ->>+ Relying Party's Interface: Scan QR Code
-  Relying Party's Interface -->>- Wallet: Retrieve `challengeTokenUrl`
-
-  Wallet ->>+ Relying Party: GET `challengeTokenUrl`
-  Relying Party -->> Wallet: Return `challengeToken`
-
-  Wallet ->> Wallet: Verify/decode `challengeToken`
-  Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
-
-  Wallet ->> Relying Party: POST the `responseToken` to `challengeToken`'s `callBackUrl`
-  Relying Party ->> Relying Party: Verify the `responseToken`
-  Relying Party ->> Relying Party: Verify the `responseToken`'s challenge token (valid JWT, signed by Relying Party, and not used before)
-  Relying Party -->>- Wallet: Return success
-
-  opt `redirectUrl` or `challengeToken` is provided
-    alt `redirectUrl` is provided
-      Wallet ->> Browser: Open `redirectUrl`
-    else `challengeToken` is provided
-      Wallet ->> Wallet: Start new interaction
-    end
-  end
-
-  deactivate Wallet
-```
-
-</section>
-
-<section>
-
-```mermaid
-sequenceDiagram
-  title: Interaction (Link)
-
-  User ->>+ Relying Party's Interface: Click link
-
-  Relying Party's Interface ->>- Wallet: Open Wallet with deep link
-
-  activate Wallet
-
-  Wallet ->> Wallet: Parse deep link
-
-  Wallet ->>+ Relying Party: GET `challengeTokenUrl`
-  Relying Party -->> Wallet: Return `challengeToken`
-
-  Wallet ->> Wallet: Verify/decode `challengeToken`
-  Wallet ->> Wallet: Create/sign a `responseToken`, with `challengeToken` as the `challenge`
-
-  Wallet ->> Relying Party: POST the `responseToken` to `challengeToken`'s `callBackUrl`
-  Relying Party ->> Relying Party: Verify the `responseToken`
-  Relying Party ->> Relying Party: Verify the `responseToken`'s challenge token (valid JWT, signed by Relying Party, and not used before)
-  Relying Party -->>- Wallet: Return success
-
-  opt `redirectUrl` or `challengeToken` is provided
-    alt `redirectUrl` is provided
-      Wallet ->> Browser: Open `redirectUrl`
-    else `challengeToken` is provided
-      Wallet ->> Wallet: Start new interaction
-    end
-  end
-
-  deactivate Wallet
-```
-
-</section>
-
-</tab-panels>
-
-## Request/Share
-
-The request/share interaction is for the use case where an verifier wants a user
-to share credential(s) with them.
-
-### Challenge Token
-
-An example of a `request` challenge token has the following properties (in
-addition to the base [properties](#challenge-token)):
-
-:::example Request Challenge Token Header
-
-```json
-// Header
-{
-  "alg": "...",
-  "kid": "did:example:ebfeb1f712ebc6f1c276e12ec21#primary"
-}
-```
-
-:::
-
-:::example Request Challenge Token Payload
-
-```json
-// Payload
-{
-  "jti": "...",
-  "iss": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-  "aud": "...",
-  "callbackUrl": "https://example.com/api/callback-url",
-  "purpose": "request",
-  "version": "0.1",
-  "presentation_definition": {
-    // ...
-  }
-}
-```
-
-:::
-
-- `purpose` MUST be `"request"`
-- MUST have `presentation_definition`
-  - Uses [Presentation Exchange](https://identity.foundation/presentation-exchange/)
-  to define the requirements.
-
-### Callback URL
-
-#### Request
-
-In addition to the standard [Callback URL Request](#request) payload, the
-offer/claim flow adds `presentation`
-
-:::example Request Callback URL Request Payload
-
-```json
-{
-  "responseToken": "{{Signed JWT}}",
-  "from": "qr" | "link"
-}
-```
-
-:::
-
-##### Response Token
-
-In addition to the standard `responseToken` the offer/claim interaction adds
-`verifiable_presentation` to the payload.
-
-:::example Request Response Token Header
-
-```json
-// Header
-{
-  "alg": "...",
-  "kid": "did:example:c276e12ec21ebfeb1f712ebc6f1#primary"
-}
-```
-
-:::
-
-:::example Request Response Token Payload
-
-```json
-// Paylaod
-{
-  "iss": "did:example:c276e12ec21ebfeb1f712ebc6f1",
-  "aud": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-  "challenge": "{{CHALLENGE TOKEN}}",
-  "verifiable_presentation": {
-    /* ... */
-    "type": ["VerifiablePresentation", "PresentationSubmission"],
-    "presentation_submission": {
-      /* ... */
-    }
-    /* ... */
-  }
-}
-```
-
-:::
-
-- MUST have `verifiable_presentation`
-  - Using Presentation Exchange's
-  [Presentation Submission](https://identity.foundation/presentation-exchange/#presentation-submission)
-  - This `VerifiablePresentation` MUST be a `PresentationSubmission`
-  - This `VerifiablePresentation`'s `proof.challenge` MUST be the challenge
-  token given by the issuer
-
-#### Response
-
-The request/share flow does not add anything to the
-[Callback URL Response](#response).
-
-### Swimlane
+The interactions, objects, and assumptions outlined in the WACI pre-draft specification are the basis for the following.  Specifically, the profile describes the [Request/Share flow](https://identity.foundation/wallet-and-credential-interactions/#requestshare). As an overview, see this flow diagram:
 
 <tab-panels selected-index="0">
 
@@ -570,41 +177,7 @@ sequenceDiagram
 
 </tab-panels>
 
-## DIDComm v2 Messages
-
-The exchange specified in the [DIDComm v2
-specification](https://identity.foundation/didcomm-messaging/spec/) is presumed
-to take place between two subjects that control DIDs with certain properties,
-and can take place over many different transports. Having a connection means that each party in the relationship has a DID for the other parties, and parties can communicate securely using the keys and endpoints within each DID Document. 
-
-#### Service block expected in DID Documents for DIDComm
-
-Both parties MUST have a `service` block containing the following properties:
-
-```json
-"service": [{
-    "id": "did:example:123123123#someid",
-    "type": "DIDCommMessaging",
-    "serviceEndpoint": "https://example.com/endpoint",
-    "routingKeys": ["did:example:somemediator#somekey"]
-  }]
-``` 
-
-TODO: Explain routing keys. Each property and normative status:
-- service block must be present
-- `id` MUST contain a unique id
-- `type` MUST be `DIDCommMessaging`
-- `serviceEndpoint` MUST be a resolvable URI
-- `routingKeys` MUST contain valid routing keys (ref directly to DIDComm spec section about routing keys)
-
-#### Establishing an HTTP(S) Connection
-
-In order to establish a new connection, Simply exchange a new message between parties. Knowing the DID of the other parties does not indicate any level of trust.
-
-The assumptions and requirements for using an HTTP(S) connection for sending,
-routing, and receiving DIDComm packets are described in the [HTTP(S)
-section](https://identity.foundation/didcomm-messaging/spec/#https) of the
-DIDComm v2 specification.
+## Interoperability Profile 
 
 ### Step 1 - Generate QR Code
 

@@ -628,7 +628,7 @@ A "Propose Presentation" message, optional in many cases, is defined in [Aries
 RFC
 0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
 and its Presentation Exchange "attachment" defined in [RFC
-0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
+0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format). This attachment is left off to initiate a generic presentation proposal.
 It either initiates a Request/Share interaction or answers an earlier invitation
 to do so; it can be functionally equivalent to the request for a challenge token
 in the [challenge token section](#challenge-token-2) above:
@@ -639,17 +639,7 @@ in the [challenge token section](#challenge-token-2) above:
     "id": "43f3a34d-9137-42b1-9404-efa9bfbf5cfd",
     "from": "did:example:prover",
     "to": "did:example:verifier",
-    "body": {},
-    "attachments": [
-      {
-        "format": "dif/presentation-exchange/definitions@v1.0",
-        "@id": "47e3d077-d1a6-447d-8031-8f813a715be9",
-        "mime-type": "application/json",
-        "data": {
-            "json": "<json>"
-        }
-      }
-    ]
+    "body": {}
 }
 ```
 

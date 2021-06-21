@@ -608,7 +608,7 @@ routing, and receiving DIDComm packets are described in the [HTTP(S)
 section](https://identity.foundation/didcomm-messaging/spec/#https) of the
 DIDComm v2 specification.
 
-### Message -1 - QR Code
+### Step 1 - Generate QR Code
 
 The QR code used to start a presentation is constructed by encoding a json based message into a URI, then encoding that URI into a QR code.
 
@@ -640,7 +640,7 @@ https://example.com/some/path?_oob=eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb
 
 The URI, if loaded into a browser should display instructions on how to download and use a mobile application. If scanned inside an app that understands this protocol, the message should be extracted from the URI's `_oob` query parameter and processed without resolving the URI. This behavior allows for a better fallback user experience should a user encounter a QR code without having a suitable app.
 
-### Message 0 - Propose Presentation
+### Step 2 - Send Message Proposing Presentation
 
 A "Propose Presentation" message, optional in many cases, is defined in [Aries
 RFC
@@ -668,7 +668,7 @@ connection was used for `thid`; `thid` could also be unspecified if this
 message were the first one over the channel or if a connection had been
 established out of band.
 
-### Message 1 - Request Presentation
+### Step 3 - Send Message Requesting Presentation
 
 The [v2] request for a Verifiable Presentation is defined in the "request
 presentation" section of [Aries RFC
@@ -752,7 +752,7 @@ For context on the Vaccination object passed, see the W3C-CCG [Vaccination
 Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
 example is drawn.
 
-### Message 2 - Present Proof
+### Step 4 - Present Proof 
 
 The Verifiable Presentation is again returned as an attachment (defined by [RFC
 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#presentation-attachment-format))

@@ -23,11 +23,10 @@
 ## Abstract
 
 There are interactions between a wallet and relying party that require passing
-information between the two. WACI provides a standard for these interactions.
+information between the two. The PRE-DRAFT [Wallet and Credential Interactions specification](https://github.com/decentralized-identity/wallet-and-credential-interactions) ("WACI") provides a tentative protocol definition for these interactions, and is being iterated in the [DIF Claims and Credentials Working Group](https://identity.foundation/working-groups/claims-credentials.html).
 
-WACI v0.1 incorporates elements from a number of existing specifications and
-protocols. It inherits its overall structure from a
-[previous version of WACI](https://github.com/decentralized-identity/wallet-and-credential-interactions),
+This document describes an interoperability profile which incorporates elements from a number of existing specifications and protocols, without assuming or requiring an implementer understand all of them. It inherits its overall structure from a
+[the current pre-draft of WACI](https://github.com/decentralized-identity/wallet-and-credential-interactions),
 but makes use of
 [DIDComm v2.0](https://github.com/decentralized-identity/didcomm-messaging)
 communication protocols, along with
@@ -45,7 +44,6 @@ used in v0.1.
 ## Status of This Document
 
 WACI v0.1 is a _PRE-DRAFT_ specification under development by the
-[DIF Claims and Credentials WG](https://identity.foundation/working-groups/claims-credentials.html).
 
 
 ## Interactions

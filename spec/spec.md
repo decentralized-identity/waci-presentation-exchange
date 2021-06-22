@@ -43,7 +43,7 @@ used in v0.1.
 
 ## Status of This Document
 
-WACI v0.1 is a _PRE-DRAFT_ specification under development by the
+WACI v0.1 is a _PRE-DRAFT_ specification under development by the [DIF Claims and Credentials Working Group](https://identity.foundation/working-groups/claims-credentials.html).
 
 
 ## Presentation Exchange Context

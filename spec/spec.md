@@ -846,7 +846,7 @@ For context on the Vaccination object passed, see the W3C-CCG [Vaccination
 Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
 example is drawn.
 
-### Message 4 - Ack Presentation
+### Step 5 - Ack Presentation
 
 Once the verifier validates the presentation, it MAY send a
 [Acknowledgement](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#ack-presentation) 

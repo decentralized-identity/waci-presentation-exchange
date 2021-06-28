@@ -427,6 +427,33 @@ For context on the Vaccination object passed, see the W3C-CCG [Vaccination
 Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
 example is drawn.
 
+### Step 5 - Ack Presentation
+
+Once the verifier validates the presentation, it MAY send a
+[Acknowledgement](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#ack-presentation) 
+message back to the prover.
+
+```json
+{
+  "type":"https://didcomm.org/present-proof/3.0/ack",
+  "id":"e2f3747b-41e8-4e46-abab-ba51472ab1c3",
+  "pthid":"95e63a5f-73e1-46ac-b269-48bb22591bfa",
+  "from":"did:example:verifier",
+  "to":"did:example:prover",
+  "body":{
+    "status":"OK",
+    "redirectUrl":"https://example.com/redirect-url?id={{Some id that identifies the user}}"
+  }
+}
+```
+
+- `status`:
+  - MUST be included
+  - Possible values can be found [here](https://github.com/hyperledger/aries-rfcs/blob/master/features/0015-acks/README.md#ack-status).
+- `redirectUrl`:
+  - Optional
+  - If present, verifier expects the prover software to redirect to this url.
+  
 ## Appendix
 
 ### Out of Scope

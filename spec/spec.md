@@ -57,7 +57,7 @@ specification](https://identity.foundation/didcomm-messaging/spec/) is presumed
 to take place between two subjects that control DIDs with certain properties,
 and can take place over many different transports. Having a connection means that each party in the relationship has a DID for the other parties, and parties can communicate securely using the keys and endpoints within each DID Document. 
 
-#### Service block expected in DID Documents for DIDComm
+### Service block expected in DID Documents for DIDComm
 
 Both parties MUST have a `service` block containing the following properties:
 
@@ -77,7 +77,7 @@ TODO: Explain routing keys. Each property and normative status:
 - `serviceEndpoint` MUST be a resolvable URI
 - `routingKeys` MUST contain valid routing keys (ref directly to DIDComm spec section about routing keys)
 
-#### Establishing an HTTP(S) Connection
+### Establishing an HTTP(S) Connection
 
 In order to establish a new connection, Simply exchange a new message between parties. Knowing the DID of the other parties does not indicate any level of trust.
 

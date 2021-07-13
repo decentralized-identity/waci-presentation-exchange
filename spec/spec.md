@@ -39,7 +39,7 @@ It is anticipated that future versions of this specification will add
 support for additional messaging, transport, or other mechanisms beyond those
 used in v0.1.
 
-![Layering Diagram](./resources/layer_cake_v0-1.png)
+![Layering Diagram](./resources/layer_cake_v0-2.png)
 
 ## Status of This Document
 
@@ -219,7 +219,7 @@ Present as a link, or as a QR code.
 
 
 
-![QR Code Example](.\resources\qrcode_example.png)
+![QR Code Example](./resources/qrcode_example.png)
 
 
 

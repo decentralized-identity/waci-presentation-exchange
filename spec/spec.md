@@ -50,6 +50,23 @@ WACI v0.1 is a _PRE-DRAFT_ specification under development by the [DIF Claims an
 
 TBD
 
+## Selective Disclosure
+
+To allow for selective disclosure of Verifiable Credential claims the use of a 
+JSON-LD frame object is combined with a `BbsBlsSignature2020` on the 
+credential. This signature allows for a zero knowledge proof of the original 
+signature, allowing the prover to derive a `BbsBlsSignatureProof2020` that will 
+verify the disclosed claims. 
+
+More information about how this works can be found in the [Linked Data Proof 
+BBS+ Signatures 2020 Suite](https://w3c-ccg.github.io/ldp-bbs2020/#the-bbs-
+signature-proof-suite-2020) and the [Mattr example implementation](https:
+//github.com/mattrglobal/jsonld-signatures-bbs). For a more general overview of 
+LD-Framing strategies as a general approach to querying and matching Linked-
+Data, see the [JSON-LD Framing](https://json-ld.org/spec/FCGS/json-ld-
+framing/20180607/#framing) guide written by the JSON-LD Community Group at W3C 
+on the occasion of version 1.1 of the JSON-LD specification.
+
 ## DIDComm Context
 
 The exchange specified in the [DIDComm v2
@@ -269,7 +286,7 @@ The challenge token that the holder will use to generate a replay-resistant VP
 is included in the the `options` object within the `dif` object, encoded as a
 DIDComm attachment:
 
-```json
+```json5
 {
   "type": "https://didcomm.org/present-proof/3.0/request-presentation",
   "id": "0ac534c8-98ed-4fe3-8a41-3600775e1e92",
@@ -291,43 +308,55 @@ DIDComm attachment:
             },
             "presentation_definition": {
               "id": "32f54163-7166-48f1-93d8-ff217bdb0654",
+              // The frame property is a JSON-LD frame which is an addition to
+			        // presentation exchange that allows for selective disclosure
+			        // (see Appendix - Out of Scope)
               "frame": {
                 "@context": [
-                    "https://www.w3.org/2018/credentials/v1",
-                    "https://w3id.org/vaccination/v1",
-                    "https://w3id.org/security/suites/bls12381-2020/v1"
+                  "https://www.w3.org/2018/credentials/v1",
+                  "https://w3id.org/vaccination/v1",
+                  "https://w3id.org/security/suites/bls12381-2020/v1"
+                ],
+                "type": [
+                  "VerifiableCredential",
+                  "VaccinationCertificate"
+                ],
+                "credentialSubject": {
+                  "@explicit": true,
+                  "type": [
+                    "VaccinationEvent"
                   ],
-                  "type": ["VerifiableCredential", "VaccinationCertificate"],
-                  "credentialSubject": {
-                    "@explicit": true,
-                    "type": ["VaccinationEvent"],
-                    "batchNumber": {},
-                    "countryOfVaccination": {}
-                  }
-                },
-                "input_descriptors": [
-                  {
-                    "id": "vaccination_input",
-                    "name": "Vaccination Certificate",
-                    "schema": "https://w3id.org/vaccination/#VaccinationCertificate",
-                    "constraints": {
-                      "fields": [
-                        {
-                          "path": ["$.credentialSubject.batchNumber"],
-                          "filter": {
-                            "type": "string"
-                          }
-                        },
-                        {
-                          "path": ["$.credentialSubject.countryOfVaccination"],
-                          "filter": {
-                            "type": "string"
-                          }
+                  "batchNumber": {},
+                  "countryOfVaccination": {}
+                }
+              },
+              "input_descriptors": [
+                {
+                  "id": "vaccination_input",
+                  "name": "Vaccination Certificate",
+                  "schema": "https://w3id.org/vaccination/#VaccinationCertificate",
+                  "constraints": {
+                    "fields": [
+                      {
+                        "path": [
+                          "$.credentialSubject.batchNumber"
+                        ],
+                        "filter": {
+                          "type": "string"
                         }
-                      ]
-                    }
+                      },
+                      {
+                        "path": [
+                          "$.credentialSubject.countryOfVaccination"
+                        ],
+                        "filter": {
+                          "type": "string"
+                        }
+                      }
+                    ]
                   }
-                ]
+                }
+              ]
             }
           }
         }
@@ -467,4 +496,11 @@ message back to the prover.
 The following are items that were considered "out of scope" for v0.1, but which
 may be considered for future versions:
 
-1. 
+1. How the JSON-LD frame object is handled by Presentation Exchange is not in 
+scope for v0.1 of this specification. Within the `presentation_definition` 
+object the `input_descriptor` describes where the data can be  There may be a 
+deterministic process that can be applied to `input_descriptors` to generate 
+the `frame` object  however that work is out of scope and not required at this 
+stage. The `input_descriptors` are describing where the properties in the 
+selective disclosure credential are and the `frame` is describing how to get 
+that selective disclosure credential.

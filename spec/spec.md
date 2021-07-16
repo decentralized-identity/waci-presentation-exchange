@@ -36,7 +36,7 @@ but makes use of elements from the
 messaging protocol, along with
 [Aries Present Proof](https://github.com/hyperledger/aries-rfcs/blob/master/features/0454-present-proof-v2/README.md)
 message formats and
-[DIF Presentation Exchange](https://identity.foundation/presentation-exchange/)
+[DIF Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
 data objects. This version of the specification also restricts itself to
 [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) which make use of
 [BBS+ LD-Signatures](https://w3c-ccg.github.io/ldp-bbs2020).
@@ -45,18 +45,65 @@ It is anticipated that future versions of this specification will add
 support for a much broader range of messaging and data-sharing formats than
 those used in v0.1.
 
-![Layering Diagram](./resources/layer_cake_v0-2.png)
-
 ## Status of This Document
 
 WACI v0.1 is a _PRE-DRAFT_ specification under development by the [DIF Claims and Credentials Working Group](https://identity.foundation/working-groups/claims-credentials.html).
 
+## Introduction
+
+The 32nd Internet Identity Workshop (IIW) hosted a series of sessions about
+designing an interoperable protocol for requesting and providing verifiable
+information. The sessions lasted many hours over the course of several days and
+resulted in interest among the participants in continuing to work out the
+details of such a protocol, as well as a rough consensus around a set of
+components that could be used in a layered approach for the design. We outline
+some of the reasons for choosing each of the components below. 
+
+![Layering Diagram](./resources/layer_cake_v0-2.png)
+
+### Verifiable Presentations
+The starting point for most participants in determining which components to
+select was the
+[Verifiable Credentials Data Model]((https://www.w3.org/TR/vc-data-model/)). It
+describes a `Verifiable Presentation` object that is designed for sharing
+information from `Verifiable Credentials`. 
+
+### BBS+ LD-Signatures
+Though a [number of signature types](https://www.lfph.io/wp-content/uploads/2021/02/Verifiable-Credentials-Flavors-Explained.pdf)
+are used with `Verifiable Credentials`, many in the community seem to be
+converging on [BBS+ LD-Signatures](https://w3c-ccg.github.io/ldp-bbs2020). The
+reasons for this convergence are more fully described
+[elsewhere](https://www.evernym.com/blog/bbs-verifiable-credentials/), but the
+summary is that they bridge the two primary concerns of `Verifiable Credential`
+implementers: ease of use and user privacy.
+
+### Presentation Exchange
+The next component is a data model that provides a solution to the problem of
+how to format a request that verifiable information be presented. The
+[Presentation Exchange specification](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
+was recently published by the Decentralized Identity Foundation. It defines a
+`Presentation Definition` data object which may be used by a relying party to
+request information, and a `Presentation Submission` object which describes the
+relationship between the `Presentation Definition` and the submitted verifiable
+information.
+
+Since
+[Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
+supports the use of `Verifiable Presentations` as a response to a `Presentation
+Definition`, while remaining agnostic to transport protocols, it is ideal for
+our purposes.
+
+### DIDComm
+A number of 
+
+### Aries PResent Proof
+
+### WACI
+
 
 ## Presentation Exchange Context
 
-TBD
-
-## Selective Disclosure
+### Selective Disclosure
 
 To allow for selective disclosure of Verifiable Credential claims the use of a 
 JSON-LD frame object is combined with a `BbsBlsSignature2020` on the 

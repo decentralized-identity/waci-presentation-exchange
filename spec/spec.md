@@ -23,21 +23,27 @@
 ## Abstract
 
 There are interactions between a wallet and relying party that require passing
-information between the two. The PRE-DRAFT [Wallet and Credential Interactions specification](https://github.com/decentralized-identity/wallet-and-credential-interactions) ("WACI") provides a tentative protocol definition for these interactions, and is being iterated in the [DIF Claims and Credentials Working Group](https://identity.foundation/working-groups/claims-credentials.html).
+information between the two. This specification provides an initial protocol
+definition for these interactions. 
 
-This document describes an interoperability profile which incorporates elements from a number of existing specifications and protocols, without assuming or requiring an implementer understand all of them. It inherits its overall structure from a
+This document describes an interoperability profile which incorporates elements
+from a number of existing specifications and protocols, without assuming or
+requiring an implementer to understand all of them. It inherits its overall
+structure from 
 [the current pre-draft of WACI](https://github.com/decentralized-identity/wallet-and-credential-interactions),
-but makes use of
+but makes use of elements from the
 [DIDComm v2.0](https://github.com/decentralized-identity/didcomm-messaging)
-communication protocols, along with
+messaging protocol, along with
 [Aries Present Proof](https://github.com/hyperledger/aries-rfcs/blob/master/features/0454-present-proof-v2/README.md)
 message formats and
 [DIF Presentation Exchange](https://identity.foundation/presentation-exchange/)
-data objects.
+data objects. This version of the specification also restricts itself to
+[Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) which make use of
+[BBS+ LD-Signatures](https://w3c-ccg.github.io/ldp-bbs2020).
 
 It is anticipated that future versions of this specification will add
-support for additional messaging, transport, or other mechanisms beyond those
-used in v0.1.
+support for a much broader range of messaging and data-sharing formats than
+those used in v0.1.
 
 ![Layering Diagram](./resources/layer_cake_v0-2.png)
 

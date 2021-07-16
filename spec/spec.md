@@ -49,12 +49,15 @@ those used in v0.1.
 
 ## Status of This Document
 
-WACI v0.1 is a _PRE-DRAFT_ specification under development by the [DIF Claims and Credentials Working Group](https://identity.foundation/working-groups/claims-credentials.html).
+WACI v0.1 is a _PRE-DRAFT_ specification under development by the
+[DIF Claims and Credentials Working Group](https://identity.foundation/working-groups/claims-credentials.html).
 
+We encourage reviewers to submit issues on
+[GitHub](https://github.com/decentralized-identity/waci-presentation-exchange/issues).
 
 ## Presentation Exchange Context
 
-TBD
+
 
 ## Selective Disclosure
 

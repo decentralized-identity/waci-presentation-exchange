@@ -93,10 +93,44 @@ supports the use of `Verifiable Presentations` as a response to a `Presentation
 Definition`, while remaining agnostic to transport protocols, it is ideal for
 our purposes.
 
-### DIDComm
-A number of 
+### Communication, Transport, and Protocol
+Previously described components were, for the most part, agreed upon readily.
+The bulk of the conversations at IIW centered around communication and protocol
+options and sought to answer the following questions:
+- "How should the data objects be communicated from one party to another?"
+- "How ought they to be transported securely?"
+- "What protocol could be used for the exchange?"
 
-### Aries PResent Proof
+#### DIDComm
+Before participants settled on using elements of
+[DIDComm v2.0](https://identity.foundation/didcomm-messaging/spec/) to securely
+communicate the data objects, there was a long and lively discussion about other
+options. 
+
+[CHAPI](https://w3c-ccg.github.io/credential-handler-api/) is an API for
+exchanging data between websites and browsers. It was seen as too limited to a
+particular technology to be widely useful for wallet applications on smart
+phones and other devices without significant changes.
+
+[VC-HTTP-API](https://w3c-ccg.github.io/vc-http-api/) was seen as promising, but
+in its current state lacks an API for a `Verifiable Credential` holder. A number
+of participants expressed a desire for the WACI specification to strive to be
+compatible with this API, and that remains a goal of this group.
+
+[OIDC-SIOP](https://identity.foundation/did-siop/) seeks to bridge existing
+federated identity capabilities on the internet with principles of
+self-sovereign identity, and may ultimately be a good fit for this protocol. It
+was not selected for this version of the specification primarily because there
+remain a number of issues that need to be worked out and doing so would require
+agreement beyond those in this group.
+
+[DIDComm v2.0](https://identity.foundation/didcomm-messaging/spec/) describes
+a method for securely communicating authenticated messages between entities that
+control [Decentralized Identifiers](https://www.w3.org/TR/did-core/) along any
+transport layer. It allows for two parties to mutually authenticate and securely
+communicate.
+
+#### Aries Present Proof
 
 ### WACI
 

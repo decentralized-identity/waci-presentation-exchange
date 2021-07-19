@@ -117,20 +117,21 @@ in its current state lacks an API for a `Verifiable Credential` holder. A number
 of participants expressed a desire for the WACI specification to strive to be
 compatible with this API, and that remains a goal of this group.
 
+[DIDComm v2.0](https://identity.foundation/didcomm-messaging/spec/) describes
+a method for securely communicating authenticated messages between entities that
+control [Decentralized Identifiers](https://www.w3.org/TR/did-core/) along any
+transport layer. It allows for two parties to mutually authenticate and securely
+communicate. DIDComm has a large community interested in using it, and many have
+already implemented DIDComm v1.0. 
+
+#### Aries Present Proof
+
 [OIDC-SIOP](https://identity.foundation/did-siop/) seeks to bridge existing
 federated identity capabilities on the internet with principles of
 self-sovereign identity, and may ultimately be a good fit for this protocol. It
 was not selected for this version of the specification primarily because there
 remain a number of issues that need to be worked out and doing so would require
 agreement beyond those in this group.
-
-[DIDComm v2.0](https://identity.foundation/didcomm-messaging/spec/) describes
-a method for securely communicating authenticated messages between entities that
-control [Decentralized Identifiers](https://www.w3.org/TR/did-core/) along any
-transport layer. It allows for two parties to mutually authenticate and securely
-communicate.
-
-#### Aries Present Proof
 
 ### WACI
 

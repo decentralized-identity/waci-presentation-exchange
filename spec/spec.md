@@ -133,6 +133,8 @@ was not selected for this version of the specification primarily because there
 remain a number of issues that need to be worked out and doing so would require
 agreement beyond those in this group.
 
+Aries
+
 ### WACI
 
 

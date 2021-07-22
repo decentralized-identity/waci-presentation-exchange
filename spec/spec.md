@@ -130,12 +130,13 @@ already implemented DIDComm v1.0.
 
 #### Aries Present Proof
 
-[OIDC-SIOP](https://identity.foundation/did-siop/) seeks to bridge existing
-federated identity capabilities on the internet with principles of
-self-sovereign identity, and may ultimately be a good fit for this protocol. It
-was not selected for this version of the specification primarily because there
-remain a number of issues that need to be worked out and doing so would require
-agreement beyond those in this group.
+[OIDC-SIOP](https://openid.bitbucket.io/connect/openid-connect-self-issued-v2-1_0.html)
+seeks to bridge existing federated identity capabilities on the internet with
+principles of self-sovereign identity, and may ultimately be a good fit for this
+protocol. It was not selected for this version of the specification primarily
+because v1 of the specification has been deprecated, and v2 of the specification
+is being incorporated into the next major version of OIDC, so it is not yet
+ready.
 
 [Aries Protocols](https://github.com/hyperledger/aries-rfcs), specifically the
 [present proof protocol](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2)

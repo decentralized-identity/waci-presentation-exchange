@@ -133,10 +133,18 @@ was not selected for this version of the specification primarily because there
 remain a number of issues that need to be worked out and doing so would require
 agreement beyond those in this group.
 
-Aries
+[Aries Protocols](https://github.com/hyperledger/aries-rfcs), specifically the
+[present proof protocol](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2)
+were explored as a possible option. The group determined that the protocol's
+existing support for DIDComm and Presentation Exchange, along with its use
+within different implementations by a number of organizations made it an ideal
+choice for this first iteration. 
 
 ### WACI
-
+The [WACI](https://github.com/decentralized-identity/wallet-and-credential-interactions)
+specification provides a framework within which the components above reside. It
+was presented separately at IIW and almost immediately became a cornerstone of
+this effort.
 
 ## Presentation Exchange Context
 

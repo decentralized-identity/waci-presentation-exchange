@@ -86,12 +86,38 @@ Both parties MUST have a `service` block containing the following properties:
   }]
 ```
 
-TODO: Explain routing keys. Each property and normative status:
 - service block must be present
 - `id` MUST contain a unique id
 - `type` MUST be `DIDCommMessaging`
 - `serviceEndpoint` MUST be a resolvable URI
-- `routingKeys` MUST contain valid routing keys (ref directly to DIDComm spec section about routing keys)
+- `routingKeys` MUST contain 0 or more valid routing keys. See next section for details.
+
+#### Routing Keys
+
+Routing Keys are used to enable message routing to agents unable to provide a direct service endpoint. Routing is arranged by the message recipient and communicated in the Service Endpoint as detailed above. 
+
+For each DID key reference present in the `routingKeys` list in order, take the encrypted message, wrap it in a forward message as detailed below, and encrypt to the DID key reference. The newly encrypted message becomes the message to transmit to the listed `serviceEndpoint` or encrypted to the next Key in the `routingKeys` list.
+
+Forward message structure:
+
+```jsonc
+{
+    "type": "https://didcomm.org/routing/2.0/forward",
+    "to": ["did:example:somemediator#somekey"],
+    "body":{
+        "next": "did:example:123123123",
+    },
+    "attachments": [
+        {
+            "data": {
+            	"jwe": { }//jwe json structure of the message being forwarded
+        	}
+        }
+    ]
+}
+```
+
+
 
 ### Establishing an HTTP(S) Connection
 

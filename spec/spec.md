@@ -60,8 +60,10 @@ designing an interoperable protocol for requesting and providing verifiable
 information. The sessions lasted many hours over the course of several days and
 resulted in interest among the participants in continuing to work out the
 details of such a protocol, as well as a rough consensus around a set of
-components that could be used in a layered approach for the design. We outline
-some of the reasons for choosing each of the components below. 
+components that could be used in a layered approach for the design. The Claims
+and Credentials Working Group at DIF agreed to host a work item for continuing
+to work out the details. We outline some of the reasons for choosing each of the
+components below. 
 
 ![Layering Diagram](./resources/layer_cake_v0-2.png)
 

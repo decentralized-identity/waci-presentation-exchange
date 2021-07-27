@@ -160,7 +160,50 @@ this effort.
 In order to support selective disclosure of Verifiable Credential claims the use
 of a JSON-LD frame object is combined with the above signature types.
 
+The method for a verifier to provide a JSON-LD frame is to add a `frame`
+property to the `presentation definition` object.
 
+For Example:
+```json5
+{
+  "presentation_definition": {
+    "id": "32f54163-7166-48f1-93d8-ff217bdb0653",
+    "input_descriptors": [],
+    "frame": {
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://w3id.org/vaccination/v1",
+        "https://w3id.org/security/suites/bls12381-2020/v1"
+      ],
+      "type": [
+        "VerifiableCredential",
+        "VaccinationCertificate"
+      ],
+      "credentialSubject": {
+        "@explicit": true,
+        "type": [
+          "VaccinationEvent"
+        ],
+        "batchNumber": {},
+        "countryOfVaccination": {}
+      }
+    }
+  }
+}
+```
+
+The Presentation Exchange specification does dot currently define a `frame`
+property for a `presentation definition`. This means that implementers of
+Presentation Exchange who wish to use the protocol described here may run into
+errors when using the 
+[JSON Schema from Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/#json-schema-2)
+to validate `presentation definition` objects that contain a frame property.
+
+We recommend using the following JSON Schema definition to validate
+`presentation definition` objects that include a `frame` property:
+```json
+[[insert: ./test/presentation-definition/schema.json]]
+```
 
 More information about how frames work with BBS+ signatures can be found in the
 [Linked Data Proof BBS+ Signatures 2020 Suite](https://w3c-ccg.github.io/ldp-bbs2020/#the-bbs-signature-proof-suite-2020)

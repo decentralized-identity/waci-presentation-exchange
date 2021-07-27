@@ -98,13 +98,6 @@ the disclosed claims. `BbsBlsBoundSignature2020` and
 `BbsBlsBoundSignatureProof2020` also provide a mechanism for privately binding
 credentials and presentations to the holder. 
 
-### frame property
-
-In order to support selective disclosure of Verifiable Credential claims the use
-of a JSON-LD frame object is combined with the above signature types.
-
-More information about how this works can be found in the [Linked Data Proof BBS+ Signatures 2020 Suite](https://w3c-ccg.github.io/ldp-bbs2020/#the-bbs-signature-proof-suite-2020) and the [Mattr example implementation](https://github.com/mattrglobal/jsonld-signatures-bbs). For a more general overview of LD-Framing strategies as a general approach to querying and matching Linked-Data, see the [JSON-LD Framing](https://json-ld.org/spec/FCGS/json-ld-framing/20180607/#framing) guide written by the JSON-LD Community Group at W3C on the occasion of version 1.1 of the JSON-LD specification.
-
 ## DIDComm Context
 
 The exchange specified in the [DIDComm v2

@@ -57,15 +57,51 @@ We encourage reviewers to submit issues on
 
 ## Presentation Exchange Context
 
+Presentation Exchange objects support a large variety of possible content and
+signature types. As this version of our specification has a limited scope, a
+number of considerations need to be made for
+[presentation definitions](https://identity.foundation/presentation-exchange/#presentation-definition)
+to provide what we need.
 
+### format property
 
-## Selective Disclosure
+A `presentation definition` that complies with this specification MUST contain a
+`format` property. The value of the `format` property MUST be an object with the
+following property:
+- `ldp_vp`: This property indicates that a W3C Verifiable Presentation will be
+submitted in the form of a JSON object. The value of this property MUST be an
+object with a `proof_type` property that has a value of either
+`BbsBlsSignatureProof2020` or `BbsBlsBoundSignatureProof2020`.
+
+For example:
+
+```json5
+{
+  "presentation_definition": {
+    "id": "32f54163-7166-48f1-93d8-ff217bdb0653",
+    "input_descriptors": [],
+    "format": {
+      "ldp_vp": {
+        "proof_type": ["BbsBlsSignatureProof2020", "BbsBlsBoundSignatureProof2020"]
+      }
+    }
+  }
+}
+```
 
 To allow for selective disclosure of Verifiable Credential claims the use of a 
-JSON-LD frame object is combined with a `BbsBlsSignature2020` on the 
-credential. This signature allows for a zero knowledge proof of the original 
-signature, allowing the prover to derive a `BbsBlsSignatureProof2020` that will 
-verify the disclosed claims. 
+`BbsBlsSignature2020` or `BbsBlsBoundSignature2020` is required for the
+credential. These signatures allows for a zero knowledge proof of the original 
+signature, allowing the prover to derive a corresponding
+`BbsBlsSignatureProof2020` or `BbsBlsBoundSignatureProof2020` that will verify
+the disclosed claims. `BbsBlsBoundSignature2020` and
+`BbsBlsBoundSignatureProof2020` also provide a mechanism for privately binding
+credentials and presentations to the holder. 
+
+### frame property
+
+In order to support selective disclosure of Verifiable Credential claims the use
+of a JSON-LD frame object is combined with the above signature types.
 
 More information about how this works can be found in the [Linked Data Proof BBS+ Signatures 2020 Suite](https://w3c-ccg.github.io/ldp-bbs2020/#the-bbs-signature-proof-suite-2020) and the [Mattr example implementation](https://github.com/mattrglobal/jsonld-signatures-bbs). For a more general overview of LD-Framing strategies as a general approach to querying and matching Linked-Data, see the [JSON-LD Framing](https://json-ld.org/spec/FCGS/json-ld-framing/20180607/#framing) guide written by the JSON-LD Community Group at W3C on the occasion of version 1.1 of the JSON-LD specification.
 

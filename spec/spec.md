@@ -36,7 +36,7 @@ but makes use of elements from the
 messaging protocol, along with
 [Aries Present Proof](https://github.com/hyperledger/aries-rfcs/blob/master/features/0454-present-proof-v2/README.md)
 message formats and
-[DIF Presentation Exchange](https://identity.foundation/presentation-exchange/)
+[DIF Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
 data objects. This version of the specification also restricts itself to
 [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) which make use of
 [BBS+ LD-Signatures](https://w3c-ccg.github.io/ldp-bbs2020).
@@ -45,8 +45,6 @@ It is anticipated that future versions of this specification will add
 support for a much broader range of messaging and data-sharing formats than
 those used in v0.1.
 
-![Layering Diagram](./resources/layer_cake_v0-2.png)
-
 ## Status of This Document
 
 WACI v0.1 is a _PRE-DRAFT_ specification under development by the
@@ -54,6 +52,106 @@ WACI v0.1 is a _PRE-DRAFT_ specification under development by the
 
 We encourage reviewers to submit issues on
 [GitHub](https://github.com/decentralized-identity/waci-presentation-exchange/issues).
+
+## Introduction
+
+The 32nd Internet Identity Workshop (IIW) hosted a series of sessions about
+designing an interoperable protocol for requesting and providing verifiable
+information. The sessions lasted many hours over the course of several days and
+resulted in interest among the participants in continuing to work out the
+details of such a protocol, as well as a rough consensus around a set of
+components that could be used in a layered approach for the design. The Claims
+and Credentials Working Group at DIF agreed to host a work item for continuing
+to work out the details. We outline some of the reasons for choosing each of the
+components below. 
+
+![Layering Diagram](./resources/layer_cake_v0-2.png)
+
+### Verifiable Presentations
+The starting point for most participants in determining which components to
+select was the
+[Verifiable Credentials Data Model]((https://www.w3.org/TR/vc-data-model/)). It
+describes a `Verifiable Presentation` object that is designed for sharing
+information from `Verifiable Credentials`. 
+
+### BBS+ LD-Signatures
+Though a [number of signature types](https://www.lfph.io/wp-content/uploads/2021/02/Verifiable-Credentials-Flavors-Explained.pdf)
+are used with `Verifiable Credentials`, many in the community seem to be
+converging on [BBS+ LD-Signatures](https://w3c-ccg.github.io/ldp-bbs2020). The
+reasons for this convergence are more fully described
+[elsewhere](https://www.evernym.com/blog/bbs-verifiable-credentials/), but the
+summary is that they bridge the two primary concerns of `Verifiable Credential`
+implementers: ease of use and user privacy.
+
+### Presentation Exchange
+The next component is a data model that provides a solution to the problem of
+how to format a request that verifiable information be presented. The
+[Presentation Exchange specification](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
+was recently published by the Decentralized Identity Foundation. It defines a
+`Presentation Definition` data object which may be used by a relying party to
+request information, and a `Presentation Submission` object which describes the
+relationship between the `Presentation Definition` and the submitted verifiable
+information.
+
+Since
+[Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
+supports the use of `Verifiable Presentations` as a response to a `Presentation
+Definition`, while remaining agnostic to transport protocols, it is ideal for
+our purposes.
+
+### Communication, Transport, and Protocol
+Previously described components were, for the most part, agreed upon readily.
+The bulk of the conversations at IIW centered around communication and protocol
+options and sought to answer the following questions:
+- "How should the data objects be communicated from one party to another?"
+- "How ought they to be transported securely?"
+- "What protocol could be used for the exchange?"
+
+#### DIDComm
+Before participants settled on using elements of
+[DIDComm v2.0](https://identity.foundation/didcomm-messaging/spec/) to securely
+communicate the data objects, there was a long and lively discussion about other
+options. 
+
+[CHAPI](https://w3c-ccg.github.io/credential-handler-api/) is an API for
+exchanging data between websites and browsers. It was seen as too limited to a
+particular technology to be widely useful for wallet applications on smart
+phones and other devices without significant changes.
+
+[VC-HTTP-API](https://w3c-ccg.github.io/vc-http-api/) was seen as promising, but
+in its current state lacks an API for a `Verifiable Credential` holder. A number
+of participants expressed a desire for the WACI specification to strive to be
+compatible with this API, and that remains a goal of this group.
+
+[DIDComm v2.0](https://identity.foundation/didcomm-messaging/spec/) describes
+a method for securely communicating authenticated messages between entities that
+control [Decentralized Identifiers](https://www.w3.org/TR/did-core/) along any
+transport layer. It allows for two parties to mutually authenticate and securely
+communicate. DIDComm has a large community interested in using it, and many have
+already implemented DIDComm v1.0. 
+
+#### Aries Present Proof
+
+[OIDC-SIOP](https://openid.bitbucket.io/connect/openid-connect-self-issued-v2-1_0.html)
+seeks to bridge existing federated identity capabilities on the internet with
+principles of self-sovereign identity, and may ultimately be a good fit for this
+protocol. It was not selected for this version of the specification primarily
+because v1 of the specification has been deprecated, and v2 of the specification
+is being incorporated into the next major version of OIDC, so it is not yet
+ready.
+
+[Aries Protocols](https://github.com/hyperledger/aries-rfcs), specifically the
+[present proof protocol](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2)
+were explored as a possible option. The group determined that the protocol's
+existing support for DIDComm and Presentation Exchange, along with its use
+within different implementations by a number of organizations made it an ideal
+choice for this first iteration. 
+
+### WACI
+The [WACI](https://github.com/decentralized-identity/wallet-and-credential-interactions)
+specification provides a framework within which the components above reside. It
+was presented separately at IIW and almost immediately became a cornerstone of
+this effort.
 
 ## Presentation Exchange Context
 
@@ -118,21 +216,51 @@ Both parties MUST have a `service` block containing the following properties:
   }]
 ```
 
-TODO: Explain routing keys. Each property and normative status:
 - service block must be present
 - `id` MUST contain a unique id
 - `type` MUST be `DIDCommMessaging`
 - `serviceEndpoint` MUST be a resolvable URI
-- `routingKeys` MUST contain valid routing keys (ref directly to DIDComm spec section about routing keys)
+- `routingKeys` MUST contain 0 or more valid routing keys. See next section for details.
+
+#### Routing Keys
+
+Routing Keys are used to enable message routing to agents unable to provide a direct service endpoint. Routing is arranged by the message recipient and communicated in the Service Endpoint as detailed above. 
+
+For each DID key reference present in the `routingKeys` list in order, take the encrypted message, wrap it in a forward message as detailed below, and encrypt to the DID key reference. The newly encrypted message becomes the message to transmit to the listed `serviceEndpoint` or encrypted to the next Key in the `routingKeys` list.
+
+Forward message structure:
+
+```jsonc
+{
+    "type": "https://didcomm.org/routing/2.0/forward",
+    "to": ["did:example:somemediator#somekey"],
+    "body":{
+        "next": "did:example:123123123",
+    },
+    "attachments": [
+        {
+            "data": {
+            	"jwe": { }//jwe json structure of the message being forwarded
+        	}
+        }
+    ]
+}
+```
+
+
 
 ### Establishing an HTTP(S) Connection
 
 In order to establish a new connection, Simply exchange a new message between parties. Knowing the DID of the other parties does not indicate any level of trust.
 
-The assumptions and requirements for using an HTTP(S) connection for sending,
-routing, and receiving DIDComm packets are described in the [HTTP(S)
-section](https://identity.foundation/didcomm-messaging/spec/#https) of the
-DIDComm v2 specification.
+Details of Sending an encrypted message to a `serviceEndpoint` via HTTP:
+
+- Messages are transported via HTTP POST.
+- The MIME Type for the POST request is set to the corresponding media type defined in [Media Types](https://identity.foundation/didcomm-messaging/spec/#media-types), e.g., `application/didcomm-encrypted+json`.
+- A successful message receipt MUST return a code in the 2xx HTTP Status Code range. It is recommended that a HTTP POST should return a 202 Accepted status code.
+- POST requests are transmit only. Messages are only sent from the code that submitted the POST request.
+- HTTP Redirects SHOULD be followed. Only Temporary Redirects (307) are acceptable. Permanent endpoint relocation should be managed with a DID Document update.
+- Using HTTPS with TLS 1.2 or greater with a forward secret cipher will provide Perfect Forward Secrecy (PFS) on the transmission leg.
 
 
 ## WACI Protocol Context

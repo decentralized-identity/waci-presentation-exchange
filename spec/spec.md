@@ -67,23 +67,6 @@ components below.
 
 ![Layering Diagram](./resources/layer_cake_v0-2.png)
 
-<<<<<<< HEAD
-Presentation Exchange objects support a large variety of possible content and
-signature types. As this version of our specification has a limited scope, a
-number of considerations need to be made for
-[presentation definitions](https://identity.foundation/presentation-exchange/#presentation-definition)
-to provide what we need.
-
-### format property
-
-A `presentation definition` that complies with this specification MUST contain a
-`format` property. The value of the `format` property MUST be an object with the
-following property:
-- `ldp_vp`: This property indicates that a W3C Verifiable Presentation will be
-submitted in the form of a JSON object. The value of this property MUST be an
-object with a `proof_type` property that has a value of either
-`BbsBlsSignatureProof2020` or `BbsBlsBoundSignatureProof2020`.
-=======
 ### Verifiable Presentations
 The starting point for most participants in determining which components to
 select was the
@@ -171,9 +154,21 @@ was presented separately at IIW and almost immediately became a cornerstone of
 this effort.
 
 ## Presentation Exchange Context
+Presentation Exchange objects support a large variety of possible content and
+signature types. As this version of our specification has a limited scope, a
+number of considerations need to be made for
+[presentation definitions](https://identity.foundation/presentation-exchange/#presentation-definition)
+to provide what we need.
 
-### Selective Disclosure
->>>>>>> 4865da83622b0f90dff9b3f22e17d5c95ab5dc0b
+### format property
+
+A `presentation definition` that complies with this specification MUST contain a
+`format` property. The value of the `format` property MUST be an object with the
+following property:
+- `ldp_vp`: This property indicates that a W3C Verifiable Presentation will be
+submitted in the form of a JSON object. The value of this property MUST be an
+object with a `proof_type` property that has a value of either
+`BbsBlsSignatureProof2020` or `BbsBlsBoundSignatureProof2020`.
 
 For example:
 

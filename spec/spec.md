@@ -161,7 +161,10 @@ In order to support selective disclosure of Verifiable Credential claims the use
 of a JSON-LD frame object is combined with the above signature types.
 
 The method for a verifier to provide a JSON-LD frame is to add a `frame`
-property to the `presentation definition` object.
+property to the `presentation definition` object. The value of the `frame`
+property MUST be a
+[JSON-LD frame](https://json-ld.org/spec/FCGS/json-ld-framing/20180607/#framing)
+for an object that complies with the [W3C VC Data Model](https://www.w3.org/TR/vc-data-model/).
 
 For Example:
 ```json5

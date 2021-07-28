@@ -202,9 +202,9 @@ consisting of a unique identifier.
 string `DIDCommMessaging`.
 - a service object MUST have a `serviceEndpoint` property, and its value MUST
 be a string consisting of a valid, resolvable URI.
-- a service object MUST have a `routingKeys` property, and its value MUST be
-an array of strings. Each string MUST be a URI designating a valid routing key.
-See below for more details.
+- a service object MAY have a `routingKeys` property. If present its value MUST
+be an array of strings. Each string MUST be a URI designating a valid routing
+key. See below for more details.
 
 #### Routing Keys
 

@@ -223,19 +223,18 @@ In order to establish a new connection, Simply exchange a new message between
 parties. Knowing the DID of the other parties does not indicate any level of
 trust.
 
-Details of Sending an encrypted message to a `serviceEndpoint` via HTTP:
+Details of sending an encrypted message to a `serviceEndpoint` via HTTP:
 
 - Messages are transported via HTTP POST.
 - The MIME Type for the POST request is set to the corresponding media type
 defined in [Media Types](https://identity.foundation/didcomm-messaging/spec/#media-types),
 e.g., `application/didcomm-encrypted+json`.
 - A successful message receipt MUST return a code in the 2xx HTTP Status Code
-range. It is recommended that a HTTP POST should return a 202 Accepted status
-code.
-- POST requests are transmit only. Messages are only sent from the code that
+range. It is RECOMMENDED that a HTTP POST return a `202 Accepted` status code.
+- POST requests are transmit only. Messages are sent from the code that
 submitted the POST request.
 - HTTP Redirects SHOULD be followed. Only Temporary Redirects (307) are
-acceptable. Permanent endpoint relocation should be managed with a DID document
+acceptable. Permanent endpoint relocation SHOULD be managed with a DID document
 update.
 - Using HTTPS with TLS 1.2 or greater with a forward secret cipher will provide
 Perfect Forward Secrecy (PFS) on the transmission leg.

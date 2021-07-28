@@ -195,7 +195,7 @@ For Example:
 }
 ```
 
-The Presentation Exchange specification does dot currently define a `frame`
+The Presentation Exchange specification does not currently define a `frame`
 property for a `presentation definition`. This means that implementers of
 Presentation Exchange who wish to use the protocol described here may run into
 errors when using the 

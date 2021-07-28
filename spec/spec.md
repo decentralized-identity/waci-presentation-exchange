@@ -195,13 +195,14 @@ Both parties MUST have a `service` block containing the following properties:
 
 Routing Keys are used to enable message routing to agents unable to provide a
 direct service endpoint. Routing is arranged by the message recipient and
-communicated in the Service Endpoint as detailed above. 
+communicated by the `service` property as defined above. 
 
-For each DID key reference present in the `routingKeys` list in order, take the
-encrypted message, wrap it in a forward message as detailed below, and encrypt
-to the DID key reference. The newly encrypted message becomes the message to
-transmit to the listed `serviceEndpoint` or encrypted to the next Key in the
-`routingKeys` list.
+Before preparing a routed message, the sender encrypts the message for the
+recipient. Then, for each routing key in the `routingKeys` array in order, take
+the encrypted message, wrap it in a forward message (see below), and encrypt the
+forward message to the routing key. The newly encrypted message becomes the
+message to transmit to the listed `serviceEndpoint` or encrypted to the next
+routing key in the `routingKeys` array.
 
 Forward message structure:
 

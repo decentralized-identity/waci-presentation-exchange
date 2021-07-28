@@ -193,13 +193,19 @@ Both parties MUST have a `service` block containing the following properties:
 
 #### Routing Keys
 
-Routing Keys are used to enable message routing to agents unable to provide a direct service endpoint. Routing is arranged by the message recipient and communicated in the Service Endpoint as detailed above. 
+Routing Keys are used to enable message routing to agents unable to provide a
+direct service endpoint. Routing is arranged by the message recipient and
+communicated in the Service Endpoint as detailed above. 
 
-For each DID key reference present in the `routingKeys` list in order, take the encrypted message, wrap it in a forward message as detailed below, and encrypt to the DID key reference. The newly encrypted message becomes the message to transmit to the listed `serviceEndpoint` or encrypted to the next Key in the `routingKeys` list.
+For each DID key reference present in the `routingKeys` list in order, take the
+encrypted message, wrap it in a forward message as detailed below, and encrypt
+to the DID key reference. The newly encrypted message becomes the message to
+transmit to the listed `serviceEndpoint` or encrypted to the next Key in the
+`routingKeys` list.
 
 Forward message structure:
 
-```jsonc
+```json5
 {
     "type": "https://didcomm.org/routing/2.0/forward",
     "to": ["did:example:somemediator#somekey"],
@@ -209,7 +215,7 @@ Forward message structure:
     "attachments": [
         {
             "data": {
-            	"jwe": { }//jwe json structure of the message being forwarded
+            	"jwe": { } //jwe json structure of the message being forwarded
         	}
         }
     ]

@@ -224,7 +224,6 @@ Forward message structure:
 ```
 
 
-
 ### Establishing an HTTP(S) Connection
 
 In order to establish a new connection, Simply exchange a new message between parties. Knowing the DID of the other parties does not indicate any level of trust.

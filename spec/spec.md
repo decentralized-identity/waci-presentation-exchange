@@ -200,18 +200,20 @@ communicated by the `service` property as defined above.
 Before preparing a routed message, the sender encrypts the message for the
 recipient. Then, for each routing key in the `routingKeys` array in order, take
 the encrypted message, wrap it in a forward message (see below), and encrypt the
-forward message to the routing key. The newly encrypted message becomes the
-message to transmit to the listed `serviceEndpoint` or encrypted to the next
-routing key in the `routingKeys` array.
+forward message to the routing key.
+
+The process of wrapping the encrypted message in a forward message and
+encrypting it is repeated for each routing key in the array. The final encrypted
+message is transmitted to the listed `serviceEndpoint`.
 
 Forward message structure:
 
 ```json5
 {
     "type": "https://didcomm.org/routing/2.0/forward",
-    "to": ["did:example:somemediator#somekey"],
+    "to": ["did:example:somemediator#somekey"], // the routing key URI
     "body":{
-        "next": "did:example:123123123",
+        "next": "did:example:123123123", // the recipient of the encrypted package
     },
     "attachments": [
         {

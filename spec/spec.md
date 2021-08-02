@@ -168,7 +168,7 @@ following property:
 - `ldp_vp`: This property indicates that a W3C Verifiable Presentation will be
 submitted in the form of a JSON object. The value of this property MUST be an
 object with a `proof_type` property that has a value of either
-`BbsBlsSignatureProof2020` or `BbsBlsBoundSignatureProof2020`.
+`BbsBlsSignature2020`, `JsonWebSignature2020`, or `Ed25519Signature2018`.
 
 For example:
 
@@ -179,7 +179,7 @@ For example:
     "input_descriptors": [],
     "format": {
       "ldp_vp": {
-        "proof_type": ["BbsBlsSignatureProof2020", "BbsBlsBoundSignatureProof2020"]
+        "proof_type": ["BbsBlsSignature2020", "JsonWebSignature2020", "Ed25519Signature2018"]
       }
     }
   }

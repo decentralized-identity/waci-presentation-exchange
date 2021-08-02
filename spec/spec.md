@@ -171,7 +171,6 @@ object with a `proof_type` property that has a value of either
 `BbsBlsSignature2020`, `JsonWebSignature2020`, or `Ed25519Signature2018`.
 
 For example:
-
 ```json5
 {
   "presentation_definition": {
@@ -195,51 +194,152 @@ the disclosed claims. `BbsBlsBoundSignature2020` and
 `BbsBlsBoundSignatureProof2020` also provide a mechanism for privately binding
 credentials and presentations to the holder. 
 
+### frame property
+
+In order to support selective disclosure of Verifiable Credential claims the use
+of a JSON-LD frame object is combined with the above signature types.
+
+The method for a verifier to provide a JSON-LD frame is to add a `frame`
+property to the `presentation definition` object. The value of the `frame`
+property MUST be a
+[JSON-LD frame](https://json-ld.org/spec/FCGS/json-ld-framing/20180607/#framing)
+for an object that complies with the [W3C VC Data Model](https://www.w3.org/TR/vc-data-model/).
+
+For Example:
+```json5
+{
+  "presentation_definition": {
+    "id": "32f54163-7166-48f1-93d8-ff217bdb0653",
+    "input_descriptors": [],
+    "frame": {
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://w3id.org/vaccination/v1",
+        "https://w3id.org/security/suites/bls12381-2020/v1"
+      ],
+      "type": [
+        "VerifiableCredential",
+        "VaccinationCertificate"
+      ],
+      "credentialSubject": {
+        "@explicit": true,
+        "type": [
+          "VaccinationEvent"
+        ],
+        "batchNumber": {},
+        "countryOfVaccination": {}
+      }
+    }
+  }
+}
+```
+      ::: note
+      It is important that the JSON-LD frame object be compatible with the input
+      descriptors of the presentation definition. There is an assumed direct
+      mapping between the JSON-LD frame object and the corresponding input
+      descriptor object in the presentation definition.
+      If a presentation definition has a JSON-LD frame that is inconsistent with
+      the input descriptors, it may be impossible to produce an acceptable
+      verifiable presentation for it.
+      
+      We anticipate that it may be possible to deterministically derive a valid
+      JSON-LD frame from an input descriptor, but a formal specification for
+      doing so does not, at this time, exist.
+      :::
+
+The Presentation Exchange specification does not currently define a `frame`
+property for a `presentation definition`. This means that implementers of
+Presentation Exchange who wish to use the protocol described here may run into
+errors when using the 
+[JSON Schema from Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/#json-schema-2)
+to validate `presentation definition` objects that contain a frame property.
+
+We recommend using the following JSON Schema definition to validate
+`presentation definition` objects that include a `frame` property:
+```json
+[[insert: ./test/presentation-definition/schema.json]]
+```
+
+More information about how frames work with BBS+ signatures can be found in the
+[Linked Data Proof BBS+ Signatures 2020 Suite](https://w3c-ccg.github.io/ldp-bbs2020/#the-bbs-signature-proof-suite-2020)
+and the [Mattr example implementation](https://github.com/mattrglobal/jsonld-signatures-bbs).
+
+For a more general overview of LD-Framing strategies as a general approach to
+querying and matching Linked-Data, see the
+[JSON-LD Framing](https://json-ld.org/spec/FCGS/json-ld-framing/20180607/#framing)
+guide written by the JSON-LD Community Group at W3C on the occasion of version
+1.1 of the JSON-LD specification.
+
 ## DIDComm Context
 
 The exchange specified in the [DIDComm v2
 specification](https://identity.foundation/didcomm-messaging/spec/) is presumed
 to take place between two subjects that control DIDs with certain properties,
-and can take place over many different transports. Having a connection means that each party in the relationship has a DID for the other parties, and parties can communicate securely using the keys and endpoints within each DID Document. 
+and can take place over many different transports. Having a connection means
+that each party in the relationship has a DID for the other parties, and parties
+can communicate securely using the keys and endpoints within each DID Document. 
 
-### Service block expected in DID Documents for DIDComm
+All parties MUST have a `DID document` that complies with this specification. 
 
-Both parties MUST have a `service` block containing the following properties:
+### service property
+
+A `DID document` that complies with this specification MUST have a `service`
+property.
+
+For example:
 
 ```json
-"service": [{
+{
+  "service": [{
     "id": "did:example:123123123#someid",
     "type": "DIDCommMessaging",
     "serviceEndpoint": "https://example.com/endpoint",
     "routingKeys": ["did:example:somemediator#somekey"]
   }]
+}
 ```
-
-- service block must be present
-- `id` MUST contain a unique id
-- `type` MUST be `DIDCommMessaging`
-- `serviceEndpoint` MUST be a resolvable URI
-- `routingKeys` MUST contain 0 or more valid routing keys. See next section for details.
+ 
+The value of the `service` property MUST be an array of objects composed as
+follows:
+- a service object MUST have an `id` property and its value MUST be a string
+consisting of a unique identifier.
+- a service object MUST have a `type` property and its value MUST be the
+string `DIDCommMessaging`.
+- a service object MUST have a `serviceEndpoint` property, and its value MUST
+be a string consisting of a valid, resolvable URI.
+- a service object MAY have a `routingKeys` property. If present its value MUST
+be an array of strings. Each string MUST be a URI designating a valid routing
+key. See below for more details.
 
 #### Routing Keys
 
-Routing Keys are used to enable message routing to agents unable to provide a direct service endpoint. Routing is arranged by the message recipient and communicated in the Service Endpoint as detailed above. 
+Routing Keys are used to enable message routing to agents unable to provide a
+direct service endpoint. Routing is arranged by the message recipient and
+communicated by the `service` property as defined above. 
 
-For each DID key reference present in the `routingKeys` list in order, take the encrypted message, wrap it in a forward message as detailed below, and encrypt to the DID key reference. The newly encrypted message becomes the message to transmit to the listed `serviceEndpoint` or encrypted to the next Key in the `routingKeys` list.
+Before preparing a routed message, the sender creates an encrypted package by
+encrypting the message for the recipient. Then, for each routing key in the
+`routingKeys` array in order, take the encrypted package, wrap it in a forward
+message (see below), and encrypt the forward message to the routing key to
+create a new encrypted package.
+
+The process of wrapping the encrypted package in a forward message and
+encrypting it is repeated for each routing key in the array. The final encrypted
+package is transmitted to the listed `serviceEndpoint`.
 
 Forward message structure:
 
-```jsonc
+```json5
 {
     "type": "https://didcomm.org/routing/2.0/forward",
-    "to": ["did:example:somemediator#somekey"],
+    "to": ["did:example:somemediator#somekey"], //the routing key URI
     "body":{
-        "next": "did:example:123123123",
+        "next": "did:example:123123123", //the recipient of the encrypted package
     },
     "attachments": [
         {
             "data": {
-            	"jwe": { }//jwe json structure of the message being forwarded
+            	"jwe": { } //jwe json structure of the encrypted package
         	}
         }
     ]
@@ -247,19 +347,27 @@ Forward message structure:
 ```
 
 
-
 ### Establishing an HTTP(S) Connection
 
-In order to establish a new connection, Simply exchange a new message between parties. Knowing the DID of the other parties does not indicate any level of trust.
+In order to establish a new connection, Simply exchange a new message between
+parties. Knowing the DID of the other parties does not indicate any level of
+trust.
 
-Details of Sending an encrypted message to a `serviceEndpoint` via HTTP:
+Details of sending an encrypted message to a `serviceEndpoint` via HTTP:
 
 - Messages are transported via HTTP POST.
-- The MIME Type for the POST request is set to the corresponding media type defined in [Media Types](https://identity.foundation/didcomm-messaging/spec/#media-types), e.g., `application/didcomm-encrypted+json`.
-- A successful message receipt MUST return a code in the 2xx HTTP Status Code range. It is recommended that a HTTP POST should return a 202 Accepted status code.
-- POST requests are transmit only. Messages are only sent from the code that submitted the POST request.
-- HTTP Redirects SHOULD be followed. Only Temporary Redirects (307) are acceptable. Permanent endpoint relocation should be managed with a DID Document update.
-- Using HTTPS with TLS 1.2 or greater with a forward secret cipher will provide Perfect Forward Secrecy (PFS) on the transmission leg.
+- The MIME Type for the POST request is set to the corresponding media type
+defined in [Media Types](https://identity.foundation/didcomm-messaging/spec/#media-types),
+e.g., `application/didcomm-encrypted+json`.
+- A successful message receipt MUST return a code in the 2xx HTTP Status Code
+range. It is RECOMMENDED that a HTTP POST return a `202 Accepted` status code.
+- POST requests are transmit only. Messages are sent from the code that
+submitted the POST request.
+- HTTP Redirects SHOULD be followed. Only Temporary Redirects (307) are
+acceptable. Permanent endpoint relocation SHOULD be managed with a DID document
+update.
+- Using HTTPS with TLS 1.2 or greater with a forward secret cipher will provide
+Perfect Forward Secrecy (PFS) on the transmission leg.
 
 
 ## WACI Protocol Context

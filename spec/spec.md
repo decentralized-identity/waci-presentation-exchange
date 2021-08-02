@@ -155,15 +155,82 @@ this effort.
 
 ## Presentation Exchange Context
 
-### Selective Disclosure
+### frame property
 
-To allow for selective disclosure of Verifiable Credential claims the use of a 
-JSON-LD frame object is combined with a `BbsBlsSignature2020` on the 
-credential. This signature allows for a zero knowledge proof of the original 
-signature, allowing the prover to derive a `BbsBlsSignatureProof2020` that will 
-verify the disclosed claims. 
+In order to support selective disclosure of Verifiable Credential claims the use
+of a JSON-LD frame object is combined with the above signature types.
 
-More information about how this works can be found in the [Linked Data Proof BBS+ Signatures 2020 Suite](https://w3c-ccg.github.io/ldp-bbs2020/#the-bbs-signature-proof-suite-2020) and the [Mattr example implementation](https://github.com/mattrglobal/jsonld-signatures-bbs). For a more general overview of LD-Framing strategies as a general approach to querying and matching Linked-Data, see the [JSON-LD Framing](https://json-ld.org/spec/FCGS/json-ld-framing/20180607/#framing) guide written by the JSON-LD Community Group at W3C on the occasion of version 1.1 of the JSON-LD specification.
+The method for a verifier to provide a JSON-LD frame is to add a `frame`
+property to the `presentation definition` object. The value of the `frame`
+property MUST be a
+[JSON-LD frame](https://json-ld.org/spec/FCGS/json-ld-framing/20180607/#framing)
+for an object that complies with the [W3C VC Data Model](https://www.w3.org/TR/vc-data-model/).
+
+For Example:
+```json5
+{
+  "presentation_definition": {
+    "id": "32f54163-7166-48f1-93d8-ff217bdb0653",
+    "input_descriptors": [],
+    "frame": {
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://w3id.org/vaccination/v1",
+        "https://w3id.org/security/suites/bls12381-2020/v1"
+      ],
+      "type": [
+        "VerifiableCredential",
+        "VaccinationCertificate"
+      ],
+      "credentialSubject": {
+        "@explicit": true,
+        "type": [
+          "VaccinationEvent"
+        ],
+        "batchNumber": {},
+        "countryOfVaccination": {}
+      }
+    }
+  }
+}
+```
+
+      ::: note
+      It is important that the JSON-LD frame object be compatible with the input
+      descriptors of the presentation definition. There is an assumed direct
+      mapping between the JSON-LD frame object and the corresponding input
+      descriptor object in the presentation definition.
+      If a presentation definition has a JSON-LD frame that is inconsistent with
+      the input descriptors, it may be impossible to produce an acceptable
+      verifiable presentation for it.
+      
+      We anticipate that it may be possible to deterministically derive a valid
+      JSON-LD frame from an input descriptor, but a formal specification for
+      doing so does not, at this time, exist.
+      :::
+
+The Presentation Exchange specification does not currently define a `frame`
+property for a `presentation definition`. This means that implementers of
+Presentation Exchange who wish to use the protocol described here may run into
+errors when using the 
+[JSON Schema from Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/#json-schema-2)
+to validate `presentation definition` objects that contain a frame property.
+
+We recommend using the following JSON Schema definition to validate
+`presentation definition` objects that include a `frame` property:
+```json
+[[insert: ./test/presentation-definition/schema.json]]
+```
+
+More information about how frames work with BBS+ signatures can be found in the
+[Linked Data Proof BBS+ Signatures 2020 Suite](https://w3c-ccg.github.io/ldp-bbs2020/#the-bbs-signature-proof-suite-2020)
+and the [Mattr example implementation](https://github.com/mattrglobal/jsonld-signatures-bbs).
+
+For a more general overview of LD-Framing strategies as a general approach to
+querying and matching Linked-Data, see the
+[JSON-LD Framing](https://json-ld.org/spec/FCGS/json-ld-framing/20180607/#framing)
+guide written by the JSON-LD Community Group at W3C on the occasion of version
+1.1 of the JSON-LD specification.
 
 ## DIDComm Context
 

@@ -275,29 +275,38 @@ key. See below for more details.
 
 #### Routing Keys
 
-Routing Keys are used to enable message routing to agents unable to provide a direct service endpoint. Routing is arranged by the message recipient and communicated in the Service Endpoint as detailed above. 
+Routing Keys are used to enable message routing to agents unable to provide a
+direct service endpoint. Routing is arranged by the message recipient and
+communicated by the `service` property as defined above. 
 
-For each DID key reference present in the `routingKeys` list in order, take the encrypted message, wrap it in a forward message as detailed below, and encrypt to the DID key reference. The newly encrypted message becomes the message to transmit to the listed `serviceEndpoint` or encrypted to the next Key in the `routingKeys` list.
+Before preparing a routed message, the sender creates an encrypted package by
+encrypting the message for the recipient. Then, for each routing key in the
+`routingKeys` array in order, take the encrypted package, wrap it in a forward
+message (see below), and encrypt the forward message to the routing key to
+create a new encrypted package.
+
+The process of wrapping the encrypted package in a forward message and
+encrypting it is repeated for each routing key in the array. The final encrypted
+package is transmitted to the listed `serviceEndpoint`.
 
 Forward message structure:
 
-```jsonc
+```json5
 {
     "type": "https://didcomm.org/routing/2.0/forward",
-    "to": ["did:example:somemediator#somekey"],
+    "to": ["did:example:somemediator#somekey"], //the routing key URI
     "body":{
-        "next": "did:example:123123123",
+        "next": "did:example:123123123", //the recipient of the encrypted package
     },
     "attachments": [
         {
             "data": {
-            	"jwe": { }//jwe json structure of the message being forwarded
+            	"jwe": { } //jwe json structure of the encrypted package
         	}
         }
     ]
 }
 ```
-
 
 
 ### Establishing an HTTP(S) Connection

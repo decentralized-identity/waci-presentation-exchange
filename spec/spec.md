@@ -237,26 +237,41 @@ guide written by the JSON-LD Community Group at W3C on the occasion of version
 The exchange specified in the [DIDComm v2
 specification](https://identity.foundation/didcomm-messaging/spec/) is presumed
 to take place between two subjects that control DIDs with certain properties,
-and can take place over many different transports. Having a connection means that each party in the relationship has a DID for the other parties, and parties can communicate securely using the keys and endpoints within each DID Document. 
+and can take place over many different transports. Having a connection means
+that each party in the relationship has a DID for the other parties, and parties
+can communicate securely using the keys and endpoints within each DID Document. 
 
-### Service block expected in DID Documents for DIDComm
+All parties MUST have a `DID document` that complies with this specification. 
 
-Both parties MUST have a `service` block containing the following properties:
+### service property
+
+A `DID document` that complies with this specification MUST have a `service`
+property.
+
+For example:
 
 ```json
-"service": [{
+{
+  "service": [{
     "id": "did:example:123123123#someid",
     "type": "DIDCommMessaging",
     "serviceEndpoint": "https://example.com/endpoint",
     "routingKeys": ["did:example:somemediator#somekey"]
   }]
+}
 ```
-
-- service block must be present
-- `id` MUST contain a unique id
-- `type` MUST be `DIDCommMessaging`
-- `serviceEndpoint` MUST be a resolvable URI
-- `routingKeys` MUST contain 0 or more valid routing keys. See next section for details.
+ 
+The value of the `service` property MUST be an array of objects composed as
+follows:
+- a service object MUST have an `id` property and its value MUST be a string
+consisting of a unique identifier.
+- a service object MUST have a `type` property and its value MUST be the
+string `DIDCommMessaging`.
+- a service object MUST have a `serviceEndpoint` property, and its value MUST
+be a string consisting of a valid, resolvable URI.
+- a service object MAY have a `routingKeys` property. If present its value MUST
+be an array of strings. Each string MUST be a URI designating a valid routing
+key. See below for more details.
 
 #### Routing Keys
 

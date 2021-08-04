@@ -308,6 +308,57 @@ Forward message structure:
 }
 ```
 
+### Encryption
+
+Messages are sent encrypted. Each example in this spec must be encrypted before transmission with the exception of the message encoded into a QR code. 
+
+TODO: Update examples with more accurate details.
+
+JOSE Header
+
+```json5
+ {
+    "typ":"JWM",
+    "enc":"A256GCM"
+   }
+```
+
+The KID used in the JWE recipients block is the DID of the message recipient
+
+The plaintext message for encryption is created by serializing the json to a string, typically without whitespace.
+
+The encrypted message MUST be in json form. Compact JWEs are not allowed.
+
+Encoded message example. (line breaks for clarity only)
+
+```json5
+{
+     "protected": "eyJ0eXAiOiJKV00iLCJlbmMiOiJBMjU2R0NNIiwi
+     a2lkIjoiUEdvWHpzME5XYVJfbWVLZ1RaTGJFdURvU1ZUYUZ1eXJiV0
+     k3VjlkcGpDZyIsImFsZyI6IkVDREgtRVMrQTI1NktXIiwiZXBrIjp7
+     Imt0eSI6IkVDIiwiY3J2IjoiUC0yNTYiLCJ4IjoiLU5oN1NoUkJfeG
+     FDQlpSZElpVkN1bDNTb1IwWXc0VEdFUXFxR2lqMXZKcyIsInkiOiI5
+     dEx4ODFQTWZRa3JPdzh5dUkyWXdJMG83TXROemFDR2ZDQmJaQlc1WX
+     JNIn19",
+     "recipients": [
+       {
+    	"header": {
+    		"kid": "did:example:recipient"
+		},
+    	"encrypted_key": "J1Fs9JaDjOT_5481ORQWfEZmHy7OjE3p
+         TNKccnK7hlqjxbPalQWWLg"
+       }
+     ],
+     "iv": "u5kIzo0m_d2PjI4m",
+     "ciphertext": "qGuFFoHy7HBmkf2BaY6eREwzEjn6O_FnRoXj2H-
+     DAXo1PgQdfON-_1QbxtnT8e8z_M6Gown7s8fLtYNmIHAuixqFQnSA4
+     fdMcMSi02z1MYEn2JC-1EkVbWr4TqQgFP1EyymB6XjCWDiwTYd2xpK
+     oUshu8WW601HLSgFIRUG3-cK_ZSdFaoWosIgAH5EQ2ayJkRB_7dXuo
+     6_AYdIzMahvPz0n1yHHBlYBuYeR58V-x85ACeCGtzL2OptPa2TmWdA
+     9Bi1MK6TYGZKezc6rpCK_VRSnLXhFwa1C3T0QBes",
+     "tag": "doeAoagwJe9BwKayfcduiw"
+   }
+```
 
 ### Establishing an HTTP(S) Connection
 

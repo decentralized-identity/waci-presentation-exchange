@@ -334,7 +334,12 @@ Perfect Forward Secrecy (PFS) on the transmission leg.
 
 ## WACI Protocol Context
 
-The interactions, objects, and assumptions outlined in the WACI pre-draft specification are the basis for the following.  Specifically, the profile describes the [Request/Share flow](https://identity.foundation/wallet-and-credential-interactions/#requestshare). As an overview, see this flow diagram:
+The interactions, objects, and assumptions outlined in the WACI pre-draft
+specification are the basis for the following.  Specifically, the profile
+describes the
+[Request/Share flow](https://identity.foundation/wallet-and-credential-interactions/#requestshare).
+
+As an overview, see this flow diagram:
 
 <tab-panels selected-index="0">
 
@@ -426,11 +431,13 @@ sequenceDiagram
 
 ### Step 1 - Generate QR Code
 
-The QR code used to start a presentation is constructed by encoding a json based message into a URI, then encoding that URI into a QR code.
+The QR code used to start a presentation is constructed by encoding a json based
+message into a URI, then encoding that URI into a QR code.
 
 #### JSON message
 
-The contents of the QR code to be generated can described in the following JSON bloc, which is also what DIDComm v2 calls an "out of band invitation."
+The contents of the QR code to be generated are described in the following JSON
+bloc, which DIDComm v2 calls an "out of band invitation."
 
 ```json=
 {
@@ -446,13 +453,15 @@ The contents of the QR code to be generated can described in the following JSON 
 
 #### Encoding
 
-To encode this message, remove all json whitespace and Base 64 URL encode. The result should look like this, for the example above:
+To encode this message, remove all json whitespace and Base 64 URL encode. The
+result should look like this, for the example above:
 
 ```
 eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb2YtYmFuZC8yLjAvaW52aXRhdGlvbiIsImlkIjoiNTk5ZjM2MzgtYjU2My00OTM3LTk0ODctZGZlNTUwOTlkOTAwIiwiZnJvbSI6ImRpZDpleGFtcGxlOnZlcmlmaWVyIiwiYm9keSI6eyJnb2FsX2NvZGUiOiJzdHJlYW1saW5lZC12cCIsImFjY2VwdCI6WyJkaWRjb21tL3YyIl19fQ==
 ```
 
-Prepend this encoded string with a domain and path, and a query parameter of `_oob` set to the encoded message. 
+Prepend this encoded string with a domain and path, and a query parameter of
+`_oob` set to the encoded message. 
 
 ```
 https://example.com/some/path?_oob=eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb2YtYmFuZC8yLjAvaW52aXRhdGlvbiIsImlkIjoiNTk5ZjM2MzgtYjU2My00OTM3LTk0ODctZGZlNTUwOTlkOTAwIiwiZnJvbSI6ImRpZDpleGFtcGxlOnZlcmlmaWVyIiwiYm9keSI6eyJnb2FsX2NvZGUiOiJzdHJlYW1saW5lZC12cCIsImFjY2VwdCI6WyJkaWRjb21tL3YyIl19fQ==
@@ -462,25 +471,23 @@ https://example.com/some/path?_oob=eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb
 
 Present as a link, or as a QR code.
 
-
-
 ![QR Code Example](./resources/qrcode_example.png)
-
-
-
-The URI, if loaded into a browser should display instructions on how to download and use a mobile application. If scanned inside an app that understands this protocol, the message should be extracted from the URI's `_oob` query parameter and processed without resolving the URI. This behavior allows for a better fallback user experience should a user encounter a QR code without having a suitable app.
 
 #### QR Code scanning and processing
 
-The URI, if loaded into a browser should display instructions on how to download and use a mobile application. If scanned inside an app that understands this protocol, the message should be extracted from the URI's `_oob` query parameter and processed without resolving the URI. This behavior allows for a better fallback user experience should a user encounter a QR code without having a suitable app.
+The URI, if loaded into a browser SHOULD display instructions on how to download
+and use a mobile application. If scanned inside an app that understands this
+protocol, the message SHOULD be extracted from the URI's `_oob` query parameter
+and processed without resolving the URI. This behavior allows for a better
+fallback user experience should a user encounter a QR code without having a
+suitable app.
 
 ### Step 2 - Send Message Proposing Presentation
 
 A "Propose Presentation" message, optional in many cases, is defined in [Aries
-RFC
-0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
-and its Presentation Exchange "attachment" defined in [RFC
-0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
+RFC 0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
+and its Presentation Exchange "attachment" defined in
+[RFC 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
 It either initiates a Request/Share interaction or answers an earlier invitation
 to do so; it can be functionally equivalent to the request for a challenge token
 in the [challenge token section](#challenge-token-2) above:
@@ -495,24 +502,24 @@ in the [challenge token section](#challenge-token-2) above:
 }
 ```
 
-Note: `id`s can be any arbitrary string used to identify each message, such as a
-UUID or a hash, but the `id` of the initial message should be included as `thid`
-("thread id"). In the above example, `id` of the message that established a
-connection was used for `thid`; `thid` could also be unspecified if this
-message were the first one over the channel or if a connection had been
-established out of band.
+Note: `id`s MAY be any arbitrary string used to identify each message, such as a
+UUID or a hash, but the `id` of the initial message SHOULD be included as `thid`
+("thread id"). In the above example, the `id` of the message that established a
+connection was used for `thid`; `thid` MAY be unspecified if this message is
+the first one over the channel or if a connection had been established out of
+band.
 
 ### Step 3 - Send Message Requesting Presentation
 
-The [v2] request for a Verifiable Presentation is defined in the "request
-presentation" section of [Aries RFC
-0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#request-presentation)
-and the attachment format for Presentation Exchange objects is defined in [Aries
-RFC
-0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#request-presentation-attachment-format).
+The request for a Verifiable Presentation is defined in the "request
+presentation" section of
+[Aries RFC 0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#request-presentation)
+and the attachment format for Presentation Exchange objects is defined in
+[Aries RFC 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#request-presentation-attachment-format).
+
 The challenge token that the holder will use to generate a replay-resistant VP
-is included in the the `options` object within the `dif` object, encoded as a
-DIDComm attachment:
+MUST be included in the the `options` object within the `dif` object, encoded as
+a DIDComm attachment:
 
 ```json5
 {
@@ -537,8 +544,7 @@ DIDComm attachment:
             "presentation_definition": {
               "id": "32f54163-7166-48f1-93d8-ff217bdb0654",
               // The frame property is a JSON-LD frame which is an addition to
-			        // presentation exchange that allows for selective disclosure
-			        // (see Appendix - Out of Scope)
+              // presentation exchange that allows for selective disclosure
               "frame": {
                 "@context": [
                   "https://www.w3.org/2018/credentials/v1",
@@ -594,14 +600,14 @@ DIDComm attachment:
 }
 ```
 
-For context on the Vaccination object passed, see the W3C-CCG [Vaccination
-Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
-example is drawn.
+For context on the Vaccination object passed, see the W3C-CCG
+[Vaccination Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/),
+from which the example is drawn.
 
 ### Step 4 - Present Proof 
 
-The Verifiable Presentation is again returned as an attachment (defined by [RFC
-0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#presentation-attachment-format))
+The Verifiable Presentation is again returned as an attachment (defined by
+[RFC 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#presentation-attachment-format))
 to a DIDComm
 [present-proof](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#presentation)
 message.  Note the `challenge` from the previous message is given in the `proof`
@@ -688,13 +694,13 @@ object for the VP and used to generate the signature there.
 }
 ```
 
-For context on the Vaccination object passed, see the W3C-CCG [Vaccination
-Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/), from which the
-example is drawn.
+For context on the Vaccination object passed, see the W3C-CCG
+[Vaccination Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/),
+from which the example is drawn.
 
 ### Step 5 - Ack Presentation
 
-Once the verifier validates the presentation, it MAY send a
+Once the verifier validates the presentation, it MAY send an
 [Acknowledgement](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#ack-presentation) 
 message back to the prover.
 
@@ -712,12 +718,13 @@ message back to the prover.
 }
 ```
 
-- `status`:
-  - MUST be included
-  - Possible values can be found [here](https://github.com/hyperledger/aries-rfcs/blob/master/features/0015-acks/README.md#ack-status).
-- `redirectUrl`:
-  - Optional
-  - If present, verifier expects the prover software to redirect to this url.
+The `body` property of an `Acknowledgement` message MUST contain a `status`
+property. The value of this property MUST be one of the statuses defined
+[here](https://github.com/hyperledger/aries-rfcs/blob/master/features/0015-acks/README.md#ack-status).
+
+The `body` property MAY contain a `redirectUrl` property. If present, the prover
+software SHOULD redirect to this url.
+
 ## Appendix
 
 ### Out of Scope

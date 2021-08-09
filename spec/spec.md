@@ -437,7 +437,7 @@ message into a URI, then encoding that URI into a QR code.
 #### JSON message
 
 The contents of the QR code to be generated are described in the following JSON
-bloc, which DIDComm v2 calls an "out of band invitation."
+block, which DIDComm v2 calls an "out of band invitation."
 
 ```json=
 {

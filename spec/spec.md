@@ -338,8 +338,9 @@ Forward message structure:
     },
     "attachments": [
         {
+            "media_type": "application/didcomm-encrypted+json",
             "data": {
-            	"jwe": { } //jwe json structure of the encrypted package
+            	"json": { } //json structure of the encrypted package
         	}
         }
     ]

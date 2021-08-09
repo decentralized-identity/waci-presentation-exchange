@@ -595,9 +595,18 @@ presentation" section of
 and the attachment format for Presentation Exchange objects is defined in
 [Aries RFC 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#request-presentation-attachment-format).
 
-The challenge token that the holder will use to generate a replay-resistant VP
-MUST be included in the the `options` object within the `dif` object, encoded as
-a DIDComm attachment:
+The `challenge` and `domain` properties are used to specify a nonce and an
+operational domain, similar to the functionality provided by the JWT `jti` and
+`aud` claims.
+
+The `options` object MUST contain a `challenge` property. The value of this
+property MUST be a string as described in
+[Aries RFC-510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#the-options-object)
+
+The `options` object MAY contain a `domain` property. If present, the value of
+this property MUST be a string as described in
+[Aries RFC-510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#the-options-object)
+
 
 ```json5
 {

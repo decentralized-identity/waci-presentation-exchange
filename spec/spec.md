@@ -739,4 +739,7 @@ to exchange presentations using a number of different transport protocols. For
 this version, anything other than the subset of DIDComm V2 that is described
 here is out of scope.
 
+#### Linked Data Signature Suite Definitions
 
+The specific cryptographic operations, and suite definitions are out of scope for this spec. 
+Please consider contributing to them [here](https://github.com/w3c-ccg/ldp-bbs2020).

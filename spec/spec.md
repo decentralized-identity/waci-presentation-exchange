@@ -154,6 +154,45 @@ was presented separately at IIW and almost immediately became a cornerstone of
 this effort.
 
 ## Presentation Exchange Context
+Presentation Exchange objects support a large variety of possible content and
+signature types. As this version of our specification has a limited scope, a
+number of considerations need to be made for
+[presentation definitions](https://identity.foundation/presentation-exchange/#presentation-definition)
+to provide what we need.
+
+### format property
+
+A `presentation definition` that complies with this specification MUST contain a
+`format` property. The value of the `format` property MUST be an object with the
+following property:
+- `ldp_vp`: This property indicates that a W3C Verifiable Presentation will be
+submitted in the form of a JSON object. The value of this property MUST be an
+object with a `proof_type` property that has a value of either
+`BbsBlsSignature2020`, `JsonWebSignature2020`, or `Ed25519Signature2018`.
+
+For example:
+```json5
+{
+  "presentation_definition": {
+    "id": "32f54163-7166-48f1-93d8-ff217bdb0653",
+    "input_descriptors": [],
+    "format": {
+      "ldp_vp": {
+        "proof_type": ["BbsBlsSignature2020", "JsonWebSignature2020", "Ed25519Signature2018"]
+      }
+    }
+  }
+}
+```
+
+To allow for selective disclosure of Verifiable Credential claims the use of a 
+`BbsBlsSignature2020` or `BbsBlsBoundSignature2020` is required for the
+credential. These signatures allows for a zero knowledge proof of the original 
+signature, allowing the prover to derive a corresponding
+`BbsBlsSignatureProof2020` or `BbsBlsBoundSignatureProof2020` that will verify
+the disclosed claims. `BbsBlsBoundSignature2020` and
+`BbsBlsBoundSignatureProof2020` also provide a mechanism for privately binding
+credentials and presentations to the holder. 
 
 ### frame property
 
@@ -194,7 +233,6 @@ For Example:
   }
 }
 ```
-
       ::: note
       It is important that the JSON-LD frame object be compatible with the input
       descriptors of the presentation definition. There is an assumed direct

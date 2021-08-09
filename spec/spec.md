@@ -343,7 +343,7 @@ Encoded message example. (line breaks for clarity only)
      "recipients": [
        {
     	"header": {
-    		"kid": "did:example:recipient"
+    		"kid": "did:example:recipient#key-agreement-key-1"
 		},
     	"encrypted_key": "J1Fs9JaDjOT_5481ORQWfEZmHy7OjE3p
          TNKccnK7hlqjxbPalQWWLg"

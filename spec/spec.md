@@ -770,11 +770,22 @@ software SHOULD redirect to this url.
 The following are items that were considered "out of scope" for v0.1, but which
 may be considered for future versions:
 
-1. How the JSON-LD frame object is handled by Presentation Exchange is not in 
-scope for v0.1 of this specification. Within the `presentation_definition` 
-object the `input_descriptor` describes where the data can be  There may be a 
-deterministic process that can be applied to `input_descriptors` to generate 
-the `frame` object  however that work is out of scope and not required at this 
-stage. The `input_descriptors` are describing where the properties in the 
-selective disclosure credential are and the `frame` is describing how to get 
-that selective disclosure credential.
+#### Deterministic rendering of the JSON-LD frame object
+Within the `presentation_definition` object the `input_descriptor` describes
+specifically which data elements are requested by the verifier. There may be a
+deterministic process that can be applied to `input_descriptors` to generate the
+`frame` object, however that work is out of scope and not required at this
+stage. The `input_descriptors` describe where the properties in the selective
+disclosure credential are and the `frame` describes how to derive that selective
+disclosure credential.
+
+#### Additional transport layers
+It is anticipated that future versions of this specification will describe how
+to exchange presentations using a number of different transport protocols. For
+this version, anything other than the subset of DIDComm V2 that is described
+here is out of scope.
+
+#### Linked Data Signature Suite Definitions
+
+The specific cryptographic operations, and suite definitions are out of scope for this spec. 
+Please consider contributing to them [here](https://github.com/w3c-ccg/ldp-bbs2020).

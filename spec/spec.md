@@ -826,5 +826,16 @@ here is out of scope.
 
 #### Linked Data Signature Suite Definitions
 
-The specific cryptographic operations, and suite definitions are out of scope for this spec. 
-Please consider contributing to them [here](https://github.com/w3c-ccg/ldp-bbs2020).
+The specific cryptographic operations, and suite definitions are out of scope
+for this spec. Please consider contributing to them
+[here](https://github.com/w3c-ccg/ldp-bbs2020).
+
+#### DIDComm ECDH-1PU and authenticated encryption
+Defining authenticated encryption is out of scope for this specification. This
+specification currently relies on elements of DIDComm V2, which is currently
+being drafted. Due to instability in some of the specifications relied on by
+DIDComm V2, there is currently no support in DIDComm for authenticated
+encryption of messages, specifically the ECDH-1PU methodology. We anticipate
+that this capability will be introduced in DIDComm V2 as it reaches maturity and
+we advise those interested in the topic to follow the progress
+[there](https://github.com/decentralized-identity/didcomm-messaging).

@@ -563,12 +563,18 @@ suitable app.
 ### Step 2 - Send Message Proposing Presentation
 
 A "Propose Presentation" message, optional in many cases, is defined in [Aries
-RFC 0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
-and its Presentation Exchange "attachment" defined in
-[RFC 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
+RFC
+0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
+and its Presentation Exchange "attachment" defined in [RFC
+0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
 It either initiates a Request/Share interaction or answers an earlier invitation
-to do so; it can be functionally equivalent to the request for a challenge token
-in the [challenge token section](#challenge-token-2) above:
+to do so. In the context of this flow, this response to the invitation
+establishes the same kind of connection that the WACI specification establishes
+in can be functionally equivalent to the two-step request for a challenge token
+& callback URL described in the [challenge token
+section](https://identity.foundation/wallet-and-credential-interactions/#challenge-token-3).
+
+The response to the invite qR with presentation-proposal attached looks like this:
 
 ```json
 {

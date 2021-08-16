@@ -233,19 +233,21 @@ For Example:
   }
 }
 ```
-      ::: note Basic Note
-      It is important that the JSON-LD frame object be compatible with the input
-      descriptors of the presentation definition. There is an assumed direct
-      mapping between the JSON-LD frame object and the corresponding input
-      descriptor object in the presentation definition.
-      If a presentation definition has a JSON-LD frame that is inconsistent with
-      the input descriptors, it may be impossible to produce an acceptable
-      verifiable presentation for it.
+
+::: note Basic Note 
+
+It is important that the JSON-LD frame object be compatible
+with the input descriptors of the presentation definition. There is an assumed
+direct mapping between the JSON-LD frame object and the corresponding input
+descriptor object in the presentation definition. If a presentation definition
+has a JSON-LD frame that is inconsistent with the input descriptors, it may be
+impossible to produce an acceptable verifiable presentation for it.
       
-      We anticipate that it may be possible to deterministically derive a valid
-      JSON-LD frame from an input descriptor, but a formal specification for
-      doing so does not, at this time, exist.
-      :::
+We anticipate that it may be possible to deterministically derive a valid
+JSON-LD frame from an input descriptor, but a formal specification for doing so
+does not, at this time, exist.
+
+:::
 
 The Presentation Exchange specification does not currently define a `frame`
 property for a `presentation definition`. This means that implementers of

@@ -349,7 +349,9 @@ Forward message structure:
 
 ### Encryption
 
-Messages are sent encrypted. Each example in this spec must be encrypted before transmission with the exception of the message encoded into a QR code. 
+Messages are sent encrypted. Each message described in this specification MUST
+be encrypted before transmission with the exception of the [message encoded into
+a QR code](#step-1---generate-qr-code).
 
 JOSE Header:
 
@@ -360,15 +362,18 @@ JOSE Header:
    }
 ```
 
-The KID used in the JWE recipients block is the DID of the message recipient
+The `kid` used in the JWE recipients block MUST be the DID of the message
+recipient.
 
-The plaintext message for encryption is created by serializing the json to a string, typically without whitespace.
+The plaintext message to be encrypted is prepared by serializing the JSON to a
+string and removing the whitespace.
 
-The encrypted message MUST be in json form. Compact JWEs are not allowed.
+The encrypted message MUST be in JSON form. Compact JWEs are not supported.
 
-Further details on JWE creation may be found in [RFC 7516](https://datatracker.ietf.org/doc/html/rfc7516).
+Further details on JWE creation may be found in
+[RFC 7516](https://datatracker.ietf.org/doc/html/rfc7516).
 
-Encoded message example, with abbreviations and line breaks for clarity.
+Encoded message example, with abbreviations and line breaks for clarity:
 
 ```json5
 {

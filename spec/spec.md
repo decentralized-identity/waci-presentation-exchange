@@ -432,7 +432,7 @@ As an overview, see this flow diagram:
 </nav>
 <section>
 
-![QR Code profile flow](./resources/swimlanes_io_d_C5HnpvA4f.png)
+![](./resources/swimlanes_io_d_C5HnpvA4f.png)
 
 </section>
 <section>

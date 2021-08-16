@@ -574,7 +574,7 @@ in can be functionally equivalent to the two-step request for a challenge token
 & callback URL described in the [challenge token
 section](https://identity.foundation/wallet-and-credential-interactions/#challenge-token-3).
 
-The response to the invite qR with presentation-proposal attached looks like this:
+The response to the invite QR with presentation-proposal attached looks like this:
 
 ```json
 {

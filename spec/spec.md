@@ -233,7 +233,7 @@ For Example:
   }
 }
 ```
-      ::: note
+      ::: note Basic Note
       It is important that the JSON-LD frame object be compatible with the input
       descriptors of the presentation definition. There is an assumed direct
       mapping between the JSON-LD frame object and the corresponding input

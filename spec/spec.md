@@ -432,7 +432,7 @@ As an overview, see this flow diagram:
 </nav>
 <section>
 
-![](./resources/swimlanes_io_d_C5HnpvA4f.png)
+<img src="./resources/swimlanes_io_d_C5HnpvA4f.png">
 
 </section>
 <section>
@@ -471,8 +471,6 @@ sequenceDiagram
 ```
 
 </section>
-
-
 
 </tab-panels>
 

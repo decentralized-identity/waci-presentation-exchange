@@ -427,10 +427,12 @@ As an overview, see this flow diagram:
 <tab-panels selected-index="0">
 
 <nav>
-  <button type="button">QR Based</button>
-  <button type="button">Link Based</button>
+  <button type="button">QR-Based WACI Profile</button>
+  <button type="button">QR-based WACI flow for comparison</button>
 </nav>
-
+<section>
+![QR Code profile flow](./resources/swimlanes_io_d_C5HnpvA4f.png)
+</section>
 <section>
 
 ```mermaid
@@ -468,45 +470,7 @@ sequenceDiagram
 
 </section>
 
-<section>
 
-```mermaid
-sequenceDiagram
-  title: Request/Share (Link)
-
-  User ->>+ Verifier's Interface: Click link
-
-  Verifier's Interface ->>- Wallet: Open Wallet with deep link
-
-  activate Wallet
-
-  Wallet ->> Wallet: Parse deep link
-
-  Wallet ->>+ Verifier: GET `challengeTokenUrl`
-  Verifier -->> Wallet: Return `challengeToken`
-
-  Wallet ->> Wallet: Verify/decode `challengeToken`
-  Wallet ->> Wallet: Collect VCs that are described in the `challengeToken`s `presentation_definition`
-  Wallet ->> Wallet: Create VP containing the VCs, with `challengeToken` as the `challenge`
-  Wallet ->> Wallet: Create/sign a `responseToken` containing the VP, with `challengeToken` as the `challenge`
-
-  Wallet ->> Verifier: POST the `responseToken` to `challengeToken`'s `callBackUrl`
-  Verifier ->> Verifier: Verify the `responseToken`
-  Verifier ->> Verifier: Verify the `responseToken`'s challenge token (valid JWT, signed by verifier, and not used before)
-  Verifier -->>- Wallet: Return success
-
-  opt `redirectUrl` or `challengeToken` is provided
-    alt `redirectUrl` is provided
-      Wallet ->> Browser: Open `redirectUrl`
-    else `challengeToken` is provided
-      Wallet ->> Wallet: Start new interaction
-    end
-  end
-
-  deactivate Wallet
-```
-
-</section>
 
 </tab-panels>
 
@@ -568,12 +532,18 @@ suitable app.
 ### Step 2 - Send Message Proposing Presentation
 
 A "Propose Presentation" message, optional in many cases, is defined in [Aries
-RFC 0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
-and its Presentation Exchange "attachment" defined in
-[RFC 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
+RFC
+0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
+and its Presentation Exchange "attachment" defined in [RFC
+0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#propose-presentation-attachment-format).
 It either initiates a Request/Share interaction or answers an earlier invitation
-to do so; it can be functionally equivalent to the request for a challenge token
-in the [challenge token section](#challenge-token-2) above:
+to do so. In the context of this flow, this response to the invitation
+establishes the same kind of connection that the WACI specification establishes
+in can be functionally equivalent to the two-step request for a challenge token
+& callback URL described in the [challenge token
+section](https://identity.foundation/wallet-and-credential-interactions/#challenge-token-3).
+
+The response to the invite qR with presentation-proposal attached looks like this:
 
 ```json
 {

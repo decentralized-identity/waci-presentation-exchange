@@ -560,7 +560,14 @@ The response to the invite QR with presentation-proposal attached looks like thi
 ```
 
 Note: `id`s MAY be any arbitrary string used to identify each message, such as a
-UUID or a hash, but the `id` of the initial message SHOULD be included as the Thread ID (`thid`) of subsequent messages. If the Thread ID (`thid`) is not present in a message, it's value is the same as the Message ID (`id`), and indicates the start of a new thread. Subsequent messages in the thread should use that `id` as the Thread ID (`thid`). The Parent Thread ID (`pthid`) MUST be included for this message only, and is set to the Message ID (`id`) of the message encoded as a QR code. This allows the message recipient (and creator of the QR code) to correlate this message with the QR code that was scanned.
+UUID or a hash, but the `id` of the initial message SHOULD be included as the
+Thread ID (`thid`) of subsequent messages. If the Thread ID (`thid`) is not present
+in a message, it's value is the same as the Message ID (`id`), and indicates the
+start of a new thread. Subsequent messages in the thread should use that `id` as
+the Thread ID (`thid`). The Parent Thread ID (`pthid`) MUST be included for this
+message only, and is set to the Message ID (`id`) of the message encoded as a
+QR code. This allows the message recipient (and creator of the QR code) to
+correlate this message with the QR code that was scanned.
 
 ### Step 3 - Send Message Requesting Presentation
 

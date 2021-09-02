@@ -12,6 +12,8 @@
 ~ [Afshan Aman](https://www.linkedin.com/in/afshan-aman/) (Bloom)
 ~ [Eddie Hedges](https://www.linkedin.com/in/eddiehedges/) (Bloom)
 ~ [Jace Hensley](https://www.linkedin.com/in/jacehensley/) (Bloom)
+~ [Sam Curren](https://www.linkedin.com/in/samcurren/) (Indicio.tech)
+
 
 **Participate:**
 ~ [GitHub repo](https://github.com/decentralized-identity/waci-presentation-exchange)
@@ -300,7 +302,7 @@ For example:
   }]
 }
 ```
- 
+
 The value of the `service` property MUST be an array of objects composed as
 follows:
 - a service object MUST have an `id` property and its value MUST be a string
@@ -545,7 +547,7 @@ in can be functionally equivalent to the two-step request for a challenge token
 & callback URL described in the [challenge token
 section](https://identity.foundation/wallet-and-credential-interactions/#challenge-token-3).
 
-The response to the invite qR with presentation-proposal attached looks like this:
+The response to the invite QR with presentation-proposal attached looks like this:
 
 ```json
 {
@@ -558,11 +560,14 @@ The response to the invite qR with presentation-proposal attached looks like thi
 ```
 
 Note: `id`s MAY be any arbitrary string used to identify each message, such as a
-UUID or a hash, but the `id` of the initial message SHOULD be included as `thid`
-("thread id"). In the above example, the `id` of the message that established a
-connection was used for `thid`; `thid` MAY be unspecified if this message is
-the first one over the channel or if a connection had been established out of
-band.
+UUID or a hash, but the `id` of the initial message SHOULD be included as the
+Thread ID (`thid`) of subsequent messages. If the Thread ID (`thid`) is not present
+in a message, it's value is the same as the Message ID (`id`), and indicates the
+start of a new thread. Subsequent messages in the thread should use that `id` as
+the Thread ID (`thid`). The Parent Thread ID (`pthid`) MUST be included for this
+message only, and is set to the Message ID (`id`) of the message encoded as a
+QR code. This allows the message recipient (and creator of the QR code) to
+correlate this message with the QR code that was scanned.
 
 ### Step 3 - Send Message Requesting Presentation
 

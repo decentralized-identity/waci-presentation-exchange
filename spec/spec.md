@@ -600,8 +600,8 @@ this property MUST be a string as described in
   "body": {},
   "attachments": [
     {
-      "@id": "ed7d9b1f-9eed-4bde-b81c-3aa7485cf947",
-      "mime-type": "application/json",
+      "id": "ed7d9b1f-9eed-4bde-b81c-3aa7485cf947",
+      "media_type": "application/json",
       "format": "dif/presentation-exchange/definitions@v1.0",
       "data": {
         "json": {
@@ -692,8 +692,8 @@ object for the VP and used to generate the signature there.
   "body": {},
   "attachments": [
     {
-      "@id": "2a3f1c4c-623c-44e6-b159-179048c51260",
-      "mime-type": "application/ld+json",
+      "id": "2a3f1c4c-623c-44e6-b159-179048c51260",
+      "media_type": "application/ld+json",
       "format": "dif/presentation-exchange/submission@v1.0",
       "data": {
         "@context": [

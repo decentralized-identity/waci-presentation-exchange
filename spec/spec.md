@@ -535,7 +535,7 @@ suitable app.
 
 ### Step 2 - Send Message Proposing Presentation
 
-A "Propose Presentation" message, is defined in [Aries
+A "Propose Presentation" message is defined in [Aries
 RFC
 0454](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#messages)
 and its Presentation Exchange "attachment" defined in [RFC

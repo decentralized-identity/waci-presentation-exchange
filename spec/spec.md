@@ -565,7 +565,7 @@ Thread ID (`thid`) of subsequent messages.
 
 If the Thread ID (`thid`) is not present
 in a message, it's value is the same as the Message ID (`id`), and indicates the
-start of a new thread. Subsequent messages in the thread should use that `id` as
+start of a new thread. Subsequent messages in the thread SHOULD use that `id` as
 the Thread ID (`thid`). 
 
 The Parent Thread ID (`pthid`) MUST be included for this

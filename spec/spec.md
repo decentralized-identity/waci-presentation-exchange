@@ -555,7 +555,7 @@ The response to the invite QR with presentation-proposal attached looks like thi
     "id": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
     "pthid": "599f3638-b563-4937-9487-dfe55099d900",
     "from": "did:example:prover",
-    "to": "did:example:verifier"
+    "to": ["did:example:verifier"]
 }
 ```
 
@@ -596,7 +596,7 @@ this property MUST be a string as described in
   "id": "0ac534c8-98ed-4fe3-8a41-3600775e1e92",
   "thid": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
   "from": "did:example:prover",
-  "to": "did:example:verifier",
+  "to": ["did:example:verifier"],
   "body": {},
   "attachments": [
     {
@@ -688,7 +688,7 @@ object for the VP and used to generate the signature there.
   "id": "f1ca8245-ab2d-4d9c-8d7d-94bf310314ef",
   "thid": "95e63a5f-73e1-46ac-b269-48bb22591bfa",
   "from": "did:example:verifier",
-  "to": "did:example:prover",
+  "to": ["did:example:prover"],
   "body": {},
   "attachments": [
     {
@@ -779,7 +779,7 @@ message back to the prover.
   "id":"e2f3747b-41e8-4e46-abab-ba51472ab1c3",
   "pthid":"95e63a5f-73e1-46ac-b269-48bb22591bfa",
   "from":"did:example:verifier",
-  "to":"did:example:prover",
+  "to":["did:example:prover"],
   "body":{
     "status":"OK",
     "redirectUrl":"https://example.com/redirect-url?id={{Some id that identifies the user}}"

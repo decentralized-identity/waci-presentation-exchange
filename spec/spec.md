@@ -1,6 +1,6 @@
-# Wallet And Credential Interactions
+# WACI Presentation Exchange
 
-> WACI [__wak__-ee]
+> WACI PEx [__wak__-ee pex]
 
 **Specification Status:** Draft
 
@@ -8,11 +8,12 @@
 ~ [Orie Steele](https://www.linkedin.com/in/or13b/) (Transmute)
 ~ [Brent Zundel](https://www.linkedin.com/in/bzundel/) (Evernym)
 
-**Authors:**
+**Contributors:**
 ~ [Afshan Aman](https://www.linkedin.com/in/afshan-aman/) (Bloom)
 ~ [Eddie Hedges](https://www.linkedin.com/in/eddiehedges/) (Bloom)
 ~ [Jace Hensley](https://www.linkedin.com/in/jacehensley/) (Bloom)
 ~ [Sam Curren](https://www.linkedin.com/in/samcurren/) (Indicio.tech)
+~ [Brian Richter](https://www.linkedin.com/in/brianrichter3/) (Aviary Tech]
 
 
 **Participate:**

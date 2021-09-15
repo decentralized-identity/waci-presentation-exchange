@@ -1,4 +1,5 @@
 # WACI Presentation Exchange
+## Wallet and Credential Interactions for Presentations
 
 > WACI PEx [__wak__-ee pex]
 

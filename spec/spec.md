@@ -14,7 +14,7 @@
 ~ [Eddie Hedges](https://www.linkedin.com/in/eddiehedges/) (Bloom)
 ~ [Jace Hensley](https://www.linkedin.com/in/jacehensley/) (Bloom)
 ~ [Sam Curren](https://www.linkedin.com/in/samcurren/) (Indicio.tech)
-~ [Brian Richter](https://www.linkedin.com/in/brianrichter3/) (Aviary Tech]
+~ [Brian Richter](https://www.linkedin.com/in/brianrichter3/) (Aviary Tech)
 
 
 **Participate:**

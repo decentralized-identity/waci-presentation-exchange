@@ -485,13 +485,15 @@ sequenceDiagram
 </tab-panels>
 
 ## Interoperability Profile 
+### Issuance
 
-### Step 1 - Generate QR Code
+### Presentation
+#### Step 1 - Generate QR Code
 
 The QR code used to start a presentation is constructed by encoding a json based
 message into a URI, then encoding that URI into a QR code.
 
-#### JSON message
+##### JSON message
 
 The contents of the QR code to be generated are described in the following JSON
 block, which DIDComm v2 calls an "out of band invitation."
@@ -508,7 +510,7 @@ block, which DIDComm v2 calls an "out of band invitation."
 }
 ```
 
-#### Encoding
+##### Encoding
 
 To encode this message, remove all json whitespace and Base 64 URL encode. The
 result should look like this, for the example above:
@@ -524,13 +526,13 @@ Prepend this encoded string with a domain and path, and a query parameter of
 https://example.com/some/path?_oob=eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb2YtYmFuZC8yLjAvaW52aXRhdGlvbiIsImlkIjoiNTk5ZjM2MzgtYjU2My00OTM3LTk0ODctZGZlNTUwOTlkOTAwIiwiZnJvbSI6ImRpZDpleGFtcGxlOnZlcmlmaWVyIiwiYm9keSI6eyJnb2FsX2NvZGUiOiJzdHJlYW1saW5lZC12cCIsImFjY2VwdCI6WyJkaWRjb21tL3YyIl19fQ==
 ```
 
-#### QR Code generated 
+##### QR Code generated 
 
 Present as a link, or as a QR code.
 
 ![QR Code Example](./resources/qrcode_example.png)
 
-#### QR Code scanning and processing
+##### QR Code scanning and processing
 
 The URI, if loaded into a browser SHOULD display instructions on how to download
 and use a mobile application. If scanned inside an app that understands this
@@ -539,7 +541,7 @@ and processed without resolving the URI. This behavior allows for a better
 fallback user experience should a user encounter a QR code without having a
 suitable app.
 
-### Step 2 - Send Message Proposing Presentation
+#### Step 2 - Send Message Proposing Presentation
 
 A "Propose Presentation" message is defined in [Aries
 RFC
@@ -579,7 +581,7 @@ message only, and is set to the Message ID (`id`) of the message encoded as a
 QR code. The use of the Parent Thread ID matching the Message ID in the QR code of Step 1 allows the message recipient (and creator of the QR code) to
 correlate this message with the QR code that was scanned. This can be used to link a specific session to the DIDComm messages used to present credentials.
 
-### Step 3 - Send Message Requesting Presentation
+#### Step 3 - Send Message Requesting Presentation
 
 The request for a Verifiable Presentation is defined in the "request
 presentation" section of
@@ -681,7 +683,7 @@ For context on the Vaccination object passed, see the W3C-CCG
 [Vaccination Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/),
 from which the example is drawn.
 
-### Step 4 - Present Proof 
+#### Step 4 - Present Proof 
 
 The Verifiable Presentation is again returned as an attachment (defined by
 [RFC 0510](https://github.com/hyperledger/aries-rfcs/blob/master/features/0510-dif-pres-exch-attach/README.md#presentation-attachment-format))
@@ -779,7 +781,7 @@ For context on the Vaccination object passed, see the W3C-CCG
 [Vaccination Vocabulary](https://w3c-ccg.github.io/vaccination-vocab/),
 from which the example is drawn.
 
-### Step 5 - Ack Presentation
+#### Step 5 - Ack Presentation
 
 Once the verifier validates the presentation, it MAY send an
 [Acknowledgement](https://github.com/hyperledger/aries-rfcs/tree/master/features/0454-present-proof-v2#ack-presentation) 

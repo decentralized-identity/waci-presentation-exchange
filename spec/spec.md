@@ -15,6 +15,7 @@
 ~ [Jace Hensley](https://www.linkedin.com/in/jacehensley/) (Bloom)
 ~ [Sam Curren](https://www.linkedin.com/in/samcurren/) (Indicio.tech)
 ~ [Brian Richter](https://www.linkedin.com/in/brianrichter3/) (Aviary Tech)
+~ [Rolson Quadras](https://www.linkedin.com/in/rolsonquadras/) ([SecureKey](https://securekey.com/))
 
 
 **Participate:**
@@ -427,6 +428,24 @@ Perfect Forward Secrecy (PFS) on the transmission leg.
 
 ## WACI Protocol Context
 
+### Issuance
+
+The issuance flow uses [DIF DIDComm v2](https://identity.foundation/didcomm-messaging/spec/) along with Issue Credential v3 and [DIF Credential Manifest](https://identity.foundation/credential-manifest/).
+
+```mermaid
+sequenceDiagram
+  title: Offer/Claim 
+
+  Issuer ->> Issuer: Generate DIDComm v2 Out-Of-Band(OOB) invitation 
+  Issuer -> Wallet: Step 1: Scan QR Code
+  Wallet ->> Issuer: Step 2: Issue Credential - Propose Credential
+  Issuer ->> Wallet: Step 3: Issue Credential - Offer Credential (Credential Manifest)
+  Wallet->> Issuer: Step 4: Issue Credential - Request Credential (Credential Application)
+  Issuer ->> Wallet: Step 5: Issue Credential - Issue Credential (Credential Fullfilment)
+  Wallet ->> Issuer: Step 6: Issue Credential - Ack
+```
+
+### Presentation
 The interactions, objects, and assumptions outlined in the WACI pre-draft
 specification are the basis for the following.  Specifically, the profile
 describes the
@@ -486,6 +505,466 @@ sequenceDiagram
 
 ## Interoperability Profile 
 ### Issuance
+#### Step 1 : Generate Out-Of-Band (OOB) message
+
+The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal_code` as `streamlined-vc`. This message can be encoded as a QR code or a redirect URL.
+
+```json=
+{
+   "type":"https://didcomm.org/out-of-band/2.0/invitation",
+   "id":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "from":"did:example:issuer",
+   "body":{
+      "goal_code":"streamlined-vc",
+      "accept":[
+         "didcomm/v2"
+      ]
+   }
+}
+```
+
+#### Step 2 : Issue Credential - Propose Credential
+
+The wallet (user agent) initiates Issuer interaction by sending [Issue Credential - Propose Credential](https://github.com/hyperledger/aries-rfcs/tree/main/features/0453-issue-credential-v2#propose-credential) message with `pthid` same as `id` from OOB message. This provides context to the Issuer by mapping the request to the original session.
+
+```json=
+{
+   "type":"https://didcomm.org/issue-credential/3.0/propose-credential",
+   "id":"7f62f655-9cac-4728-854a-775ba6944593",
+   "pthid":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "from":"did:example:holder",
+   "to":[
+      "did:example:issuer"
+   ]
+}
+```
+
+#### Step 3 : Issue Credential - Offer Credential (Credential Manifest)
+
+The Issuer sends a [Issue Credential - Offer Credential](https://github.com/hyperledger/aries-rfcs/tree/main/features/0453-issue-credential-v2#offer-credential) message to Holder. The message attachment contains a [Credential Manifest message](https://identity.foundation/credential-manifest/#credential-manifest-2) from [Credential Manifest Spec](https://identity.foundation/credential-manifest/). The Credential Manifest message contains an output descriptor to display the Credential preview to the user and an optional presentation definition, in case the issuer needs any other credential before issuing the new credential.
+
+In the following message structure, the issuer wants a Permanent Resident Card (PRC) in order to issue a Drivers License (DL).
+
+```json=
+{
+   "type":"https://didcomm.org/issue-credential/3.0/offer-credential",
+   "id":"07c44208-06a9-4f8a-a5ce-8ce953270d4b",
+   "pthid":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "from":"did:example:issuer",
+   "to":[
+      "did:example:holder"
+   ],
+   "body":{
+      
+   },
+   "attachments":[
+      {
+         "id":"e00e11d4-906d-4c88-ba72-7c66c7113a78",
+         "media_type":"application/json",
+         "format":"dif/credential-manifest/manifest@v1.0",
+         "data":{
+            "json":{
+               "options":{
+                  "challenge":"508adef4-b8e0-4edf-a53d-a260371c1423",
+                  "domain":"9rf25a28rs96"
+               },
+               "id":"dcc75a16-19f5-4273-84ce-4da69ee2b7fe",
+               "version":"0.1.0",
+               "issuer":{
+                  "id":"did:example:123?linked-domains=3",
+                  "name":"Washington State Government",
+                  "styles":{
+                     
+                  }
+               },
+               "presentation_definition":{
+                  "id":"8246867e-fdce-48de-a825-9d84ec16c6c9",
+                  "frame":{
+                     "@context":[
+                        "https://www.w3.org/2018/credentials/v1",
+                        "https://w3id.org/citizenship/v1",
+                        "https://w3id.org/security/suites/bls12381-2020/v1"
+                     ],
+                     "type":[
+                        "VerifiableCredential",
+                        "PermanentResidentCard"
+                     ],
+                     "credentialSubject":{
+                        "@explicit":true,
+                        "type":[
+                           "PermanentResident"
+                        ],
+                        "givenName":{
+                           
+                        },
+                        "familyName":{
+                           
+                        },
+                        "birthCountry":{
+                           
+                        },
+                        "birthDate":{
+                           
+                        }
+                     }
+                  },
+                  "input_descriptors":[
+                     {
+                        "id":"prc_input",
+                        "name":"Permanent Resident Card",
+                        "purpose":"We need PRC to verify your status.",
+                        "schema":"https://w3id.org/citizenship#PermanentResidentCard",
+                        "constraints":{
+                           "fields":[
+                              {
+                                 "path":[
+                                    "$.credentialSubject.givenName"
+                                 ],
+                                 "filter":{
+                                    "type":"string"
+                                 }
+                              },
+                              {
+                                 "path":[
+                                    "$.credentialSubject.familyName"
+                                 ],
+                                 "filter":{
+                                    "type":"string"
+                                 }
+                              },
+                              {
+                                 "path":[
+                                    "$.credentialSubject.birthCountry"
+                                 ],
+                                 "filter":{
+                                    "type":"string"
+                                 }
+                              },
+                              {
+                                 "path":[
+                                    "$.credentialSubject.birthDate"
+                                 ],
+                                 "filter":{
+                                    "type":"string"
+                                 }
+                              }
+                           ]
+                        }
+                     }
+                  ]
+               },
+               "output_descriptors":[
+                  {
+                     "id":"driver_license_output",
+                     "schema":"https://schema.org/EducationalOccupationalCredential",
+                     "display":{
+                        "title":{
+                           "path":[
+                              "$.name",
+                              "$.vc.name"
+                           ],
+                           "fallback":"Washington State Driver License"
+                        },
+                        "subtitle":{
+                           "path":[
+                              "$.class",
+                              "$.vc.class"
+                           ],
+                           "fallback":"Class A, Commercial"
+                        },
+                        "description":{
+                           "text":"License to operate a vehicle with a gross combined weight rating (GCWR) of 26,001 or more pounds, as long as the GVWR of the vehicle(s) being towed is over 10,000 pounds."
+                        },
+                        "properties":[
+                           {
+                              "path":[
+                                 "$.donor",
+                                 "$.vc.donor"
+                              ],
+                              "fallback":"Unknown",
+                              "label":"Organ Donor"
+                           }
+                        ]
+                     },
+                     "styles":{
+                        "thumbnail":{
+                           "uri":"https://dol.wa.com/logo.png",
+                           "alt":"Washington State Seal"
+                        },
+                        "hero":{
+                           "uri":"https://dol.wa.com/happy-people-driving.png",
+                           "alt":"Happy people driving"
+                        },
+                        "background":{
+                           "color":"#ff0000"
+                        },
+                        "text":{
+                           "color":"#d4d400"
+                        }
+                     }
+                  }
+               ]
+            }
+         }
+      },
+      {
+         "id":"b55f39c1-a7e5-4d4f-8ba0-716a19ec013a",
+         "media_type":"application/json",
+        "format":"dif/credential-manifest/fulfillment@v1.0",
+         "data":{
+            "json":{
+               "@context":[
+                  "https://www.w3.org/2018/credentials/v1",
+                  "https://identity.foundation/credential-manifest/fulfillment/v1"
+               ],
+               "type":[
+                  "VerifiablePresentation",
+                  "CredentialFulfillment"
+               ],
+               "credential_fulfillment":{
+                  "id":"a30e3b91-fb77-4d22-95fa-871689c322e2",
+                  "manifest_id":"dcc75a16-19f5-4273-84ce-4da69ee2b7fe",
+                  "descriptor_map":[
+                     {
+                        "id":"driver_license_output",
+                        "format":"ldp_vc",
+                        "path":"$.verifiableCredential[0]"
+                     }
+                  ]
+               },
+               "verifiableCredential":[
+                  {
+                     "@context":"https://www.w3.org/2018/credentials/v1",
+                     "id":"https://eu.com/claims/DriversLicense",
+                     "type":[
+                        "EUDriversLicense"
+                     ],
+                     "issuer":"did:foo:123",
+                     "issuanceDate":"2010-01-01T19:73:24Z",
+                     "credentialSubject":{
+                        "id":"did:example:ebfeb1f712ebc6f1c276e12ec21",
+                        "license":{
+                           "number":"34DGE352",
+                           "dob":"07/13/80"
+                        }
+                     }
+                  }
+               ]
+            }
+         }
+      }
+   ]
+}
+```
+
+##### Attachments
+| Credential Format               | Format Value                   | Link to Attachment Format                                                                                | Comment |
+|---------------------------------|--------------------------------|----------------------------------------------------------------------------------------------------------|---------|
+| DIF Credential Manifest Message | `dif/credential-manifest/manifest@v1.0` | [DIF Credential Manifest Spec](https://identity.foundation/credential-manifest/#credential-manifest-2 ) |         |
+| DIF Credential Fullfilment Message (Unsigned) | `dif/credential-manifest/fulfillment@v1.0`         | [DIF Credential Manifest Spec](https://identity.foundation/credential-manifest/#credential-fulfillment)                                 |         |
+
+#### Step 4 : Issue Credential - Request Credential (Credential Application)
+
+The User sends a [Credential Application message](https://identity.foundation/credential-manifest/#credential-application) as an attachment in [Issue Credential - Request Credential](https://github.com/hyperledger/aries-rfcs/tree/main/features/0453-issue-credential-v2#request-credential).
+
+```json=
+{
+   "type":"https://didcomm.org/issue-credential/3.0/request-credential",
+   "id":"c6686159-ef49-45b2-938f-51818da14723",
+   "pthid":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "from":"did:example:holder",
+   "to":[
+      "did:example:issuer"
+   ],
+   "body":{
+      
+   },
+   "attachments":[
+      {
+         "id":"e00e11d4-906d-4c88-ba72-7c66c7113a78",
+         "media_type":"application/json",
+         "format":"dif/credential-manifest/application@v1.0",
+         "data":{
+            "json":{
+               "@context":[
+                  "https://www.w3.org/2018/credentials/v1",
+                  "https://identity.foundation/credential-manifest/application/v1"
+               ],
+               "type":[
+                  "VerifiablePresentation",
+                  "CredentialApplication"
+               ],
+               "credential_application":{
+                  "id":"9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+                  "manifest_id":"dcc75a16-19f5-4273-84ce-4da69ee2b7fe",
+                  "format":{
+                     "ldp_vc":{
+                        "proof_type":[
+                           "JsonWebSignature2020",
+                           "EcdsaSecp256k1Signature2019"
+                        ]
+                     }
+                  }
+               },
+               "presentation_submission":{
+                  "id":"2e161b2c-606b-416f-b04f-7f06edac55a1",
+                  "definition_id":"8246867e-fdce-48de-a825-9d84ec16c6c9",
+                  "descriptor_map":[
+                     {
+                        "id":"prc_input",
+                        "format":"ldp_vp",
+                        "path":"$.verifiableCredential[0]"
+                     }
+                  ]
+               },
+               "verifiableCredential":[
+                  {
+                     "@context":[
+                        "https://www.w3.org/2018/credentials/v1",
+                        "https://w3id.org/citizenship/v1",
+                        "https://w3id.org/security/bbs/v1"
+                     ],
+                     "id":"urn:uvci:af5vshde843jf831j128fj",
+                     "type":[
+                        "VaccinationCertificate",
+                        "PermanentResidentCard"
+                     ],
+                     "name":"Permanent Resident Card",
+                     "description":"Permanent Resident Card of Mr.Louis Pasteu",
+                     "expirationDate":"2029-12-03T12:19:52Z",
+                     "issuanceDate":"2019-12-03T12:19:52Z",
+                     "issuer":"did:example:456",
+                     "credentialSubject":{
+                        "id":"did:example:ebfeb1f712ebc6f1c276e12ec21",
+                        "givenName":"Louis",
+                        "familyName":"Pasteur",
+                        "birthCountry":"Bahamas",
+                        "birthDate":"1958-07-17"
+                     },
+                     "proof":{
+                        "type":"BbsBlsSignatureProof2020",
+                        "created":"2021-02-18T23:04:28Z",
+                        "nonce":"JNGovx4GGoi341v/YCTcZq7aLWtBtz8UhoxEeCxZFevEGzfh94WUSg8Ly/q+2jLqzzY=",
+                        "proofPurpose":"assertionMethod",
+                        "proofValue":"AB0GQA//jbDwMgaIIJeqP3fRyMYi6WDGhk0JlGJc/sk4ycuYGmyN7CbO4bA7yhIW/YQbHEkOgeMy0QM+usBgZad8x5FRePxfo4v1dSzAbJwWjx87G9F1lAIRgijlD4sYni1LhSo6svptDUmIrCAOwS2raV3G02mVejbwltMOo4+cyKcGlj9CzfjCgCuS1SqAxveDiMKGAAAAdJJF1pO6hBUGkebu/SMmiFafVdLvFgpMFUFEHTvElUQhwNSp6vxJp6Rs7pOVc9zHqAAAAAI7TJuDCf7ramzTo+syb7Njf6ExD11UKNcChaeblzegRBIkg3HoWgwR0hhd4z4D5/obSjGPKpGuD+1DoyTZhC/wqOjUZ03J1EtryZrC+y1DD14b4+khQVLgOBJ9+uvshrGDbu8+7anGezOa+qWT0FopAAAAEG6p07ghODpi8DVeDQyPwMY/iu2Lh7x3JShWniQrewY2GbsACBYOPlkNNm/qSExPRMe2X7UPpdsxpUDwqbObye4EXfAabgKd9gCmj2PNdvcOQAi5rIuJSGa4Vj7AtKoW/2vpmboPoOu4IEM1YviupomCKOzhjEuOof2/y5Adfb8JUVidWqf9Ye/HtxnzTu0HbaXL7jbwsMNn5wYfZuzpmVQgEXss2KePMSkHcfScAQNglnI90YgugHGuU+/DQcfMoA0+JviFcJy13yERAueVuzrDemzc+wJaEuNDn8UiTjAdVhLcgnHqUai+4F6ONbCfH2B3ohB3hSiGB6C7hDnEyXFOO9BijCTHrxPv3yKWNkks+3JfY28m+3NO0e2tlyH71yDX0+F6U388/bvWod/u5s3MpaCibTZEYoAc4sm4jW03HFYMmvYBuWOY6rGGOgIrXxQjx98D0macJJR7Hkh7KJhMkwvtyI4MaTPJsdJGfv8I+RFROxtRM7RcFpa4J5wF/wQnpyorqchwo6xAOKYFqCqKvI9B6Y7Da7/0iOiWsjs8a4zDiYynfYavnz6SdxCMpHLgplEQlnntqCb8C3qly2s5Ko3PGWu4M8Dlfcn4TT8YenkJDJicA91nlLaE8TJbBgsvgyT+zlTsRSXlFzQc+3KfWoODKZIZqTBaRZMft3S/",
+                        "verificationMethod":"did:example:123#key-1"
+                     }
+                  }
+               ],
+               "proof":{
+                  "type":"Ed25519Signature2018",
+                  "verificationMethod":"did:example:123#key-0",
+                  "created":"2021-05-14T20:16:29.565377",
+                  "proofPurpose":"authentication",
+                  "challenge":"3fa85f64-5717-4562-b3fc-2c963f66afa7",
+                  "jws":"eyJhbGciOiAiRWREU0EiLCAiYjY0IjogZmFsc2UsICJjcml0IjogWyJiNjQiXX0..7M9LwdJR1_SQayHIWVHF5eSSRhbVsrjQHKUrfRhRRrlbuKlggm8mm_4EI_kTPeBpalQWiGiyCb_0OWFPtn2wAQ"
+               }
+            }
+         }
+      }
+   ]
+}
+```
+
+#### Step 5 : Issue Credential - Issue Credential (Credential Fulfilment)
+
+The Issuer sends a [Credential Fulfilment message](https://identity.foundation/credential-manifest/#credential-fulfillment) as an attachment in [Issue Credential - Issue Credential](https://github.com/hyperledger/aries-rfcs/tree/main/features/0453-issue-credential-v2#issue-credential), which will contain the Verifiable Credentials.
+
+```json=
+{
+   "type":"https://didcomm.org/issue-credential/3.0/issue-credential",
+   "id":"7a476bd8-cc3f-4d80-b784-caeb2ff265da",
+   "pthid":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "from":"did:example:issuer",
+   "to":[
+      "did:example:holder"
+   ],
+   "body":{
+      
+   },
+   "attachments":[
+      {
+         "id":"e00e11d4-906d-4c88-ba72-7c66c7113a78",
+         "media_type":"application/json",
+         "format":"dif/credential-manifest/fulfillment@v1.0",
+         "data":{
+            "json":{
+               "@context":[
+                  "https://www.w3.org/2018/credentials/v1",
+                  "https://identity.foundation/credential-manifest/fulfillment/v1"
+               ],
+               "type":[
+                  "VerifiablePresentation",
+                  "CredentialFulfillment"
+               ],
+               "credential_fulfillment":{
+                  "id":"a30e3b91-fb77-4d22-95fa-871689c322e2",
+                  "manifest_id":"dcc75a16-19f5-4273-84ce-4da69ee2b7fe",
+                  "descriptor_map":[
+                     {
+                        "id":"driver_license_output",
+                        "format":"ldp_vc",
+                        "path":"$.verifiableCredential[0]"
+                     }
+                  ]
+               },
+               "verifiableCredential":[
+                  {
+                     "@context":"https://www.w3.org/2018/credentials/v1",
+                     "id":"https://eu.com/claims/DriversLicense",
+                     "type":[
+                        "EUDriversLicense"
+                     ],
+                     "issuer":"did:foo:123",
+                     "issuanceDate":"2010-01-01T19:73:24Z",
+                     "credentialSubject":{
+                        "id":"did:example:ebfeb1f712ebc6f1c276e12ec21",
+                        "license":{
+                           "number":"34DGE352",
+                           "dob":"07/13/80"
+                        }
+                     },
+                     "proof":{
+                        "created":"2021-06-07T20:02:44.730614315Z",
+                        "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..NVum9BeYkhzwslZXm2cDOveQB9njlrCRSrdMZgwV3zZfLRXmZQ1AXdKLLmo4ClTYXFX_TWNyB8aFt9cN6sSvCg",
+                        "proofPurpose":"assertionMethod",
+                        "type":"Ed25519Signature2018",
+                        "verificationMethod":"did:orb:EiA3Xmv8A8vUH5lRRZeKakd-cjAxGC2A4aoPDjLysjghow#tMIstfHSzXfBUF7O0m2FiBEfTb93_j_4ron47IXPgEo"
+                     }
+                  }
+               ],
+               "proof":{
+                  "created":"2021-06-07T20:02:44.730614315Z",
+                  "jws":"eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..NVum9BeYkhzwslZXm2cDOveQB9njlrCRSrdMZgwV3zZfLRXmZQ1AXdKLLmo4ClTYXFX_TWNyB8aFt9cN6sSvCg",
+                  "proofPurpose":"authentication",
+                  "type":"Ed25519Signature2018",
+                  "verificationMethod":"did:orb:EiA3Xmv8A8vUH5lRRZeKakd-cjAxGC2A4aoPDjLysjghow#tMIstfHSzXfBUF7O0m2FiBEfTb93_j_4ron47IXPgEo"
+               }
+            }
+         }
+      }
+   ]
+}
+```
+
+#### Step 6 : Issue Credential - Ack
+
+The wallet sends an acknolowledgement message to the issuer.
+
+```json=
+{
+   "type":"https://didcomm.org/issue-credential/3.0/ack",
+   "id":"d1fb78ad-c452-4c52-a7a0-b68b3e82cdd3",
+   "pthid":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "from":"did:example:holder",
+   "to":[
+      "did:example:issuer"
+   ],
+   "body":{
+
+   }
+}
+```
 
 ### Presentation
 #### Step 1 - Generate QR Code

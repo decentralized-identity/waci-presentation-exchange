@@ -430,7 +430,7 @@ Perfect Forward Secrecy (PFS) on the transmission leg.
 
 ### Issuance
 
-The issuance flow uses [DIF DIDComm v2](https://identity.foundation/didcomm-messaging/spec/) along with Issue Credential v3 and [DIF Credential Manifest](https://identity.foundation/credential-manifest/).
+The issuance flow uses [DIF DIDComm v2](https://identity.foundation/didcomm-messaging/spec/) along with [Issue Credential v3](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md) and [DIF Credential Manifest](https://identity.foundation/credential-manifest/).
 
 ```mermaid
 sequenceDiagram
@@ -525,7 +525,7 @@ The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal
 
 #### Step 2 : Issue Credential - Propose Credential
 
-The wallet (user agent) initiates Issuer interaction by sending [Issue Credential - Propose Credential](https://github.com/hyperledger/aries-rfcs/tree/main/features/0453-issue-credential-v2#propose-credential) message with `pthid` same as `id` from OOB message. This provides context to the Issuer by mapping the request to the original session.
+The wallet (user agent) initiates Issuer interaction by sending [Issue Credential - Propose Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#propose-credential) message with `pthid` same as `id` from OOB message. This provides context to the Issuer by mapping the request to the original session.
 
 ```json=
 {
@@ -541,7 +541,7 @@ The wallet (user agent) initiates Issuer interaction by sending [Issue Credentia
 
 #### Step 3 : Issue Credential - Offer Credential (Credential Manifest)
 
-The Issuer sends a [Issue Credential - Offer Credential](https://github.com/hyperledger/aries-rfcs/tree/main/features/0453-issue-credential-v2#offer-credential) message to Holder. The message attachment contains a [Credential Manifest message](https://identity.foundation/credential-manifest/#credential-manifest-2) from [Credential Manifest Spec](https://identity.foundation/credential-manifest/). The Credential Manifest message contains an output descriptor to display the Credential preview to the user and an optional presentation definition, in case the issuer needs any other credential before issuing the new credential.
+The Issuer sends a [Issue Credential - Offer Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#offer-credential) message to Holder. The message attachment contains a [Credential Manifest message](https://identity.foundation/credential-manifest/#credential-manifest-2) from [Credential Manifest Spec](https://identity.foundation/credential-manifest/). The Credential Manifest message contains an output descriptor to display the Credential preview to the user and an optional presentation definition, in case the issuer needs any other credential before issuing the new credential.
 
 In the following message structure, the issuer wants a Permanent Resident Card (PRC) in order to issue a Drivers License (DL).
 
@@ -765,7 +765,7 @@ In the following message structure, the issuer wants a Permanent Resident Card (
 
 #### Step 4 : Issue Credential - Request Credential (Credential Application)
 
-The User sends a [Credential Application message](https://identity.foundation/credential-manifest/#credential-application) as an attachment in [Issue Credential - Request Credential](https://github.com/hyperledger/aries-rfcs/tree/main/features/0453-issue-credential-v2#request-credential).
+The User sends a [Credential Application message](https://identity.foundation/credential-manifest/#credential-application) as an attachment in [Issue Credential - Request Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#request-credential).
 
 ```json=
 {
@@ -868,7 +868,7 @@ The User sends a [Credential Application message](https://identity.foundation/cr
 
 #### Step 5 : Issue Credential - Issue Credential (Credential Fulfilment)
 
-The Issuer sends a [Credential Fulfilment message](https://identity.foundation/credential-manifest/#credential-fulfillment) as an attachment in [Issue Credential - Issue Credential](https://github.com/hyperledger/aries-rfcs/tree/main/features/0453-issue-credential-v2#issue-credential), which will contain the Verifiable Credentials.
+The Issuer sends a [Credential Fulfilment message](https://identity.foundation/credential-manifest/#credential-fulfillment) as an attachment in [Issue Credential - Issue Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#issue-credential), which will contain the Verifiable Credentials.
 
 ```json=
 {

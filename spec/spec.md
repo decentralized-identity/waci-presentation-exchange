@@ -425,6 +425,50 @@ update.
 - Using HTTPS with TLS 1.2 or greater with a forward secret cipher will provide
 Perfect Forward Secrecy (PFS) on the transmission leg.
 
+### Web Redirect
+
+The DIDComm v2 supports [web-redirect](https://identity.foundation/didcomm-messaging/spec/#redirecting-back-to-sender) 
+feature to redirect the receiver application back to the sender application. In the case of WACI, 
+the Issuer/Verifier may ask the Wallet to redirect back using this property. 
+
+Example acknowledgement message containing web-redirect information:
+
+```json=
+{
+  "type":"https://didcomm.org/present-proof/3.0/ack",
+  "id":"e2f3747b-41e8-4e46-abab-ba51472ab1c3",
+  "pthid":"95e63a5f-73e1-46ac-b269-48bb22591bfa",
+  "from":"did:example:verifier",
+  "to":["did:example:prover"],
+  "web-redirect":{
+    "status":"OK",
+    "redirectUrl":"https://example.com/handle-success/51e63a5f-93e1-46ac-b269-66bb22591bfa"
+  }
+}
+```
+
+Example problem-report message containing web-redirect information.
+
+```json=
+{
+  "type": "https://didcomm.org/report-problem/2.0/problem-report",
+  "id": "7c9de639-c51c-4d60-ab95-103fa613c805",
+  "pthid": "1e513ad4-48c9-444e-9e7e-5b8b45c5e325",
+  "web-redirect":{
+      "status":"FAIL",
+      "redirectUrl":"https://example.com/handle-error/99e80a9f-34e1-41ac-b277-91bb64481bxb"
+   },
+  "body": {
+    "code": "e.p.xfer.cant-use-endpoint",
+    "comment": "Unable to use the {1} endpoint for {2}.",
+    "args": [
+      "https://agents.r.us/inbox",
+      "did:example:123"
+    ]
+  }
+}
+```
+
 
 ## WACI Protocol Context
 
@@ -1274,8 +1318,7 @@ message back to the prover.
   "from":"did:example:verifier",
   "to":["did:example:prover"],
   "body":{
-    "status":"OK",
-    "redirectUrl":"https://example.com/redirect-url?id={{Some id that identifies the user}}"
+    "status":"OK"
   }
 }
 ```
@@ -1283,9 +1326,6 @@ message back to the prover.
 The `body` property of an `Acknowledgement` message MUST contain a `status`
 property. The value of this property MUST be one of the statuses defined
 [here](https://github.com/hyperledger/aries-rfcs/blob/master/features/0015-acks/README.md#ack-status).
-
-The `body` property MAY contain a `redirectUrl` property. If present, the prover
-software SHOULD redirect to this url.
 
 ## Appendix
 

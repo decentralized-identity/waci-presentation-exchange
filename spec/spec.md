@@ -102,6 +102,8 @@ request information, and a `Presentation Submission` object which describes the
 relationship between the `Presentation Definition` and the submitted verifiable
 information.
 
+Similarly, in issuance situations the credentials on offer by a given issuer need to be defined in objects that can be passed back and forth. In these flows, a "sister specification" that spun out of the Presentation Exchange work-item group defines those objects: [Credential Manifest](https://identity.foundation/credential-manifest/#credential-manifest-2), also a work item of the DIF Claims and Credentials WG.
+
 Since
 [Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
 supports the use of `Verifiable Presentations` as a response to a `Presentation

@@ -8,6 +8,9 @@ QR Codes and Links for wallet and credential interactions.
 
 [Available Here](https://docs.google.com/spreadsheets/d/1wgccmMvIImx30qVE9GhRKWWv3vmL2ZyUauuKx3IfRmA/edit#gid=1252135265)
 
+### Versions
+- [v0.1](https://web.archive.org/web/20211206215823/https://identity.foundation/waci-presentation-exchange/)
+
 ### Test Vectors
 
 - [aviarytech](https://github.com/aviarytech/wacinsteins-monster/tree/main/tests/fixtures)

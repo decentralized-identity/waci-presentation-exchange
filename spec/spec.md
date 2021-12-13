@@ -551,7 +551,7 @@ sequenceDiagram
 ### Issuance
 #### Step 1 : Generate Out-Of-Band (OOB) message
 
-The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal_code` as `streamlined-vc`. This message can be encoded as a QR code or a redirect URL.
+The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal-code` as `streamlined-vc`. This message can be encoded as a QR code or a redirect URL.
 
 ```json=
 {
@@ -559,7 +559,7 @@ The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal
    "id":"f137e0db-db7b-4776-9530-83c808a34a42",
    "from":"did:example:issuer",
    "body":{
-      "goal_code":"streamlined-vc",
+      "goal-code":"streamlined-vc",
       "accept":[
          "didcomm/v2"
       ]
@@ -1027,7 +1027,7 @@ block, which DIDComm v2 calls an "out of band invitation."
   "id": "599f3638-b563-4937-9487-dfe55099d900",
   "from": "did:example:verifier",
   "body": {
-      "goal_code": "streamlined-vp",
+      "goal-code": "streamlined-vp",
       "accept": ["didcomm/v2"]
   }
 }

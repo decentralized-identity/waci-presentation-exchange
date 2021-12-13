@@ -4,6 +4,14 @@
 
 QR Codes and Links for wallet and credential interactions.
 
+### Meeting Recordings
+
+[Available Here](https://docs.google.com/spreadsheets/d/1wgccmMvIImx30qVE9GhRKWWv3vmL2ZyUauuKx3IfRmA/edit#gid=1252135265)
+
+### Test Vectors
+
+- [aviarytech](https://github.com/aviarytech/wacinsteins-monster/tree/main/tests/fixtures)
+
 ### Input Documents
 
 This work item is consolidating a number of input documents

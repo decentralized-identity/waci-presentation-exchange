@@ -260,8 +260,8 @@ does not, at this time, exist.
 
 :::
 
-The Presentation Exchange specification defines a `frame` property for a `presentation definition`. This means that implementers of Presentation Exchange who wish to use the protocol described here can use the  
-[JSON Schema from Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/#json-schema-2)
+The v2.0.0 Presentation Exchange specification defines a `frame` property for a `presentation definition`. This means that implementers of Presentation Exchange who wish to use the protocol described here can use the latest 
+[JSON Schema from Presentation Exchange](https://identity.foundation/presentation-exchange/#json-schema-2)
 to validate `presentation definition` objects that contain a frame property.
 
 

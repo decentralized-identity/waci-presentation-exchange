@@ -3,9 +3,9 @@
 
 > WACI PEx [__wak__-ee pex]
 
-**Specification Status:** Current Draft
+**Specification Status:** Draft V0.1 (snapshotted and archived on [web.archive.org](https://web.archive.org/web/20211206215823/https://identity.foundation/waci-presentation-exchange/))
 
-**Previous Versions:** [v0.1](v0.1/)
+**Latest Draft:** [https://identity.foundation/waci-presentation-exchange/](https://identity.foundation/waci-presentation-exchange/)
 
 **Editors:**
 ~ [Orie Steele](https://www.linkedin.com/in/or13b/) (Transmute)

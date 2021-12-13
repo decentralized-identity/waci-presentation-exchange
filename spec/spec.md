@@ -260,18 +260,10 @@ does not, at this time, exist.
 
 :::
 
-The Presentation Exchange specification does not currently define a `frame`
-property for a `presentation definition`. This means that implementers of
-Presentation Exchange who wish to use the protocol described here may run into
-errors when using the 
+The Presentation Exchange specification defines a `frame` property for a `presentation definition`. This means that implementers of Presentation Exchange who wish to use the protocol described here can use the  
 [JSON Schema from Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/#json-schema-2)
 to validate `presentation definition` objects that contain a frame property.
 
-We recommend using the following JSON Schema definition to validate
-`presentation definition` objects that include a `frame` property:
-```json
-[[insert: ../test/presentation-definition/schema.json]]
-```
 
 More information about how frames work with BBS+ signatures can be found in the
 [Linked Data Proof BBS+ Signatures 2020 Suite](https://w3c-ccg.github.io/ldp-bbs2020/#the-bbs-signature-proof-suite-2020)

@@ -3,9 +3,9 @@
 
 > WACI PEx [__wak__-ee pex]
 
-**Specification Status:** Current Draft
+**Specification Status:** Draft V0.1 (snapshotted and archived on [web.archive.org](https://web.archive.org/web/20211206215823/https://identity.foundation/waci-presentation-exchange/))
 
-**Previous Versions:** [v0.1](v0.1/)
+**Latest Draft:** [https://identity.foundation/waci-presentation-exchange/](https://identity.foundation/waci-presentation-exchange/)
 
 **Editors:**
 ~ [Orie Steele](https://www.linkedin.com/in/or13b/) (Transmute)
@@ -103,8 +103,6 @@ was recently published by the Decentralized Identity Foundation. It defines a
 request information, and a `Presentation Submission` object which describes the
 relationship between the `Presentation Definition` and the submitted verifiable
 information.
-
-Similarly, in issuance situations the credentials on offer by a given issuer need to be defined in objects that can be passed back and forth. In these flows, a "sister specification" that spun out of the Presentation Exchange work-item group defines those objects: [Credential Manifest](https://identity.foundation/credential-manifest/#credential-manifest-2), also a work item of the DIF Claims and Credentials WG.
 
 Since
 [Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
@@ -262,10 +260,18 @@ does not, at this time, exist.
 
 :::
 
-The v2.0.0 Presentation Exchange specification defines a `frame` property for a `presentation definition`. This means that implementers of Presentation Exchange who wish to use the protocol described here can use the latest 
-[JSON Schema from Presentation Exchange](https://identity.foundation/presentation-exchange/#json-schema-2)
+The Presentation Exchange specification does not currently define a `frame`
+property for a `presentation definition`. This means that implementers of
+Presentation Exchange who wish to use the protocol described here may run into
+errors when using the 
+[JSON Schema from Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/#json-schema-2)
 to validate `presentation definition` objects that contain a frame property.
 
+We recommend using the following JSON Schema definition to validate
+`presentation definition` objects that include a `frame` property:
+```json
+[[insert: ../test/presentation-definition/schema.json]]
+```
 
 More information about how frames work with BBS+ signatures can be found in the
 [Linked Data Proof BBS+ Signatures 2020 Suite](https://w3c-ccg.github.io/ldp-bbs2020/#the-bbs-signature-proof-suite-2020)
@@ -547,7 +553,7 @@ sequenceDiagram
 ### Issuance
 #### Step 1 : Generate Out-Of-Band (OOB) message
 
-The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal-code` as `streamlined-vc`. This message can be encoded as a QR code or a redirect URL.
+The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal_code` as `streamlined-vc`. This message can be encoded as a QR code or a redirect URL.
 
 ```json=
 {
@@ -555,7 +561,7 @@ The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal
    "id":"f137e0db-db7b-4776-9530-83c808a34a42",
    "from":"did:example:issuer",
    "body":{
-      "goal-code":"streamlined-vc",
+      "goal_code":"streamlined-vc",
       "accept":[
          "didcomm/v2"
       ]
@@ -608,12 +614,124 @@ In the following message structure, the issuer wants a Permanent Resident Card (
                   "challenge":"508adef4-b8e0-4edf-a53d-a260371c1423",
                   "domain":"9rf25a28rs96"
                },
-               "credential_manifest":{
-                  "id":"dcc75a16-19f5-4273-84ce-4da69ee2b7fe",
-                  "version":"0.1.0",
-                  "issuer":{
-                     "id":"did:example:123",
-                     "name":"Washington State Government",
+               "id":"dcc75a16-19f5-4273-84ce-4da69ee2b7fe",
+               "version":"0.1.0",
+               "issuer":{
+                  "id":"did:example:123?linked-domains=3",
+                  "name":"Washington State Government",
+                  "styles":{
+                     
+                  }
+               },
+               "presentation_definition":{
+                  "id":"8246867e-fdce-48de-a825-9d84ec16c6c9",
+                  "frame":{
+                     "@context":[
+                        "https://www.w3.org/2018/credentials/v1",
+                        "https://w3id.org/citizenship/v1",
+                        "https://w3id.org/security/suites/bls12381-2020/v1"
+                     ],
+                     "type":[
+                        "VerifiableCredential",
+                        "PermanentResidentCard"
+                     ],
+                     "credentialSubject":{
+                        "@explicit":true,
+                        "type":[
+                           "PermanentResident"
+                        ],
+                        "givenName":{
+                           
+                        },
+                        "familyName":{
+                           
+                        },
+                        "birthCountry":{
+                           
+                        },
+                        "birthDate":{
+                           
+                        }
+                     }
+                  },
+                  "input_descriptors":[
+                     {
+                        "id":"prc_input",
+                        "name":"Permanent Resident Card",
+                        "purpose":"We need PRC to verify your status.",
+                        "schema":"https://w3id.org/citizenship#PermanentResidentCard",
+                        "constraints":{
+                           "fields":[
+                              {
+                                 "path":[
+                                    "$.credentialSubject.givenName"
+                                 ],
+                                 "filter":{
+                                    "type":"string"
+                                 }
+                              },
+                              {
+                                 "path":[
+                                    "$.credentialSubject.familyName"
+                                 ],
+                                 "filter":{
+                                    "type":"string"
+                                 }
+                              },
+                              {
+                                 "path":[
+                                    "$.credentialSubject.birthCountry"
+                                 ],
+                                 "filter":{
+                                    "type":"string"
+                                 }
+                              },
+                              {
+                                 "path":[
+                                    "$.credentialSubject.birthDate"
+                                 ],
+                                 "filter":{
+                                    "type":"string"
+                                 }
+                              }
+                           ]
+                        }
+                     }
+                  ]
+               },
+               "output_descriptors":[
+                  {
+                     "id":"driver_license_output",
+                     "schema":"https://schema.org/EducationalOccupationalCredential",
+                     "display":{
+                        "title":{
+                           "path":[
+                              "$.name",
+                              "$.vc.name"
+                           ],
+                           "fallback":"Washington State Driver License"
+                        },
+                        "subtitle":{
+                           "path":[
+                              "$.class",
+                              "$.vc.class"
+                           ],
+                           "fallback":"Class A, Commercial"
+                        },
+                        "description":{
+                           "text":"License to operate a vehicle with a gross combined weight rating (GCWR) of 26,001 or more pounds, as long as the GVWR of the vehicle(s) being towed is over 10,000 pounds."
+                        },
+                        "properties":[
+                           {
+                              "path":[
+                                 "$.donor",
+                                 "$.vc.donor"
+                              ],
+                              "fallback":"Unknown",
+                              "label":"Organ Donor"
+                           }
+                        ]
+                     },
                      "styles":{
                         "thumbnail":{
                            "uri":"https://dol.wa.com/logo.png",
@@ -630,142 +748,15 @@ In the following message structure, the issuer wants a Permanent Resident Card (
                            "color":"#d4d400"
                         }
                      }
-                  },
-                  "presentation_definition":{
-                     "id":"8246867e-fdce-48de-a825-9d84ec16c6c9",
-                     "frame":{
-                        "@context":[
-                           "https://www.w3.org/2018/credentials/v1",
-                           "https://w3id.org/citizenship/v1",
-                           "https://w3id.org/security/suites/bls12381-2020/v1"
-                        ],
-                        "type":[
-                           "VerifiableCredential",
-                           "PermanentResidentCard"
-                        ],
-                        "credentialSubject":{
-                           "@explicit":true,
-                           "type":[
-                              "PermanentResident"
-                           ],
-                           "givenName":{
-                              
-                           },
-                           "familyName":{
-                              
-                           },
-                           "birthCountry":{
-                              
-                           },
-                           "birthDate":{
-                              
-                           }
-                        }
-                     },
-                     "input_descriptors":[
-                        {
-                           "id":"prc_input",
-                           "name":"Permanent Resident Card",
-                           "purpose":"We need PRC to verify your status.",
-                           "schema":"https://w3id.org/citizenship#PermanentResidentCard",
-                           "constraints":{
-                              "fields":[
-                                 {
-                                    "path":[
-                                       "$.credentialSubject.givenName"
-                                    ],
-                                    "filter":{
-                                       "type":"string"
-                                    }
-                                 },
-                                 {
-                                    "path":[
-                                       "$.credentialSubject.familyName"
-                                    ],
-                                    "filter":{
-                                       "type":"string"
-                                    }
-                                 },
-                                 {
-                                    "path":[
-                                       "$.credentialSubject.birthCountry"
-                                    ],
-                                    "filter":{
-                                       "type":"string"
-                                    }
-                                 },
-                                 {
-                                    "path":[
-                                       "$.credentialSubject.birthDate"
-                                    ],
-                                    "filter":{
-                                       "type":"string"
-                                    }
-                                 }
-                              ]
-                           }
-                        }
-                     ]
-                  },
-                  "output_descriptors":[
-                     {
-                        "id":"driver_license_output",
-                        "schema":"https://schema.org/EducationalOccupationalCredential",
-                        "display":{
-                           "title":{
-                              "path":[
-                                 "$.name",
-                                 "$.vc.name"
-                              ],
-                              "fallback":"Washington State Driver License"
-                           },
-                           "subtitle":{
-                              "path":[
-                                 "$.class",
-                                 "$.vc.class"
-                              ],
-                              "fallback":"Class A, Commercial"
-                           },
-                           "description":{
-                              "text":"License to operate a vehicle with a gross combined weight rating (GCWR) of 26,001 or more pounds, as long as the GVWR of the vehicle(s) being towed is over 10,000 pounds."
-                           },
-                           "properties":[
-                              {
-                                 "path":[
-                                    "$.donor",
-                                    "$.vc.donor"
-                                 ],
-                                 "fallback":"Unknown",
-                                 "label":"Organ Donor"
-                              }
-                           ]
-                        },
-                        "styles":{
-                           "thumbnail":{
-                              "uri":"https://dol.wa.com/logo.png",
-                              "alt":"Washington State Seal"
-                           },
-                           "hero":{
-                              "uri":"https://dol.wa.com/happy-people-driving.png",
-                              "alt":"Happy people driving"
-                           },
-                           "background":{
-                              "color":"#ff0000"
-                           },
-                           "text":{
-                              "color":"#d4d400"
-                           }
-                        }
-                     }
-                  ]
-               }
+                  }
+               ]
             }
          }
       },
       {
          "id":"b55f39c1-a7e5-4d4f-8ba0-716a19ec013a",
          "media_type":"application/json",
-         "format":"dif/credential-manifest/fulfillment@v1.0",
+        "format":"dif/credential-manifest/fulfillment@v1.0",
          "data":{
             "json":{
                "@context":[
@@ -1038,7 +1029,7 @@ block, which DIDComm v2 calls an "out of band invitation."
   "id": "599f3638-b563-4937-9487-dfe55099d900",
   "from": "did:example:verifier",
   "body": {
-      "goal-code": "streamlined-vp",
+      "goal_code": "streamlined-vp",
       "accept": ["didcomm/v2"]
   }
 }

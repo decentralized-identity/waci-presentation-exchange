@@ -606,124 +606,12 @@ In the following message structure, the issuer wants a Permanent Resident Card (
                   "challenge":"508adef4-b8e0-4edf-a53d-a260371c1423",
                   "domain":"9rf25a28rs96"
                },
-               "id":"dcc75a16-19f5-4273-84ce-4da69ee2b7fe",
-               "version":"0.1.0",
-               "issuer":{
-                  "id":"did:example:123?linked-domains=3",
-                  "name":"Washington State Government",
-                  "styles":{
-                     
-                  }
-               },
-               "presentation_definition":{
-                  "id":"8246867e-fdce-48de-a825-9d84ec16c6c9",
-                  "frame":{
-                     "@context":[
-                        "https://www.w3.org/2018/credentials/v1",
-                        "https://w3id.org/citizenship/v1",
-                        "https://w3id.org/security/suites/bls12381-2020/v1"
-                     ],
-                     "type":[
-                        "VerifiableCredential",
-                        "PermanentResidentCard"
-                     ],
-                     "credentialSubject":{
-                        "@explicit":true,
-                        "type":[
-                           "PermanentResident"
-                        ],
-                        "givenName":{
-                           
-                        },
-                        "familyName":{
-                           
-                        },
-                        "birthCountry":{
-                           
-                        },
-                        "birthDate":{
-                           
-                        }
-                     }
-                  },
-                  "input_descriptors":[
-                     {
-                        "id":"prc_input",
-                        "name":"Permanent Resident Card",
-                        "purpose":"We need PRC to verify your status.",
-                        "schema":"https://w3id.org/citizenship#PermanentResidentCard",
-                        "constraints":{
-                           "fields":[
-                              {
-                                 "path":[
-                                    "$.credentialSubject.givenName"
-                                 ],
-                                 "filter":{
-                                    "type":"string"
-                                 }
-                              },
-                              {
-                                 "path":[
-                                    "$.credentialSubject.familyName"
-                                 ],
-                                 "filter":{
-                                    "type":"string"
-                                 }
-                              },
-                              {
-                                 "path":[
-                                    "$.credentialSubject.birthCountry"
-                                 ],
-                                 "filter":{
-                                    "type":"string"
-                                 }
-                              },
-                              {
-                                 "path":[
-                                    "$.credentialSubject.birthDate"
-                                 ],
-                                 "filter":{
-                                    "type":"string"
-                                 }
-                              }
-                           ]
-                        }
-                     }
-                  ]
-               },
-               "output_descriptors":[
-                  {
-                     "id":"driver_license_output",
-                     "schema":"https://schema.org/EducationalOccupationalCredential",
-                     "display":{
-                        "title":{
-                           "path":[
-                              "$.name",
-                              "$.vc.name"
-                           ],
-                           "fallback":"Washington State Driver License"
-                        },
-                        "subtitle":{
-                           "path":[
-                              "$.class",
-                              "$.vc.class"
-                           ],
-                           "fallback":"Class A, Commercial"
-                        },
-                        "description":{
-                           "text":"License to operate a vehicle with a gross combined weight rating (GCWR) of 26,001 or more pounds, as long as the GVWR of the vehicle(s) being towed is over 10,000 pounds."
-                        },
-                        "properties":[
-                           {
-                              "path":[
-                                 "$.donor",
-                                 "$.vc.donor"
-                              ],
-                              "fallback":"Unknown",
-                              "label":"Organ Donor"
-                           }
-                        ]
-                     },
+               "credential_manifest":{
+                  "id":"dcc75a16-19f5-4273-84ce-4da69ee2b7fe",
+                  "version":"0.1.0",
+                  "issuer":{
+                     "id":"did:example:123",
+                     "name":"Washington State Government",
                      "styles":{
                         "thumbnail":{
                            "uri":"https://dol.wa.com/logo.png",
@@ -740,15 +628,142 @@ In the following message structure, the issuer wants a Permanent Resident Card (
                            "color":"#d4d400"
                         }
                      }
-                  }
-               ]
+                  },
+                  "presentation_definition":{
+                     "id":"8246867e-fdce-48de-a825-9d84ec16c6c9",
+                     "frame":{
+                        "@context":[
+                           "https://www.w3.org/2018/credentials/v1",
+                           "https://w3id.org/citizenship/v1",
+                           "https://w3id.org/security/suites/bls12381-2020/v1"
+                        ],
+                        "type":[
+                           "VerifiableCredential",
+                           "PermanentResidentCard"
+                        ],
+                        "credentialSubject":{
+                           "@explicit":true,
+                           "type":[
+                              "PermanentResident"
+                           ],
+                           "givenName":{
+                              
+                           },
+                           "familyName":{
+                              
+                           },
+                           "birthCountry":{
+                              
+                           },
+                           "birthDate":{
+                              
+                           }
+                        }
+                     },
+                     "input_descriptors":[
+                        {
+                           "id":"prc_input",
+                           "name":"Permanent Resident Card",
+                           "purpose":"We need PRC to verify your status.",
+                           "schema":"https://w3id.org/citizenship#PermanentResidentCard",
+                           "constraints":{
+                              "fields":[
+                                 {
+                                    "path":[
+                                       "$.credentialSubject.givenName"
+                                    ],
+                                    "filter":{
+                                       "type":"string"
+                                    }
+                                 },
+                                 {
+                                    "path":[
+                                       "$.credentialSubject.familyName"
+                                    ],
+                                    "filter":{
+                                       "type":"string"
+                                    }
+                                 },
+                                 {
+                                    "path":[
+                                       "$.credentialSubject.birthCountry"
+                                    ],
+                                    "filter":{
+                                       "type":"string"
+                                    }
+                                 },
+                                 {
+                                    "path":[
+                                       "$.credentialSubject.birthDate"
+                                    ],
+                                    "filter":{
+                                       "type":"string"
+                                    }
+                                 }
+                              ]
+                           }
+                        }
+                     ]
+                  },
+                  "output_descriptors":[
+                     {
+                        "id":"driver_license_output",
+                        "schema":"https://schema.org/EducationalOccupationalCredential",
+                        "display":{
+                           "title":{
+                              "path":[
+                                 "$.name",
+                                 "$.vc.name"
+                              ],
+                              "fallback":"Washington State Driver License"
+                           },
+                           "subtitle":{
+                              "path":[
+                                 "$.class",
+                                 "$.vc.class"
+                              ],
+                              "fallback":"Class A, Commercial"
+                           },
+                           "description":{
+                              "text":"License to operate a vehicle with a gross combined weight rating (GCWR) of 26,001 or more pounds, as long as the GVWR of the vehicle(s) being towed is over 10,000 pounds."
+                           },
+                           "properties":[
+                              {
+                                 "path":[
+                                    "$.donor",
+                                    "$.vc.donor"
+                                 ],
+                                 "fallback":"Unknown",
+                                 "label":"Organ Donor"
+                              }
+                           ]
+                        },
+                        "styles":{
+                           "thumbnail":{
+                              "uri":"https://dol.wa.com/logo.png",
+                              "alt":"Washington State Seal"
+                           },
+                           "hero":{
+                              "uri":"https://dol.wa.com/happy-people-driving.png",
+                              "alt":"Happy people driving"
+                           },
+                           "background":{
+                              "color":"#ff0000"
+                           },
+                           "text":{
+                              "color":"#d4d400"
+                           }
+                        }
+                     }
+                  ]
+               }
             }
          }
       },
       {
          "id":"b55f39c1-a7e5-4d4f-8ba0-716a19ec013a",
          "media_type":"application/json",
-        "format":"dif/credential-manifest/fulfillment@v1.0",
+         "format":"dif/credential-manifest/fulfillment@v1.0",
          "data":{
             "json":{
                "@context":[

@@ -549,7 +549,7 @@ sequenceDiagram
 
 The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal-code` as `streamlined-vc`. This message can be encoded as a QR code or a redirect URL.
 
-```json=
+```json5
 {
    "type":"https://didcomm.org/out-of-band/2.0/invitation",
    "id":"f137e0db-db7b-4776-9530-83c808a34a42",
@@ -585,7 +585,7 @@ The Issuer sends a [Issue Credential - Offer Credential](https://github.com/dece
 
 In the following message structure, the issuer wants a Permanent Resident Card (PRC) in order to issue a Drivers License (DL).
 
-```json=
+```json5
 {
    "type":"https://didcomm.org/issue-credential/3.0/offer-credential",
    "id":"07c44208-06a9-4f8a-a5ce-8ce953270d4b",
@@ -667,11 +667,18 @@ In the following message structure, the issuer wants a Permanent Resident Card (
                            "id":"prc_input",
                            "name":"Permanent Resident Card",
                            "purpose":"We need PRC to verify your status.",
-                           "schema":"https://w3id.org/citizenship#PermanentResidentCard",
                            "constraints":{
                               "fields":[
                                  {
                                     "path":[
+                                       "$.credentialSchema.id", "$.vc.credentialSchema.id"
+                                    ],
+                                    "filter":{
+                                       "type":"string",
+                                       "const": "https://w3id.org/vaccination/#VaccinationCertificate"
+                                    }
+                                 },                                 {
+                                 "path":[
                                        "$.credentialSubject.givenName"
                                     ],
                                     "filter":{
@@ -822,7 +829,7 @@ In the following message structure, the issuer wants a Permanent Resident Card (
 
 The User sends a [Credential Application message](https://identity.foundation/credential-manifest/#credential-application) as an attachment in [Issue Credential - Request Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#request-credential).
 
-```json=
+```json5
 {
    "type":"https://didcomm.org/issue-credential/3.0/request-credential",
    "id":"c6686159-ef49-45b2-938f-51818da14723",
@@ -925,7 +932,7 @@ The User sends a [Credential Application message](https://identity.foundation/cr
 
 The Issuer sends a [Credential Fulfilment message](https://identity.foundation/credential-manifest/#credential-fulfillment) as an attachment in [Issue Credential - Issue Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#issue-credential), which will contain the Verifiable Credentials.
 
-```json=
+```json5
 {
    "type":"https://didcomm.org/issue-credential/3.0/issue-credential",
    "id":"7a476bd8-cc3f-4d80-b784-caeb2ff265da",
@@ -1006,7 +1013,7 @@ The Issuer sends a [Credential Fulfilment message](https://identity.foundation/c
 
 The wallet sends an acknolowledgement message to the issuer.
 
-```json=
+```json5
 {
    "type":"https://didcomm.org/issue-credential/3.0/ack",
    "id":"d1fb78ad-c452-4c52-a7a0-b68b3e82cdd3",
@@ -1182,9 +1189,17 @@ this property MUST be a string as described in
               {
                 "id": "vaccination_input",
                 "name": "Vaccination Certificate",
-                "schema": "https://w3id.org/vaccination/#VaccinationCertificate",
                 "constraints": {
                   "fields": [
+                    {
+                      "path": [
+                        "$.credentialSchema.id", "$.vc.credentialSchema.id"
+                      ],
+                      "filter": {
+                        "type": "string",
+                        "const": "https://w3id.org/vaccination/#VaccinationCertificate"
+                      }
+                    },
                     {
                       "path": [
                         "$.credentialSubject.batchNumber"

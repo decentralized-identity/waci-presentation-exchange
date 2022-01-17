@@ -565,8 +565,7 @@ The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal
 
 #### Step 2 : Issue Credential - Propose Credential
 
-The wallet (user agent) initiates Issuer interaction by sending [Issue Credential - Propose Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#propose-credential) message with `pthid` same as `id` from OOB message. This provides context to the Issuer by mapping the request to the original session.
-
+The wallet (user agent) initiates Issuer interaction by sending [Issue Credential - Propose Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#propose-credential) message.
 ```json=
 {
    "type":"https://didcomm.org/issue-credential/3.0/propose-credential",
@@ -579,6 +578,20 @@ The wallet (user agent) initiates Issuer interaction by sending [Issue Credentia
 }
 ```
 
+The `id` property MAY be any arbitrary string used to identify each message, such as a
+UUID or a hash, but the `id` of the initial message SHOULD be included as the
+Thread ID (`thid`) of subsequent messages. 
+
+If the Thread ID (`thid`) is not present
+in a message, it's value is the same as the Message ID (`id`), and indicates the
+start of a new thread. Subsequent messages in the thread SHOULD use that `id` as
+the Thread ID (`thid`). 
+
+The Parent Thread ID (`pthid`) MUST be included for this
+message only, and is set to the Message ID (`id`) of the message encoded as a
+QR code. The use of the Parent Thread ID matching the Message ID in the QR code of Step 1 allows the message recipient (and creator of the QR code) to
+correlate this message with the QR code that was scanned. This can be used to link a specific session to the DIDComm messages used to present credentials.
+
 #### Step 3 : Issue Credential - Offer Credential (Credential Manifest)
 
 The Issuer sends a [Issue Credential - Offer Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#offer-credential) message to Holder. The message attachment contains a [Credential Manifest message](https://identity.foundation/credential-manifest/#credential-manifest-2) from [Credential Manifest Spec](https://identity.foundation/credential-manifest/). The Credential Manifest message contains an output descriptor to display the Credential preview to the user and an optional presentation definition, in case the issuer needs any other credential before issuing the new credential.
@@ -589,7 +602,7 @@ In the following message structure, the issuer wants a Permanent Resident Card (
 {
    "type":"https://didcomm.org/issue-credential/3.0/offer-credential",
    "id":"07c44208-06a9-4f8a-a5ce-8ce953270d4b",
-   "pthid":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "thid":"7f62f655-9cac-4728-854a-775ba6944593",
    "from":"did:example:issuer",
    "to":[
       "did:example:holder"
@@ -833,7 +846,7 @@ The User sends a [Credential Application message](https://identity.foundation/cr
 {
    "type":"https://didcomm.org/issue-credential/3.0/request-credential",
    "id":"c6686159-ef49-45b2-938f-51818da14723",
-   "pthid":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "thid":"7f62f655-9cac-4728-854a-775ba6944593",
    "from":"did:example:holder",
    "to":[
       "did:example:issuer"
@@ -936,7 +949,7 @@ The Issuer sends a [Credential Fulfilment message](https://identity.foundation/c
 {
    "type":"https://didcomm.org/issue-credential/3.0/issue-credential",
    "id":"7a476bd8-cc3f-4d80-b784-caeb2ff265da",
-   "pthid":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "thid":"7f62f655-9cac-4728-854a-775ba6944593",
    "from":"did:example:issuer",
    "to":[
       "did:example:holder"
@@ -1017,7 +1030,7 @@ The wallet sends an acknolowledgement message to the issuer.
 {
    "type":"https://didcomm.org/issue-credential/3.0/ack",
    "id":"d1fb78ad-c452-4c52-a7a0-b68b3e82cdd3",
-   "pthid":"f137e0db-db7b-4776-9530-83c808a34a42",
+   "thid":"7f62f655-9cac-4728-854a-775ba6944593",
    "from":"did:example:holder",
    "to":[
       "did:example:issuer"

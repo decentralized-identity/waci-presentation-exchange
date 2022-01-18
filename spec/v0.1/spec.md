@@ -270,7 +270,7 @@ to validate `presentation definition` objects that contain a frame property.
 We recommend using the following JSON Schema definition to validate
 `presentation definition` objects that include a `frame` property:
 ```json
-[[insert: ../test/presentation-definition/schema.json]]
+[[insert: ../../test/presentation-definition/schema.json]]
 ```
 
 More information about how frames work with BBS+ signatures can be found in the

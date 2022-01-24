@@ -565,7 +565,7 @@ The issuer generates a DIDComm v2 Out-Of-Band(OOB) invitation message with `goal
 
 #### Step 2 : Issue Credential - Propose Credential
 
-The wallet (user agent) initiates Issuer interaction by sending [Issue Credential - Propose Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#propose-credential) message.
+The wallet (user agent) starts the credential issuance process by sending the [Issue Credential - Propose Credential](https://github.com/decentralized-identity/waci-presentation-exchange/blob/main/issue_credential/README.md#propose-credential) message.
 ```json=
 {
    "type":"https://didcomm.org/issue-credential/3.0/propose-credential",
@@ -815,7 +815,7 @@ In the following message structure, the issuer wants a Permanent Resident Card (
                         "EUDriversLicense"
                      ],
                      "issuer":"did:foo:123",
-                     "issuanceDate":"2010-01-01T19:73:24Z",
+                     "issuanceDate":"2010-01-01T19:23:24Z",
                      "credentialSubject":{
                         "id":"did:example:ebfeb1f712ebc6f1c276e12ec21",
                         "license":{
@@ -991,7 +991,7 @@ The Issuer sends a [Credential Fulfilment message](https://identity.foundation/c
                         "EUDriversLicense"
                      ],
                      "issuer":"did:foo:123",
-                     "issuanceDate":"2010-01-01T19:73:24Z",
+                     "issuanceDate":"2010-01-01T19:23:24Z",
                      "credentialSubject":{
                         "id":"did:example:ebfeb1f712ebc6f1c276e12ec21",
                         "license":{

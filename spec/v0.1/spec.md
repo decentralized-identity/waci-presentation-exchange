@@ -76,7 +76,7 @@ and Credentials Working Group at DIF agreed to host a work item for continuing
 to work out the details. We outline some of the reasons for choosing each of the
 components below. 
 
-![Layering Diagram](./resources/layer_cake_v0-2.png)
+![Layering Diagram](./v0.1/resources/layer_cake_v0-2.png)
 
 ### Verifiable Presentations
 The starting point for most participants in determining which components to
@@ -270,7 +270,7 @@ to validate `presentation definition` objects that contain a frame property.
 We recommend using the following JSON Schema definition to validate
 `presentation definition` objects that include a `frame` property:
 ```json
-[[insert: ../resources/presentation-definition-schema-1-19-2022.json]]
+[[insert: ./v0.1/resources/presentation-definition-schema-1-19-2022.json]]
 ```
 
 More information about how frames work with BBS+ signatures can be found in the
@@ -507,7 +507,7 @@ As an overview, see this flow diagram:
 </nav>
 <section>
 
-<img src="./resources/swimlanes_io_d_C5HnpvA4f.png">
+<img src="./v0.1/resources/swimlanes_io_d_C5HnpvA4f.png">
 
 </section>
 <section>
@@ -1058,7 +1058,7 @@ https://example.com/some/path?_oob=eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb
 
 Present as a link, or as a QR code.
 
-![QR Code Example](./resources/qrcode_example.png)
+![QR Code Example](./v0.1/resources/qrcode_example.png)
 
 ##### QR Code scanning and processing
 

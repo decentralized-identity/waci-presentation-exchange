@@ -46,8 +46,8 @@ messaging protocol, along with
 [Aries Present Proof](https://github.com/hyperledger/aries-rfcs/blob/master/features/0454-present-proof-v2/README.md)
 message formats and
 [DIF Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
-data objects. This version of the specification also restricts itself to the
-[Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) which make use of
+data objects. This version of the specification also restricts itself to 
+[Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) that make use of
 [BBS+ LD-Signatures](https://w3c-ccg.github.io/ldp-bbs2020).
 
 It is anticipated that future versions of this specification will add

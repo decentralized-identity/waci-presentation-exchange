@@ -1,11 +1,12 @@
-# WACI Presentation Exchange
-## Wallet and Credential Interactions for Presentations
+# WACI-DIDComm Interop Profile 
+
+A [DIDComm v2.0](https://github.com/decentralized-identity/didcomm-messaging) Profile for supporting the Wallet and Credential Interaction (WACI) Protocols for both Issuance and [Presentation Exchange](), colloqually known as:
 
 > WACI PEx [__wak__-ee pex]
 
-**Specification Status:** Current Draft
+**Specification Status:** [Draft V0.1.0](https://identity.foundation/waci-presentation-exchange/v0.1) (also snapshotted and archived on 12/06/21 on [web.archive.org](https://web.archive.org/web/20211206215823/https://identity.foundation/waci-presentation-exchange/))
 
-**Previous Versions:** [v0.1](v0.1/)
+**Latest Draft:** [https://identity.foundation/waci-presentation-exchange/](https://identity.foundation/waci-presentation-exchange/)
 
 **Editors:**
 ~ [Orie Steele](https://www.linkedin.com/in/or13b/) (Transmute)
@@ -31,7 +32,8 @@
 
 There are interactions between a wallet and relying party that require passing
 information between the two. This specification provides an initial protocol
-definition for these interactions. 
+definition for the two main interactions (issuance and presentation) required
+for verifiable credentials.
 
 This document describes an interoperability profile which incorporates elements
 from a number of existing specifications and protocols, without assuming or
@@ -44,17 +46,17 @@ messaging protocol, along with
 [Aries Present Proof](https://github.com/hyperledger/aries-rfcs/blob/master/features/0454-present-proof-v2/README.md)
 message formats and
 [DIF Presentation Exchange](https://identity.foundation/presentation-exchange/spec/v1.0.0/)
-data objects. This version of the specification also restricts itself to
-[Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) which make use of
+data objects. This version of the specification also restricts itself to 
+[Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) that make use of
 [BBS+ LD-Signatures](https://w3c-ccg.github.io/ldp-bbs2020).
 
 It is anticipated that future versions of this specification will add
 support for a much broader range of messaging and data-sharing formats than
-those used in v0.1.
+those used in the current stable draft.
 
 ## Status of This Document
 
-WACI v0.1 is a _DRAFT_ specification under development by the
+WACI v0.1.0 is a _DRAFT_ specification under development by the
 [DIF Claims and Credentials Working Group](https://identity.foundation/working-groups/claims-credentials.html).
 
 We feel that the specification is ready for feedback from other decentralized

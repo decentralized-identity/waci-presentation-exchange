@@ -1,5 +1,7 @@
 # WACI Presentation Exchange
 
+## We're moving to https://github.com/decentralized-identity/waci-didcomm
+
 > WACI [__wak__-ee] - Wallet And Credential Interactions
 
 QR Codes and Links for wallet and credential interactions.

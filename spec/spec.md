@@ -814,6 +814,7 @@ In the following message structure, the issuer wants a Permanent Resident Card (
                      "@context":"https://www.w3.org/2018/credentials/v1",
                      "id":"https://eu.com/claims/DriversLicense",
                      "type":[
+                        "VerifiableCredential",
                         "EUDriversLicense"
                      ],
                      "issuer":"did:foo:123",
@@ -990,6 +991,7 @@ The Issuer sends a [Credential Fulfilment message](https://identity.foundation/c
                      "@context":"https://www.w3.org/2018/credentials/v1",
                      "id":"https://eu.com/claims/DriversLicense",
                      "type":[
+                        "VerifiableCredential",
                         "EUDriversLicense"
                      ],
                      "issuer":"did:foo:123",
@@ -1188,6 +1190,7 @@ this property MUST be a string as described in
                 "https://w3id.org/security/suites/bls12381-2020/v1"
               ],
               "type": [
+                "VerifiableCredential",
                 "VerifiableCredential",
                 "VaccinationCertificate"
               ],

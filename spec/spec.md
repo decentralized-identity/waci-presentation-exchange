@@ -1,4 +1,4 @@
-# WACI-DIDComm Interop Profile 
+# WACI-DIDComm Interop Profile (historical; see "latest draft" below)
 
 A [DIDComm v2.0](https://github.com/decentralized-identity/didcomm-messaging) Profile for supporting the Wallet and Credential Interaction (WACI) Protocols for both Issuance and [Presentation Exchange](), colloqually known as:
 
@@ -6,7 +6,8 @@ A [DIDComm v2.0](https://github.com/decentralized-identity/didcomm-messaging) Pr
 
 **Specification Status:** [Draft V0.1.0](https://identity.foundation/waci-presentation-exchange/v0.1) (also snapshotted and archived on 12/06/21 on [web.archive.org](https://web.archive.org/web/20211206215823/https://identity.foundation/waci-presentation-exchange/))
 
-**Latest Draft:** [https://identity.foundation/waci-presentation-exchange/](https://identity.foundation/waci-presentation-exchange/)
+**Latest Draft:** [https://identity.foundation/waci-didcomm/](https://identity.foundation/waci-didcomm/)
+**NOTE CHANGE OF NAME**
 
 **Editors:**
 ~ [Orie Steele](https://www.linkedin.com/in/or13b/) (Transmute)
@@ -19,6 +20,7 @@ A [DIDComm v2.0](https://github.com/decentralized-identity/didcomm-messaging) Pr
 ~ [Sam Curren](https://www.linkedin.com/in/samcurren/) (Indicio.tech)
 ~ [Brian Richter](https://www.linkedin.com/in/brianrichter3/) (Aviary Tech)
 ~ [Rolson Quadras](https://www.linkedin.com/in/rolsonquadras/) ([SecureKey](https://securekey.com/))
+~ [Juan Caballero](https://www.linkedin.com/in/juan-caballero/) ([Centre.io](https://centre.io/))
 
 
 **Participate:**
